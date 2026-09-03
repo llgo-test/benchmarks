@@ -10,7 +10,7 @@ if [[ -z "$pages_dir" || -z "$site_dir" ]]; then
   exit 2
 fi
 
-for file in index.html app.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
+for file in index.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
   cp "$site_dir/$file" "$pages_dir/$file"
 done
 rm -f "$pages_dir/.nojekyll"

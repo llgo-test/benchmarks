@@ -122,6 +122,11 @@ select:focus, input:focus, button:focus-visible, a:focus-visible { border-color:
 .compatibility-failures ul { margin: 5px 0 0; padding-left: 16px; }
 .compatibility-table td > strong { display: block; margin-top: 4px; color: #173354; font-size: 10px; }
 
+.wasm-history-toolbar { grid-template-columns: minmax(190px, 1fr) 118px auto auto minmax(260px, auto); }
+.wasm-history-toolbar > * { min-width: 0; }
+.wasm-source-name { display: block; margin-top: 3px; color: #8794a7; font-size: 8px; font-weight: 650; line-height: 1.15; }
+#wasm-size-grid .matrix-label-cell { width: 156px; min-width: 156px; max-width: 156px; }
+
 .card { margin-bottom: 14px; border-radius: 13px; overflow: hidden; }
 .card-heading { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 13px 16px 11px; border-bottom: 1px solid var(--line); background: #fff; }
 .card-heading p { margin-bottom: 2px; }
@@ -214,6 +219,8 @@ footer { display: flex; gap: 9px; flex-wrap: wrap; padding: 4px 2px; color: var(
   .comparison-note { grid-column: 1 / -1; }
   .history-controls { grid-template-columns: 1fr; }
   .performance-toolbar { grid-template-columns: minmax(220px, 1fr) 1fr; }
+  .wasm-history-toolbar { grid-template-columns: 1fr 110px auto; }
+  .wasm-history-toolbar .result-links { grid-column: 1 / -1; }
   .compatibility-toolbar { grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px); }
   .compatibility-toolbar .performance-meta, .compatibility-toolbar .result-links { grid-column: 1 / -1; }
   .result-links { grid-column: 1 / -1; }
@@ -235,6 +242,8 @@ footer { display: flex; gap: 9px; flex-wrap: wrap; padding: 4px 2px; color: var(
   .rank-legend { display: none; }
   .site-nav { display: grid; width: 100%; grid-template-columns: 1fr; text-align: center; }
   .performance-toolbar { grid-template-columns: 1fr; }
+  .wasm-history-toolbar { grid-template-columns: 1fr 100px; }
+  .wasm-history-toolbar .result-links { grid-column: 1 / -1; }
   .compatibility-toolbar { grid-template-columns: 1fr; }
   .compatibility-toolbar .performance-meta, .compatibility-toolbar .result-links { grid-column: auto; }
   .result-links { grid-column: auto; flex-wrap: wrap; }
