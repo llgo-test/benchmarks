@@ -32,8 +32,8 @@ The required suite set explicitly includes `dustin_humanize`'s `BenchmarkParseBi
 report fails instead of silently publishing a partial result if any required
 suite is absent.
 
-`llgo-version.env` supplies the default pinned LLGo, Go, and LLVM versions for
-branch and manual runs. The workflow also runs when Bent itself changes, so its
+`llgo-version.env` supplies the default pinned LLGo, Go, LLVM, and TinyGo
+versions for branch and manual runs. The workflow also runs when Bent itself changes, so its
 compiler integration remains covered. The workflow stores a Markdown summary
 and TSV result as an artifact. The summary also contains Bent's native per-case
 build timings; `build-times.tsv`, `timing-summary.md`, `download-timings.log`,
@@ -71,9 +71,10 @@ uses the compiler's own package-level parallelism.
 The workflow keeps Bent's native benchsize files, the existing Markdown summary, and TSV report in the uploaded artifact. It also emits results.json as a small publication index derived from those native records; the raw files remain the source for detailed inspection.
 
 For pushes to `main`, LLGo merge dispatches, and manual runs from `main`, the
-workflow copies the structured result into the pages branch. The static page at
-the Pages root lists all published runs and lets you compare any two runs by
-benchmark and configuration. Pull requests use the lightweight Go-only
+workflow copies the structured result into the pages branch. The Pages root is
+the Go/TinyGo/LLGo WASM application-size comparison. The previous Linux ELF size and
+build-time history lives at `linux.html`, where readers can compare any two runs
+by benchmark and configuration. Pull requests use the lightweight Go-only
 validation job described below; they do not produce a binary-size artifact or
 modify the history.
 Existing published runs load their retained `build-times.tsv` directly, while
@@ -104,6 +105,12 @@ remain checked without rebuilding LLGo or the five LLGo binary-size variants.
 
 Published history is keyed by the full LLGo commit, so rerunning one commit
 updates its existing entry instead of adding another build-round entry.
+
+The same full benchmark job also runs the applications under `ci/llgo-wasm-size` and
+publishes their compact results in the same Pages commit. See that directory's
+README for the shared-toolchain protocol and the explicit LLVM 22 compatibility
+flag. Full WASM binaries and compiler logs remain in the workflow artifact;
+Pages stores only JSON, TSV, and Markdown results.
 
 ### First-time repository setup
 

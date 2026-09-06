@@ -112,14 +112,18 @@ jobs:
             git fetch --no-tags origin main
             git checkout --detach origin/main
 
+            current_repository="$(awk -F= '$1 == "LLGO_REPOSITORY" { print $2 }' ci/llgo-size/llgo-version.env)"
             current_commit="$(awk -F= '$1 == "LLGO_COMMIT" { print $2 }' ci/llgo-size/llgo-version.env)"
-            if [[ "$current_commit" == "$target_commit" ]]; then
-              echo "LLGo pin is already $target_commit"
+            if [[ "$current_repository" == "$DISPATCH_LLGO_REPOSITORY" && \
+                  "$current_commit" == "$target_commit" ]]; then
+              echo "LLGo pin is already ${DISPATCH_LLGO_REPOSITORY}@${target_commit}"
               pin_ready=true
               break
             fi
 
-            sed -i "s/^LLGO_COMMIT=.*/LLGO_COMMIT=${target_commit}/" \
+            sed -i \
+              -e "s|^LLGO_REPOSITORY=.*|LLGO_REPOSITORY=${DISPATCH_LLGO_REPOSITORY}|" \
+              -e "s/^LLGO_COMMIT=.*/LLGO_COMMIT=${target_commit}/" \
               ci/llgo-size/llgo-version.env
             git add ci/llgo-size/llgo-version.env
             git commit -m "ci: pin LLGo ${target_commit:0:12}"
@@ -171,7 +175,8 @@ jobs:
               ':(exclude)cmd/bent/scripts/testjson' \
               cmd/bent/configs/benchmarks-llgo-size.toml \
               cmd/bent/configs/configurations-llgo-size.toml \
-              cmd/bent/configs/suites.toml; then
+              cmd/bent/configs/suites.toml \
+              ci/llgo-wasm-size; then
             echo 'full_matrix=false' >> "$GITHUB_OUTPUT"
             echo 'The PR does not change the LLGo pin, Bent, or benchmark cases; only Go validation will run.'
           else
@@ -232,10 +237,17 @@ jobs:
             LLGO_COMMIT="$MANUAL_LLGO_COMMIT"
           fi
 
-          printf 'LLGO_REPOSITORY=%s\n' "$LLGO_REPOSITORY" >> "$GITHUB_ENV"
-          printf 'LLGO_COMMIT=%s\n' "$LLGO_COMMIT" >> "$GITHUB_ENV"
-          printf 'GO_VERSION=%s\n' "$GO_VERSION" >> "$GITHUB_ENV"
-          printf 'LLVM_VERSION=%s\n' "$LLVM_VERSION" >> "$GITHUB_ENV"
+          {
+            printf 'LLGO_REPOSITORY=%s\n' "$LLGO_REPOSITORY"
+            printf 'LLGO_COMMIT=%s\n' "$LLGO_COMMIT"
+            printf 'LLGO_BUILD_GO_VERSION=%s\n' "$LLGO_BUILD_GO_VERSION"
+            printf 'GO_VERSION=%s\n' "$GO_VERSION"
+            printf 'LLVM_VERSION=%s\n' "$LLVM_VERSION"
+            printf 'TINYGO_VERSION=%s\n' "$TINYGO_VERSION"
+            printf 'TINYGO_LINUX_AMD64_SHA256=%s\n' "$TINYGO_LINUX_AMD64_SHA256"
+            printf 'BINARYEN_VERSION=%s\n' "$BINARYEN_VERSION"
+            printf 'BINARYEN_LINUX_AMD64_SHA256=%s\n' "$BINARYEN_LINUX_AMD64_SHA256"
+          } >> "$GITHUB_ENV"
           mkdir -p .ci
           printf '%s\n' "$GO_VERSION" > .ci/go-version
 
@@ -276,6 +288,38 @@ jobs:
               cmake "clang-${LLVM_VERSION}" "lld-${LLVM_VERSION}" \
               "llvm-${LLVM_VERSION}-dev" ninja-build \
               libuv1-dev libgc-dev libffi-dev
+
+      - name: Install pinned Emscripten for LLGo WASM post-link processing
+        uses: emscripten-core/setup-emsdk@667eb33f24e84e7f362c16d8d7fff0629a73e15e # v15
+        with:
+          version: "4.0.21"
+
+      - name: Install pinned TinyGo
+        run: |
+          set -euo pipefail
+          archive="tinygo${TINYGO_VERSION}.linux-amd64.tar.gz"
+          curl --fail --location --retry 3 --retry-all-errors \
+            --output ".ci/$archive" \
+            "https://github.com/tinygo-org/tinygo/releases/download/v${TINYGO_VERSION}/${archive}"
+          printf '%s  %s\n' "$TINYGO_LINUX_AMD64_SHA256" ".ci/$archive" | sha256sum --check --strict
+          tar -C .ci -xzf ".ci/$archive"
+
+          binaryen_archive="binaryen-version_${BINARYEN_VERSION}-x86_64-linux.tar.gz"
+          curl --fail --location --retry 3 --retry-all-errors \
+            --output ".ci/$binaryen_archive" \
+            "https://github.com/WebAssembly/binaryen/releases/download/version_${BINARYEN_VERSION}/${binaryen_archive}"
+          printf '%s  %s\n' "$BINARYEN_LINUX_AMD64_SHA256" ".ci/$binaryen_archive" | sha256sum --check --strict
+          tar -C .ci -xzf ".ci/$binaryen_archive"
+
+          export PATH="$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$PATH"
+          .ci/tinygo/bin/tinygo version
+          wasm-opt --version
+          llgo_wasm_opt="$EMSDK/upstream/bin/wasm-opt"
+          [[ -x "$llgo_wasm_opt" ]]
+          "$llgo_wasm_opt" --version
+          llgo_wasm_opt_help="$("$llgo_wasm_opt" --help)"
+          grep -Fq -- '--translate-to-exnref' <<< "$llgo_wasm_opt_help"
+
       - name: Check out pinned LLGo
         run: |
           set -euo pipefail
@@ -300,13 +344,15 @@ jobs:
         run: |
           set -euo pipefail
           source ci/llgo-size/timing.sh
-          export GOROOT="$(go env GOROOT)"
-          export PATH="$GOROOT/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
+          llgo_build_toolchain="go${LLGO_BUILD_GO_VERSION#go}"
+          export PATH="/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLGO_ROOT="$GITHUB_WORKSPACE/.ci/llgo"
           (
             cd "$LLGO_ROOT"
-            time_command "Download LLGo Go modules" go mod download -x
-            time_command "Build LLGo command" go build -tags=dev -o "$LLGO_ROOT/llgo" ./cmd/llgo
+            time_command "Download LLGo Go modules" \
+              env GOTOOLCHAIN="$llgo_build_toolchain" go mod download -x
+            time_command "Build LLGo command" \
+              env GOTOOLCHAIN="$llgo_build_toolchain" go build -tags=dev -o "$LLGO_ROOT/llgo" ./cmd/llgo
           )
           time_command "Configure LLGo LTO plugin" \
             cmake -S "$LLGO_ROOT/ltoplugin" -B "$LLGO_ROOT/ltoplugin/build" \
@@ -314,6 +360,29 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release -G Ninja
           time_command "Build LLGo LTO plugin" \
             cmake --build "$LLGO_ROOT/ltoplugin/build" --parallel 2 --verbose
+
+      - name: Compare Go, TinyGo, and LLGo WASM application sizes
+        env:
+          LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
+          LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
+        run: |
+          set -euo pipefail
+          go_toolchain="go${GO_VERSION#go}"
+          GOROOT="$(GOTOOLCHAIN="$go_toolchain" go env GOROOT)"
+          export GOROOT
+          export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
+          export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
+          export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
+          ci/llgo-wasm-size/run.sh .ci/wasm-run
+          cat .ci/wasm-run/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload WASM binary-size results
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-tinygo-llgo-wasm-size
+          path: .ci/wasm-run
+          if-no-files-found: error
+
       - name: Build six binary-size configurations with Bent
         env:
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
@@ -322,7 +391,8 @@ jobs:
         run: |
           set -euo pipefail
           source ci/llgo-size/timing.sh
-          export GOROOT="$(go env GOROOT)"
+          GOROOT="$(go env GOROOT)"
+          export GOROOT
           export PATH="$GOROOT/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           echo "[toolchain] selected llvm-config:"
           llvm-config --version
@@ -353,7 +423,7 @@ jobs:
                 -C=configurations-llgo-size.toml
           )
           time_command "Generate binary-size report" \
-            bash -c 'set -o pipefail; ci/llgo-size/report.sh .ci/bent-run | tee -a "$GITHUB_STEP_SUMMARY"'
+            bash -c "set -o pipefail; ci/llgo-size/report.sh .ci/bent-run | tee -a \"$GITHUB_STEP_SUMMARY\""
       - name: Upload binary-size results
         uses: actions/upload-artifact@v4
         with:
@@ -378,7 +448,8 @@ jobs:
                 .ci/bent-run/results \
                 "$pages_dir" \
                 ci/llgo-size/site \
-                .ci/llgo-main-history.txt; then
+                .ci/llgo-main-history.txt \
+                .ci/wasm-run; then
               published=true
               break
             fi
@@ -446,9 +517,24 @@ jobs:
         with:
           go-version-file: .ci/go-version
 
-      - name: Run the LLGo-size benchmark cases with Go
+      - name: Validate the WASM applications and LLGo-size cases with Go
         run: |
           set -euo pipefail
+          source ci/llgo-size/llgo-version.env
+          python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
+          (
+            cd ci/llgo-wasm-size/apps
+            GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...
+            mkdir -p "$GITHUB_WORKSPACE/.ci/wasm-go-validation"
+            while IFS=$'\t' read -r app_id _command source _provenance _kind _description; do
+              [[ "$app_id" != "id" ]] || continue
+              (
+                cd "$source"
+                GOTOOLCHAIN="go${GO_VERSION#go}" GOOS=wasip1 GOARCH=wasm \
+                  go build -o "$GITHUB_WORKSPACE/.ci/wasm-go-validation/$app_id.wasm" .
+              )
+            done < ../apps.tsv
+          )
           go build -o .ci/bent ./cmd/bent
           mkdir -p .ci/bent-pr
           (

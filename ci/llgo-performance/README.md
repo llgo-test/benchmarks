@@ -21,8 +21,9 @@ regression gate.
 Each successful release run is stored under `data/performance/runs/<tag>/` on
 the `pages` branch. The lightweight `performance.html` view follows benchstat's
 layout: Go is the baseline, with LLGo and LLGo full-LTO values, confidence
-ranges, deltas, and p-values shown side by side. The existing `index.html`
-continues to show only binary size and build time.
+ranges, deltas, and p-values shown side by side. The Pages root now shows the
+WASM size comparison, while `linux.html` retains the Linux binary-size and
+build-time history.
 
 The suite versions come from `cmd/bent/configs/suites.toml`. Keep those versions
 pinned for comparable history; update them deliberately in a reviewed change.

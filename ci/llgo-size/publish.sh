@@ -6,8 +6,9 @@ results_dir="$1"
 pages_dir="$2"
 site_dir="$3"
 main_history="${4:-}"
+wasm_results_dir="${5:-}"
 if [[ -z "$results_dir" || -z "$pages_dir" || -z "$site_dir" ]]; then
-  echo "usage: publish.sh RESULTS_DIR PAGES_DIR SITE_DIR [LLGO_MAIN_HISTORY]" >&2
+  echo "usage: publish.sh RESULTS_DIR PAGES_DIR SITE_DIR [LLGO_MAIN_HISTORY] [WASM_RESULTS_DIR]" >&2
   exit 2
 fi
 
@@ -48,7 +49,7 @@ for source in sorted(os.listdir(runs_dir)):
     except (OSError, ValueError):
         continue
     key = run.get("llgoCommit") or run.get("sourceCommit") or source
-    if not re.fullmatch(r"[A-Za-z0-9._-]+", str(key)) or str(key) == source:
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", str(key)) or str(key) == source:
         continue
     target_dir = os.path.join(runs_dir, str(key))
     if os.path.exists(target_dir):
@@ -68,7 +69,7 @@ PY
 # Result jobs can finish long after a newer site revision has been published.
 # Seed a brand-new Pages branch, but leave existing static assets to the
 # dedicated Pages workflow so an old result job cannot roll the UI back.
-for file in index.html app.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
+for file in index.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
   if [[ ! -e "$pages_dir/$file" ]]; then
     cp "$site_dir/$file" "$pages_dir/$file"
   fi
@@ -83,7 +84,7 @@ import sys
 with open(sys.argv[1], encoding="utf-8") as f:
     run = json.load(f)["run"]
 key = str(run.get("llgoCommit") or run.get("sourceCommit") or run.get("id") or "manual")
-if not re.fullmatch(r"[A-Za-z0-9._-]+", key):
+if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", key):
     raise SystemExit("invalid run key: " + repr(key))
 print(key)
 PY
@@ -173,12 +174,21 @@ if [[ -n "$main_history" && -s "$main_history" ]]; then
 fi
 python3 "$script_dir/enrich_pull_requests.py" "${enrich_args[@]}"
 
+wasm_run_key=""
+if [[ -n "$wasm_results_dir" ]]; then
+  wasm_run_key="$(python3 "$script_dir/../llgo-wasm-size/archive.py" "$wasm_results_dir" "$pages_dir")"
+fi
+
 git -C "$pages_dir" config user.name "github-actions[bot]"
 git -C "$pages_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git -C "$pages_dir" add .
 if git -C "$pages_dir" diff --cached --quiet; then
   echo "Pages history is already up to date"
 else
-  git -C "$pages_dir" commit -m "ci: publish LLGo binary-size run $run_key"
+  if [[ -n "$wasm_run_key" ]]; then
+    git -C "$pages_dir" commit -m "ci: publish LLGo Linux and WASM size run $run_key"
+  else
+    git -C "$pages_dir" commit -m "ci: publish LLGo binary-size run $run_key"
+  fi
   git -C "$pages_dir" push origin HEAD:pages
 fi

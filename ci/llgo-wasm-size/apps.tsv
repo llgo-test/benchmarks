@@ -1,0 +1,11 @@
+id	command	source	provenance	kind	description
+base64	base64	base64	xgo-dev/benchmarks	streaming codec	Encode or decode standard input as Base64
+checksum	checksum	checksum	xgo-dev/benchmarks	streaming checksum	Calculate CRC-32 and FNV-1a digests from standard input
+convolution	conv-wasi	external/go-rust-wasm-bench/go/cmd/conv-wasi	universonic/go-rust-wasm-bench	image processing	Apply a Gaussian convolution kernel to RGBA input
+fibonacci	fibonacci	fibonacci	mattn/wasi-benchmark	recursive computation	Parse an integer argument and calculate Fibonacci recursively
+grep	grep	grep	xgo-dev/benchmarks	text search	Filter input lines with a regular expression
+glob	glob	glob	xgo-dev/benchmarks	text search	Filter input lines with a wildcard pattern
+json-roundtrip	json-wasi	external/go-rust-wasm-bench/go/cmd/json-wasi	universonic/go-rust-wasm-bench	structured data	Decode, filter, sort, and encode JSON records
+path-report	path-report	path-report	xgo-dev/benchmarks	report generator	Normalize input paths and render an escaped HTML report
+sha256	sha-wasi	external/go-rust-wasm-bench/go/cmd/sha-wasi	universonic/go-rust-wasm-bench	cryptographic hash	Calculate and format a SHA-256 digest
+word-count	word-count	word-count	xgo-dev/benchmarks	text analysis	Count bytes, lines, words, and UTF-8 runes from standard input
