@@ -47,6 +47,11 @@ on:
         description: Optional full xgo-dev/llgo commit SHA to benchmark
         required: false
         type: string
+      wasm_only:
+        description: Build and upload only the Go, TinyGo, and LLGo WASM comparison
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -384,6 +389,7 @@ jobs:
           if-no-files-found: error
 
       - name: Build six binary-size configurations with Bent
+        if: ${{ inputs.wasm_only != true }}
         env:
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_LTO_PLUGIN: ${{ github.workspace }}/.ci/llgo/ltoplugin/build/LLGOLTOPlugin.so
@@ -425,6 +431,7 @@ jobs:
           time_command "Generate binary-size report" \
             bash -c "set -o pipefail; ci/llgo-size/report.sh .ci/bent-run | tee -a \"$GITHUB_STEP_SUMMARY\""
       - name: Upload binary-size results
+        if: ${{ inputs.wasm_only != true }}
         uses: actions/upload-artifact@v4
         with:
           name: llgo-binary-size
@@ -432,7 +439,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish binary-size history to Pages
-        if: github.ref == 'refs/heads/main'
+        if: ${{ inputs.wasm_only != true && github.ref == 'refs/heads/main' }}
         env:
           PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
@@ -458,6 +465,33 @@ jobs:
           done
           if [[ "$published" != true ]]; then
             echo "failed to publish binary-size history after 4 attempts" >&2
+            exit 1
+          fi
+
+      - name: Publish WASM size history to Pages
+        if: ${{ inputs.wasm_only == true && github.ref == 'refs/heads/main' }}
+        env:
+          PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          published=false
+          for attempt in 1 2 3 4; do
+            pages_dir="$GITHUB_WORKSPACE/.ci/wasm-pages-$attempt"
+            bash ci/llgo-size/prepare-pages-branch.sh \
+              "$pages_dir" \
+              "https://x-access-token:${PAGES_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            if ci/llgo-wasm-size/publish.sh \
+                .ci/wasm-run \
+                "$pages_dir" \
+                ci/llgo-size/site; then
+              published=true
+              break
+            fi
+            echo "Pages advanced during WASM publication; retrying from its latest tip"
+            sleep $((attempt * 2))
+          done
+          if [[ "$published" != true ]]; then
+            echo "failed to publish WASM size history after 4 attempts" >&2
             exit 1
           fi
   deploy-pages:
