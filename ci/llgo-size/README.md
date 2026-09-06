@@ -118,5 +118,5 @@ The first publisher run creates the `pages` branch automatically. Before that
 run, configure the repository's Pages source as **GitHub Actions** and allow
 workflows to write repository contents. In `xgo-dev/llgo`, configure
 `BENCHMARKS_DISPATCH_TOKEN` with permission to dispatch to
-`xgo-dev/benchmarks`; this token is required only by the small sender workflow
+`llgo-test/benchmarks`; this token is required only by the small sender workflow
 that runs after `main` advances.

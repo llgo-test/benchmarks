@@ -50,7 +50,7 @@ def github_pull_request_lookup(repository, commit, api_url, token):
             headers={
                 "Accept": "application/vnd.github+json",
                 "X-GitHub-Api-Version": "2022-11-28",
-                "User-Agent": "xgo-dev-benchmarks-pages",
+                "User-Agent": "llgo-test-benchmarks-pages",
             },
         )
         if credential:
