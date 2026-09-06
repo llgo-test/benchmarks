@@ -1,0 +1,5959 @@
+{
+  "schemaVersion": 1,
+  "format": "go-test-json",
+  "run": {
+    "id": "34041533424",
+    "attempt": 1,
+    "number": 42,
+    "createdAt": "2026-09-06T16:47:29.843758Z",
+    "repository": "xgo-dev/benchmarks",
+    "sourceCommit": "d70063ee4de16e1f52e958d1fb51bd53def415b0",
+    "llgoRepository": "xgo-dev/llgo",
+    "llgoCommit": "9317592bb30abfa88732272580acd5e5b504da18",
+    "llgoTag": "v1.0.2",
+    "goVersion": "1.26.2",
+    "llvmVersion": "22",
+    "event": "repository_dispatch",
+    "workflowUrl": "https://github.com/xgo-dev/benchmarks/actions/runs/34041533424",
+    "runnerOS": "Linux",
+    "runnerArch": "X64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor"
+  },
+  "summary": {
+    "projectsCompatible": 7,
+    "projectsTotal": 12,
+    "packagesCompatible": 194,
+    "packagesCompiled": 199,
+    "packagesTotal": 200,
+    "testsPassed": 12357,
+    "testsFailed": 11,
+    "testsSkipped": 19,
+    "testsTotal": 12387
+  },
+  "projects": [
+    {
+      "name": "etcd",
+      "url": "https://github.com/etcd-io/etcd",
+      "versions": [
+        "@v3.6.14"
+      ],
+      "packages": [
+        {
+          "name": "etcd_pkg_001",
+          "importPath": "go.etcd.io/etcd/pkg/v3/adt",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_002",
+          "importPath": "go.etcd.io/etcd/pkg/v3/crc",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_003",
+          "importPath": "go.etcd.io/etcd/pkg/v3/featuregate",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 44,
+            "failed": 0,
+            "skipped": 0,
+            "total": 44,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 44,
+            "failed": 0,
+            "skipped": 0,
+            "total": 44,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_004",
+          "importPath": "go.etcd.io/etcd/pkg/v3/flags",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_005",
+          "importPath": "go.etcd.io/etcd/pkg/v3/httputil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_006",
+          "importPath": "go.etcd.io/etcd/pkg/v3/idutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_007",
+          "importPath": "go.etcd.io/etcd/pkg/v3/ioutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_008",
+          "importPath": "go.etcd.io/etcd/pkg/v3/netutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_009",
+          "importPath": "go.etcd.io/etcd/pkg/v3/osutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_010",
+          "importPath": "go.etcd.io/etcd/pkg/v3/pbutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_011",
+          "importPath": "go.etcd.io/etcd/pkg/v3/report",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_012",
+          "importPath": "go.etcd.io/etcd/pkg/v3/schedule",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_013",
+          "importPath": "go.etcd.io/etcd/pkg/v3/stringutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_014",
+          "importPath": "go.etcd.io/etcd/pkg/v3/traceutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_pkg_015",
+          "importPath": "go.etcd.io/etcd/pkg/v3/wait",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_001",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/fileutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_002",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/logutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_003",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/pathutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_004",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/srv",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_005",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/testutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 1,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 1,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_006",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/tlsutil",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_client_pkg_007",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/transport",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "test-failure",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 45,
+            "failed": 0,
+            "skipped": 0,
+            "total": 45,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "runner-error",
+            "passed": 19,
+            "failed": 1,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": [
+              {
+                "name": "TestNewListenerTLSInfoSkipClientSANVerify",
+                "output": "\u2026\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/002/cert.pem\"], \"tlsinfo\": \"cert = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/001/cert.pem, key = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/001/key.pem, client-cert=/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/001/cert.pem, client-key=/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/001/key.pem, trusted-ca = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/002/cert.pem, client-cert-auth = false, crl-file = \"}\n    logger.go:140: 2026-09-06T16:27:16.268Z\tWARN\tcheck file permission\t{\"error\": \"directory \\\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003\\\" exist, but the permission is \\\"drwxr-xr-x\\\". The recommended permission is \\\"-rwx------\\\" to prevent possible unprivileged access to the data\"}\n    logger.go:140: 2026-09-06T16:27:16.268Z\tWARN\tautomatically generate certificates\t{\"certificate-validity-bound-not-after\": \"2027-09-06T16:27:16.268Z\"}\n    logger.go:140: 2026-09-06T16:27:16.303Z\tINFO\tcreated cert file\t{\"path\": \"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/cert.pem\"}\n    logger.go:140: 2026-09-06T16:27:16.303Z\tINFO\tcreated key file\t{\"path\": \"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/key.pem\"}\n    logger.go:140: 2026-09-06T16:27:16.303Z\tWARN\tcheck file permission\t{\"error\": \"directory \\\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003\\\" exist, but the permission is \\\"drwxr-xr-x\\\". The recommended permission is \\\"-rwx------\\\" to prevent possible unprivileged access to the data\"}\n    logger.go:140: 2026-09-06T16:27:16.303Z\tWARN\tcheck file permission\t{\"error\": \"directory \\\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004\\\" exist, but the permission is \\\"drwxr-xr-x\\\". The recommended permission is \\\"-rwx------\\\" to prevent possible unprivileged access to the data\"}\n    logger.go:140: 2026-09-06T16:27:16.303Z\tWARN\tautomatically generate certificates\t{\"certificate-validity-bound-not-after\": \"2027-09-06T16:27:16.303Z\"}\n    logger.go:140: 2026-09-06T16:27:16.343Z\tINFO\tcreated cert file\t{\"path\": \"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004/cert.pem\"}\n    logger.go:140: 2026-09-06T16:27:16.343Z\tINFO\tcreated key file\t{\"path\": \"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004/key.pem\"}\n    logger.go:140: 2026-09-06T16:27:16.343Z\tWARN\tcheck file permission\t{\"error\": \"directory \\\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004\\\" exist, but the permission is \\\"drwxr-xr-x\\\". The recommended permission is \\\"-rwx------\\\" to prevent possible unprivileged access to the data\"}\n    logger.go:140: 2026-09-06T16:27:16.360Z\tINFO\tLoading cert pool\t{\"cs\": [\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004/cert.pem\"], \"tlsinfo\": \"cert = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/cert.pem, key = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/key.pem, client-cert=/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/cert.pem, client-key=/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/003/key.pem, trusted-ca = /tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/004/cert.pem, client-cert-auth = false, crl-file = \"}\n    logger.go:140: 2026-09-06T16:27:16.432Z\tWARN\tcheck file permission\t{\"error\": \"directory \\\"/tmp/TestNewListenerTLSInfoSkipClientSANVerify3144845568/005\\\" exist, but the permission is \\\"drwxr-xr-x\\\". The recommended permission is \\\"-rwx------\\\" to prevent possible unprivileged access to the data\"}\n    logger.go:140: 2026-09-06T16:27:16.432Z\tWARN\tautomatically generate certificates\t{\"certificate-validity-bound-not-after\": \"2027-09-06T16:27:16.432Z\"}\npanic: test timed out after 5m0s\nrunning tests:\n\tTestNewListenerTLSInfoSkipClientSANVerify (5m0s)\n\ngoroutine 1 [running]:\ntesting.(*M).startAlarm.func1(...)\n\t/opt/hostedtoolcache/go/1.26.2/x64/src/testing/testing.go:2802 +0x182\ntime.syncTimer(...)\n\t/opt/hostedtoolcache/go/1.26.2/x64/src/time/sleep.go:25 +0x87"
+              }
+            ]
+          }
+        },
+        {
+          "name": "etcd_client_pkg_008",
+          "importPath": "go.etcd.io/etcd/client/pkg/v3/types",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_api_001",
+          "importPath": "go.etcd.io/etcd/api/v3/etcdserverpb",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_api_002",
+          "importPath": "go.etcd.io/etcd/api/v3/v3rpc/rpctypes",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "etcd_api_003",
+          "importPath": "go.etcd.io/etcd/api/v3/version",
+          "version": "@v3.6.14",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "gap"
+    },
+    {
+      "name": "protobuf-go",
+      "url": "https://github.com/protocolbuffers/protobuf-go",
+      "versions": [
+        "@v1.36.11"
+      ],
+      "packages": [
+        {
+          "name": "protobuf_001",
+          "importPath": "google.golang.org/protobuf/compiler/protogen",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_002",
+          "importPath": "google.golang.org/protobuf/encoding",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total": 0,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total": 0,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_003",
+          "importPath": "google.golang.org/protobuf/encoding/protodelim",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_004",
+          "importPath": "google.golang.org/protobuf/encoding/prototext",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 283,
+            "failed": 0,
+            "skipped": 0,
+            "total": 283,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 283,
+            "failed": 0,
+            "skipped": 0,
+            "total": 283,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_005",
+          "importPath": "google.golang.org/protobuf/encoding/protowire",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 92,
+            "failed": 0,
+            "skipped": 0,
+            "total": 92,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 92,
+            "failed": 0,
+            "skipped": 0,
+            "total": 92,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_006",
+          "importPath": "google.golang.org/protobuf/internal/conformance",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 1,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 1,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_007",
+          "importPath": "google.golang.org/protobuf/internal/descfmt",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_008",
+          "importPath": "google.golang.org/protobuf/internal/detrand",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total": 0,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total": 0,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_009",
+          "importPath": "google.golang.org/protobuf/internal/encoding/defval",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_010",
+          "importPath": "google.golang.org/protobuf/internal/encoding/json",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 163,
+            "failed": 0,
+            "skipped": 0,
+            "total": 163,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 163,
+            "failed": 0,
+            "skipped": 0,
+            "total": 163,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_011",
+          "importPath": "google.golang.org/protobuf/internal/encoding/tag",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_012",
+          "importPath": "google.golang.org/protobuf/internal/encoding/text",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 251,
+            "failed": 0,
+            "skipped": 0,
+            "total": 251,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 251,
+            "failed": 0,
+            "skipped": 0,
+            "total": 251,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_013",
+          "importPath": "google.golang.org/protobuf/internal/errors",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_014",
+          "importPath": "google.golang.org/protobuf/internal/filedesc",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0,
+            "total": 15,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0,
+            "total": 15,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_015",
+          "importPath": "google.golang.org/protobuf/internal/impl",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 179,
+            "failed": 0,
+            "skipped": 9,
+            "total": 188,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 179,
+            "failed": 0,
+            "skipped": 9,
+            "total": 188,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_016",
+          "importPath": "google.golang.org/protobuf/internal/msgfmt",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 43,
+            "failed": 0,
+            "skipped": 0,
+            "total": 43,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 43,
+            "failed": 0,
+            "skipped": 0,
+            "total": 43,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_017",
+          "importPath": "google.golang.org/protobuf/internal/order",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_018",
+          "importPath": "google.golang.org/protobuf/internal/race_test/file_desc_init",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_019",
+          "importPath": "google.golang.org/protobuf/internal/race_test/lazy",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_020",
+          "importPath": "google.golang.org/protobuf/internal/race_test/messageset_extension_init",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_021",
+          "importPath": "google.golang.org/protobuf/internal/reflection_test",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 33,
+            "failed": 0,
+            "skipped": 1,
+            "total": 34,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 33,
+            "failed": 0,
+            "skipped": 1,
+            "total": 34,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_022",
+          "importPath": "google.golang.org/protobuf/internal/set",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_023",
+          "importPath": "google.golang.org/protobuf/internal/strs",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_024",
+          "importPath": "google.golang.org/protobuf/proto",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2801,
+            "failed": 0,
+            "skipped": 2,
+            "total": 2803,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2801,
+            "failed": 0,
+            "skipped": 2,
+            "total": 2803,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_025",
+          "importPath": "google.golang.org/protobuf/reflect/protodesc",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 86,
+            "failed": 0,
+            "skipped": 0,
+            "total": 86,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 86,
+            "failed": 0,
+            "skipped": 0,
+            "total": 86,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_026",
+          "importPath": "google.golang.org/protobuf/reflect/protorange",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_027",
+          "importPath": "google.golang.org/protobuf/reflect/protoreflect",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_028",
+          "importPath": "google.golang.org/protobuf/reflect/protoregistry",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_029",
+          "importPath": "google.golang.org/protobuf/testing/protocmp",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 191,
+            "failed": 0,
+            "skipped": 0,
+            "total": 191,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 191,
+            "failed": 0,
+            "skipped": 0,
+            "total": 191,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_030",
+          "importPath": "google.golang.org/protobuf/testing/protopack",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 24,
+            "failed": 0,
+            "skipped": 0,
+            "total": 24,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 24,
+            "failed": 0,
+            "skipped": 0,
+            "total": 24,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_031",
+          "importPath": "google.golang.org/protobuf/testing/prototest",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_032",
+          "importPath": "google.golang.org/protobuf/types/dynamicpb",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_033",
+          "importPath": "google.golang.org/protobuf/types/known/anypb",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_034",
+          "importPath": "google.golang.org/protobuf/types/known/durationpb",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "protobuf_035",
+          "importPath": "google.golang.org/protobuf/types/known/fieldmaskpb",
+          "version": "@v1.36.11",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 36,
+            "failed": 0,
+            "skipped": 0,
+            "total": 36,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 36,
+            "failed": 0,
+            "skipped": 0,
+            "total": 36,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "gonum",
+      "url": "https://github.com/gonum/gonum",
+      "versions": [
+        "@v0.17.0"
+      ],
+      "packages": [
+        {
+          "name": "gonum_001",
+          "importPath": "gonum.org/v1/gonum/blas/blas32",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_002",
+          "importPath": "gonum.org/v1/gonum/blas/blas64",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_003",
+          "importPath": "gonum.org/v1/gonum/blas/cblas128",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 125,
+            "failed": 0,
+            "skipped": 0,
+            "total": 125,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 125,
+            "failed": 0,
+            "skipped": 0,
+            "total": 125,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_004",
+          "importPath": "gonum.org/v1/gonum/blas/cblas64",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_005",
+          "importPath": "gonum.org/v1/gonum/blas/gonum",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 153,
+            "failed": 0,
+            "skipped": 0,
+            "total": 153,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 153,
+            "failed": 0,
+            "skipped": 0,
+            "total": 153,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_006",
+          "importPath": "gonum.org/v1/gonum/blas/testblas",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_007",
+          "importPath": "gonum.org/v1/gonum/cmplxs",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_008",
+          "importPath": "gonum.org/v1/gonum/cmplxs/cscalar",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_009",
+          "importPath": "gonum.org/v1/gonum/diff/fd",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 11,
+            "failed": 0,
+            "skipped": 0,
+            "total": 11,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_010",
+          "importPath": "gonum.org/v1/gonum/dsp/fourier",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 568,
+            "failed": 0,
+            "skipped": 0,
+            "total": 568,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 568,
+            "failed": 0,
+            "skipped": 0,
+            "total": 568,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_011",
+          "importPath": "gonum.org/v1/gonum/dsp/fourier/internal/fftpack",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_012",
+          "importPath": "gonum.org/v1/gonum/dsp/transform",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_013",
+          "importPath": "gonum.org/v1/gonum/dsp/window",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 40,
+            "failed": 0,
+            "skipped": 0,
+            "total": 40,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 40,
+            "failed": 0,
+            "skipped": 0,
+            "total": 40,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_014",
+          "importPath": "gonum.org/v1/gonum/floats",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 41,
+            "failed": 0,
+            "skipped": 0,
+            "total": 41,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_015",
+          "importPath": "gonum.org/v1/gonum/floats/scalar",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_016",
+          "importPath": "gonum.org/v1/gonum/graph",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_017",
+          "importPath": "gonum.org/v1/gonum/graph/coloring",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_018",
+          "importPath": "gonum.org/v1/gonum/graph/community",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 105,
+            "failed": 0,
+            "skipped": 0,
+            "total": 105,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 105,
+            "failed": 0,
+            "skipped": 0,
+            "total": 105,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_019",
+          "importPath": "gonum.org/v1/gonum/graph/encoding",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_020",
+          "importPath": "gonum.org/v1/gonum/graph/encoding/digraph6",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_021",
+          "importPath": "gonum.org/v1/gonum/graph/encoding/dot",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_022",
+          "importPath": "gonum.org/v1/gonum/graph/encoding/graph6",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_023",
+          "importPath": "gonum.org/v1/gonum/graph/encoding/graphql",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_024",
+          "importPath": "gonum.org/v1/gonum/graph/flow",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_025",
+          "importPath": "gonum.org/v1/gonum/graph/formats/cytoscapejs",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_026",
+          "importPath": "gonum.org/v1/gonum/graph/formats/dot/internal/lexer",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 1,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 1,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_027",
+          "importPath": "gonum.org/v1/gonum/graph/formats/gexf12",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_028",
+          "importPath": "gonum.org/v1/gonum/graph/formats/sigmajs",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_029",
+          "importPath": "gonum.org/v1/gonum/graph/graphs/gen",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 22,
+            "failed": 0,
+            "skipped": 0,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 22,
+            "failed": 0,
+            "skipped": 0,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_030",
+          "importPath": "gonum.org/v1/gonum/graph/internal/set",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_031",
+          "importPath": "gonum.org/v1/gonum/graph/multi",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 64,
+            "failed": 0,
+            "skipped": 0,
+            "total": 64,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 64,
+            "failed": 0,
+            "skipped": 0,
+            "total": 64,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_032",
+          "importPath": "gonum.org/v1/gonum/graph/network",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 38,
+            "failed": 0,
+            "skipped": 0,
+            "total": 38,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 38,
+            "failed": 0,
+            "skipped": 0,
+            "total": 38,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_033",
+          "importPath": "gonum.org/v1/gonum/graph/path",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "total": 32,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "total": 32,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_034",
+          "importPath": "gonum.org/v1/gonum/graph/path/dynamic",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_035",
+          "importPath": "gonum.org/v1/gonum/graph/product",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_036",
+          "importPath": "gonum.org/v1/gonum/graph/set/uid",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_037",
+          "importPath": "gonum.org/v1/gonum/graph/simple",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 145,
+            "failed": 0,
+            "skipped": 0,
+            "total": 145,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 145,
+            "failed": 0,
+            "skipped": 0,
+            "total": 145,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_038",
+          "importPath": "gonum.org/v1/gonum/graph/spectral",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_039",
+          "importPath": "gonum.org/v1/gonum/graph/testgraph",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_040",
+          "importPath": "gonum.org/v1/gonum/graph/topo",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_041",
+          "importPath": "gonum.org/v1/gonum/graph/traverse",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_042",
+          "importPath": "gonum.org/v1/gonum/integrate",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_043",
+          "importPath": "gonum.org/v1/gonum/integrate/quad",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_044",
+          "importPath": "gonum.org/v1/gonum/internal/cmplx64",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_045",
+          "importPath": "gonum.org/v1/gonum/interp",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 27,
+            "failed": 0,
+            "skipped": 0,
+            "total": 27,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 27,
+            "failed": 0,
+            "skipped": 0,
+            "total": 27,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_046",
+          "importPath": "gonum.org/v1/gonum/lapack/gonum",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 185,
+            "failed": 0,
+            "skipped": 0,
+            "total": 185,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 185,
+            "failed": 0,
+            "skipped": 0,
+            "total": 185,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_047",
+          "importPath": "gonum.org/v1/gonum/lapack/testlapack",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_048",
+          "importPath": "gonum.org/v1/gonum/mat",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 191,
+            "failed": 0,
+            "skipped": 0,
+            "total": 191,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 191,
+            "failed": 0,
+            "skipped": 0,
+            "total": 191,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_049",
+          "importPath": "gonum.org/v1/gonum/mathext",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 82,
+            "failed": 0,
+            "skipped": 0,
+            "total": 82,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 82,
+            "failed": 0,
+            "skipped": 0,
+            "total": 82,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gonum_050",
+          "importPath": "gonum.org/v1/gonum/mathext/internal/amos",
+          "version": "@v0.17.0",
+          "tests": "Test",
+          "buildFlags": [
+            "-tags",
+            "safe"
+          ],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "kubernetes/client-go",
+      "url": "https://github.com/kubernetes/client-go",
+      "versions": [
+        "@v0.36.2"
+      ],
+      "packages": [
+        {
+          "name": "client_go_001",
+          "importPath": "k8s.io/client-go/discovery",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 24,
+            "failed": 0,
+            "skipped": 0,
+            "total": 24,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 24,
+            "failed": 0,
+            "skipped": 0,
+            "total": 24,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_002",
+          "importPath": "k8s.io/client-go/discovery/fake",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_003",
+          "importPath": "k8s.io/client-go/dynamic",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 29,
+            "failed": 0,
+            "skipped": 0,
+            "total": 29,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 29,
+            "failed": 0,
+            "skipped": 0,
+            "total": 29,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_004",
+          "importPath": "k8s.io/client-go/dynamic/dynamiclister",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_005",
+          "importPath": "k8s.io/client-go/dynamic/fake",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 18,
+            "failed": 0,
+            "skipped": 0,
+            "total": 18,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 18,
+            "failed": 0,
+            "skipped": 0,
+            "total": 18,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_006",
+          "importPath": "k8s.io/client-go/features",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 23,
+            "failed": 0,
+            "skipped": 0,
+            "total": 23,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 23,
+            "failed": 0,
+            "skipped": 0,
+            "total": 23,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_007",
+          "importPath": "k8s.io/client-go/features/testing",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_008",
+          "importPath": "k8s.io/client-go/kubernetes/fake",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_009",
+          "importPath": "k8s.io/client-go/kubernetes/typed/core/v1",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_010",
+          "importPath": "k8s.io/client-go/kubernetes/typed/core/v1/fake",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_011",
+          "importPath": "k8s.io/client-go/kubernetes/typed/events/v1beta1",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_012",
+          "importPath": "k8s.io/client-go/listers/extensions/v1beta1",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_013",
+          "importPath": "k8s.io/client-go/metadata",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_014",
+          "importPath": "k8s.io/client-go/metadata/fake",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_015",
+          "importPath": "k8s.io/client-go/metadata/metadatalister",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_016",
+          "importPath": "k8s.io/client-go/openapi",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_017",
+          "importPath": "k8s.io/client-go/openapi/openapitest",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_018",
+          "importPath": "k8s.io/client-go/openapi3",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 25,
+            "failed": 0,
+            "skipped": 0,
+            "total": 25,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 25,
+            "failed": 0,
+            "skipped": 0,
+            "total": 25,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_019",
+          "importPath": "k8s.io/client-go/plugin/pkg/client/auth/oidc",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_020",
+          "importPath": "k8s.io/client-go/rest",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "test-failure",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 423,
+            "failed": 0,
+            "skipped": 0,
+            "total": 423,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "runner-error",
+            "passed": 422,
+            "failed": 0,
+            "skipped": 0,
+            "total": 422,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_021",
+          "importPath": "k8s.io/client-go/rest/watch",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_022",
+          "importPath": "k8s.io/client-go/restmapper",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 17,
+            "failed": 0,
+            "skipped": 0,
+            "total": 17,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_023",
+          "importPath": "k8s.io/client-go/scale",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_024",
+          "importPath": "k8s.io/client-go/testing",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 22,
+            "failed": 0,
+            "skipped": 0,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 22,
+            "failed": 0,
+            "skipped": 0,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_025",
+          "importPath": "k8s.io/client-go/tools/auth",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_026",
+          "importPath": "k8s.io/client-go/tools/auth/exec",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 43,
+            "failed": 0,
+            "skipped": 0,
+            "total": 43,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 43,
+            "failed": 0,
+            "skipped": 0,
+            "total": 43,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_027",
+          "importPath": "k8s.io/client-go/tools/cache/synctrack",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_028",
+          "importPath": "k8s.io/client-go/tools/cache/testing",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_029",
+          "importPath": "k8s.io/client-go/tools/clientcmd",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 132,
+            "failed": 0,
+            "skipped": 0,
+            "total": 132,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 132,
+            "failed": 0,
+            "skipped": 0,
+            "total": 132,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_030",
+          "importPath": "k8s.io/client-go/tools/clientcmd/api",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_031",
+          "importPath": "k8s.io/client-go/tools/clientcmd/api/v1",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_032",
+          "importPath": "k8s.io/client-go/tools/events",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0,
+            "total": 15,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0,
+            "total": 15,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_033",
+          "importPath": "k8s.io/client-go/tools/pager",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 27,
+            "failed": 0,
+            "skipped": 0,
+            "total": 27,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 27,
+            "failed": 0,
+            "skipped": 0,
+            "total": 27,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_034",
+          "importPath": "k8s.io/client-go/tools/portforward",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_035",
+          "importPath": "k8s.io/client-go/tools/record/util",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_036",
+          "importPath": "k8s.io/client-go/tools/reference",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_037",
+          "importPath": "k8s.io/client-go/tools/remotecommand",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "total": 32,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 32,
+            "failed": 0,
+            "skipped": 0,
+            "total": 32,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_038",
+          "importPath": "k8s.io/client-go/transport",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "test-failure",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 145,
+            "failed": 0,
+            "skipped": 0,
+            "total": 145,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "fail",
+            "passed": 138,
+            "failed": 7,
+            "skipped": 0,
+            "total": 145,
+            "elapsedSeconds": null,
+            "failedTests": [
+              {
+                "name": "TestCacheHoldAfterCARotation",
+                "output": "=== RUN   TestCacheHoldAfterCARotation\n    cache_test.go:490: cache len 1, want 0: context deadline exceeded\n--- FAIL: TestCacheHoldAfterCARotation (10.02s)"
+              },
+              {
+                "name": "TestCacheReviveAfterDrop",
+                "output": "=== RUN   TestCacheReviveAfterDrop\n    cache_test.go:578: cache len 1, want 0: context deadline exceeded\n--- FAIL: TestCacheReviveAfterDrop (10.00s)"
+              },
+              {
+                "name": "TestUncacheableCertRotationLeak",
+                "output": "=== RUN   TestUncacheableCertRotationLeak\n    cache_test.go:619: goroutine leak: cert rotation goroutine was not stopped for uncacheable transport (baseline=4 current=9)\n    cache_test.go:623: expected TransportCertRotationGCCalls=1, got 0\n--- FAIL: TestUncacheableCertRotationLeak (10.00s)"
+              },
+              {
+                "name": "TestCacheableCertRotationLeak",
+                "output": "=== RUN   TestCacheableCertRotationLeak\n    cache_test.go:664: cache len 1, want 0: context deadline exceeded\n--- FAIL: TestCacheableCertRotationLeak (10.00s)"
+              },
+              {
+                "name": "TestCacheGCDisabledCertRotationNoCancel",
+                "output": "=== RUN   TestCacheGCDisabledCertRotationNoCancel\n    cache_test.go:727: cert rotation goroutine was stopped \u2014 it should run indefinitely when GC is disabled\n--- FAIL: TestCacheGCDisabledCertRotationNoCancel (0.09s)"
+              },
+              {
+                "name": "TestCacheStaleEvictionSkipped",
+                "output": "=== RUN   TestCacheStaleEvictionSkipped\n    cache_test.go:768: timed out waiting for stale cleanup to fire\n--- FAIL: TestCacheStaleEvictionSkipped (10.00s)"
+              },
+              {
+                "name": "TestCacheLeak",
+                "output": "=== RUN   TestCacheLeak\n    cache_test.go:832: cache len 1002, want 2: context deadline exceeded\n--- FAIL: TestCacheLeak (10.17s)"
+              }
+            ]
+          }
+        },
+        {
+          "name": "client_go_039",
+          "importPath": "k8s.io/client-go/transport/websocket",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "client_go_040",
+          "importPath": "k8s.io/client-go/util/cert",
+          "version": "@v0.36.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "gap"
+    },
+    {
+      "name": "uber-go/zap",
+      "url": "https://github.com/uber-go/zap",
+      "versions": [
+        "@v1.27.0"
+      ],
+      "packages": [
+        {
+          "name": "zap_001",
+          "importPath": "go.uber.org/zap/buffer",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_002",
+          "importPath": "go.uber.org/zap/internal/color",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_003",
+          "importPath": "go.uber.org/zap/internal/exit",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_004",
+          "importPath": "go.uber.org/zap/internal/pool",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_005",
+          "importPath": "go.uber.org/zap/internal/stacktrace",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_006",
+          "importPath": "go.uber.org/zap/internal/ztest",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_007",
+          "importPath": "go.uber.org/zap/zapcore",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "test-failure",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 314,
+            "failed": 0,
+            "skipped": 0,
+            "total": 314,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "fail",
+            "passed": 312,
+            "failed": 2,
+            "skipped": 0,
+            "total": 314,
+            "elapsedSeconds": null,
+            "failedTests": [
+              {
+                "name": "TestTimeEncoders",
+                "output": "=== RUN   TestTimeEncoders\n    encoder_test.go:588: \n        \tError Trace:\t/home/runner/work/benchmarks/benchmarks/.ci/bent-compatibility/build/zap_007/encoder_test.go:588\n        \tError:      \tReceived unexpected error:\n        \t            \tyaml: unmarshal errors:\n        \t            \t  line 1: cannot unmarshal !!str `iso8601` into zapcore.TimeEncoder\n        \tTest:       \tTestTimeEncoders\n        \tMessages:   \tUnexpected error unmarshaling \"timeEncoder: iso8601\".\n--- FAIL: TestTimeEncoders (0.00s)"
+              },
+              {
+                "name": "TestTimeEncodersParseFromJSON",
+                "output": "=== RUN   TestTimeEncodersParseFromJSON\n    encoder_test.go:631: \n        \tError Trace:\t/home/runner/work/benchmarks/benchmarks/.ci/bent-compatibility/build/zap_007/encoder_test.go:631\n        \tError:      \tReceived unexpected error:\n        \t            \tjson: cannot unmarshal string into Go struct field EncoderConfig.timeEncoder of type zapcore.TimeEncoder\n        \tTest:       \tTestTimeEncodersParseFromJSON\n        \tMessages:   \tUnexpected error unmarshaling \"{\\\"timeEncoder\\\": \\\"iso8601\\\"}\".\n--- FAIL: TestTimeEncodersParseFromJSON (0.00s)"
+              }
+            ]
+          }
+        },
+        {
+          "name": "zap_008",
+          "importPath": "go.uber.org/zap/zapgrpc",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 35,
+            "failed": 0,
+            "skipped": 0,
+            "total": 35,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 35,
+            "failed": 0,
+            "skipped": 0,
+            "total": 35,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_009",
+          "importPath": "go.uber.org/zap/zapio",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_010",
+          "importPath": "go.uber.org/zap/zaptest",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "zap_011",
+          "importPath": "go.uber.org/zap/zaptest/observer",
+          "version": "@v1.27.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 9,
+            "failed": 0,
+            "skipped": 0,
+            "total": 9,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "gap"
+    },
+    {
+      "name": "go-gorm/gorm",
+      "url": "https://github.com/go-gorm/gorm",
+      "versions": [
+        "@v1.31.2"
+      ],
+      "packages": [
+        {
+          "name": "gorm_001",
+          "importPath": "gorm.io/gorm",
+          "version": "@v1.31.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compile-gap",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "fail",
+            "test": "not-run",
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total": 0,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gorm_002",
+          "importPath": "gorm.io/gorm/callbacks",
+          "version": "@v1.31.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gorm_003",
+          "importPath": "gorm.io/gorm/clause",
+          "version": "@v1.31.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "total": 120,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 120,
+            "failed": 0,
+            "skipped": 0,
+            "total": 120,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gorm_004",
+          "importPath": "gorm.io/gorm/schema",
+          "version": "@v1.31.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2048,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2048,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2048,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2048,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "gorm_005",
+          "importPath": "gorm.io/gorm/utils",
+          "version": "@v1.31.2",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 42,
+            "failed": 0,
+            "skipped": 0,
+            "total": 42,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 42,
+            "failed": 0,
+            "skipped": 0,
+            "total": 42,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "gap"
+    },
+    {
+      "name": "go-datastructures",
+      "url": "https://github.com/Workiva/go-datastructures",
+      "versions": [
+        "@v1.1.7"
+      ],
+      "packages": [
+        {
+          "name": "workiva_001",
+          "importPath": "github.com/Workiva/go-datastructures/augmentedtree",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 47,
+            "failed": 0,
+            "skipped": 0,
+            "total": 47,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 47,
+            "failed": 0,
+            "skipped": 0,
+            "total": 47,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_002",
+          "importPath": "github.com/Workiva/go-datastructures/batcher",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_003",
+          "importPath": "github.com/Workiva/go-datastructures/bitarray",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 69,
+            "failed": 0,
+            "skipped": 0,
+            "total": 69,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 69,
+            "failed": 0,
+            "skipped": 0,
+            "total": 69,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_004",
+          "importPath": "github.com/Workiva/go-datastructures/btree/immutable",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 19,
+            "failed": 0,
+            "skipped": 3,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 19,
+            "failed": 0,
+            "skipped": 3,
+            "total": 22,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_005",
+          "importPath": "github.com/Workiva/go-datastructures/btree/palm",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_006",
+          "importPath": "github.com/Workiva/go-datastructures/btree/plus",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 31,
+            "failed": 0,
+            "skipped": 0,
+            "total": 31,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 31,
+            "failed": 0,
+            "skipped": 0,
+            "total": 31,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_007",
+          "importPath": "github.com/Workiva/go-datastructures/cache",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0,
+            "total": 3,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_008",
+          "importPath": "github.com/Workiva/go-datastructures/fibheap",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 13,
+            "failed": 0,
+            "skipped": 0,
+            "total": 13,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 13,
+            "failed": 0,
+            "skipped": 0,
+            "total": 13,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_009",
+          "importPath": "github.com/Workiva/go-datastructures/futures",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_010",
+          "importPath": "github.com/Workiva/go-datastructures/graph",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "total": 5,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_011",
+          "importPath": "github.com/Workiva/go-datastructures/hashmap/fastinteger",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "total": 10,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_012",
+          "importPath": "github.com/Workiva/go-datastructures/list",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "total": 8,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_013",
+          "importPath": "github.com/Workiva/go-datastructures/numerics/hilbert",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 2,
+            "failed": 0,
+            "skipped": 0,
+            "total": 2,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_014",
+          "importPath": "github.com/Workiva/go-datastructures/numerics/optimization",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "total": 6,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_015",
+          "importPath": "github.com/Workiva/go-datastructures/queue",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 46,
+            "failed": 0,
+            "skipped": 0,
+            "total": 46,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 46,
+            "failed": 0,
+            "skipped": 0,
+            "total": 46,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_016",
+          "importPath": "github.com/Workiva/go-datastructures/rangetree",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 64,
+            "failed": 0,
+            "skipped": 0,
+            "total": 64,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 64,
+            "failed": 0,
+            "skipped": 0,
+            "total": 64,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_017",
+          "importPath": "github.com/Workiva/go-datastructures/rangetree/skiplist",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_018",
+          "importPath": "github.com/Workiva/go-datastructures/rtree/hilbert",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "total": 16,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_019",
+          "importPath": "github.com/Workiva/go-datastructures/set",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_020",
+          "importPath": "github.com/Workiva/go-datastructures/slice",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 4,
+            "failed": 0,
+            "skipped": 0,
+            "total": 4,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_021",
+          "importPath": "github.com/Workiva/go-datastructures/slice/skip",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 20,
+            "failed": 0,
+            "skipped": 0,
+            "total": 20,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_022",
+          "importPath": "github.com/Workiva/go-datastructures/sort",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 21,
+            "failed": 0,
+            "skipped": 0,
+            "total": 21,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 21,
+            "failed": 0,
+            "skipped": 0,
+            "total": 21,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_023",
+          "importPath": "github.com/Workiva/go-datastructures/threadsafe/err",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_024",
+          "importPath": "github.com/Workiva/go-datastructures/tree/avl",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "total": 14,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_025",
+          "importPath": "github.com/Workiva/go-datastructures/trie/ctrie",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_026",
+          "importPath": "github.com/Workiva/go-datastructures/trie/dtrie",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "total": 7,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_027",
+          "importPath": "github.com/Workiva/go-datastructures/trie/xfast",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 25,
+            "failed": 0,
+            "skipped": 0,
+            "total": 25,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 25,
+            "failed": 0,
+            "skipped": 0,
+            "total": 25,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        },
+        {
+          "name": "workiva_028",
+          "importPath": "github.com/Workiva/go-datastructures/trie/yfast",
+          "version": "@v1.1.7",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 12,
+            "failed": 0,
+            "skipped": 0,
+            "total": 12,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "BurntSushi/toml",
+      "url": "https://github.com/BurntSushi/toml",
+      "versions": [
+        "@v1.6.0"
+      ],
+      "packages": [
+        {
+          "name": "toml_001",
+          "importPath": "github.com/BurntSushi/toml",
+          "version": "@v1.6.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1175,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1175,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 1175,
+            "failed": 0,
+            "skipped": 0,
+            "total": 1175,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "Masterminds/semver",
+      "url": "https://github.com/Masterminds/semver",
+      "versions": [
+        "@v3.3.1"
+      ],
+      "packages": [
+        {
+          "name": "semver_001",
+          "importPath": "github.com/Masterminds/semver/v3",
+          "version": "@v3.3.1",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "test-failure",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 35,
+            "failed": 0,
+            "skipped": 0,
+            "total": 35,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "fail",
+            "passed": 34,
+            "failed": 1,
+            "skipped": 0,
+            "total": 35,
+            "elapsedSeconds": null,
+            "failedTests": [
+              {
+                "name": "TestParseConstraint",
+                "output": "=== RUN   TestParseConstraint\n    constraints_test.go:52: Wrong constraint found for >= 1.2\n    constraints_test.go:52: Wrong constraint found for 1.0\n    constraints_test.go:52: Wrong constraint found for <= 1.2\n    constraints_test.go:52: Wrong constraint found for =< 1.2\n    constraints_test.go:52: Wrong constraint found for => 1.2\n    constraints_test.go:52: Wrong constraint found for v1.2\n    constraints_test.go:52: Wrong constraint found for =1.5\n    constraints_test.go:52: Wrong constraint found for > 1.3\n    constraints_test.go:52: Wrong constraint found for < 1.4.1\n    constraints_test.go:52: Wrong constraint found for < 40.50.10\n--- FAIL: TestParseConstraint (0.00s)"
+              }
+            ]
+          }
+        }
+      ],
+      "classification": "gap"
+    },
+    {
+      "name": "bits-and-blooms/bitset",
+      "url": "https://github.com/bits-and-blooms/bitset",
+      "versions": [
+        "@v1.22.0"
+      ],
+      "packages": [
+        {
+          "name": "bitset_001",
+          "importPath": "github.com/bits-and-blooms/bitset",
+          "version": "@v1.22.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 203,
+            "failed": 0,
+            "skipped": 0,
+            "total": 203,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 203,
+            "failed": 0,
+            "skipped": 0,
+            "total": 203,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "go-humanize",
+      "url": "https://github.com/dustin/go-humanize",
+      "versions": [
+        "@v1.0.1"
+      ],
+      "packages": [
+        {
+          "name": "humanize_001",
+          "importPath": "github.com/dustin/go-humanize",
+          "version": "@v1.0.1",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 28,
+            "failed": 0,
+            "skipped": 0,
+            "total": 28,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 28,
+            "failed": 0,
+            "skipped": 0,
+            "total": 28,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    },
+    {
+      "name": "google/uuid",
+      "url": "https://github.com/google/uuid",
+      "versions": [
+        "@v1.6.0"
+      ],
+      "packages": [
+        {
+          "name": "uuid_001",
+          "importPath": "github.com/google/uuid",
+          "version": "@v1.6.0",
+          "tests": "Test",
+          "buildFlags": [],
+          "classification": "compatible",
+          "Go": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 53,
+            "failed": 0,
+            "skipped": 1,
+            "total": 54,
+            "elapsedSeconds": null,
+            "failedTests": []
+          },
+          "LLGo": {
+            "build": "pass",
+            "test": "pass",
+            "passed": 53,
+            "failed": 0,
+            "skipped": 1,
+            "total": 54,
+            "elapsedSeconds": null,
+            "failedTests": []
+          }
+        }
+      ],
+      "classification": "compatible"
+    }
+  ],
+  "native": {
+    "go": "raw/Go.stdout",
+    "llgo": "raw/LLGo.stdout",
+    "goDriver": "raw/Go.log",
+    "llgoDriver": "raw/LLGo.log"
+  }
+}
