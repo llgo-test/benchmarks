@@ -3,90 +3,74 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLGo binary size and build-time history</title>
+  <title>Go, TinyGo, and LLGo WASM application size</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="shell">
     <nav class="site-nav" aria-label="Benchmark views">
-      <a class="active" href="index.html" aria-current="page">Binary size &amp; build time</a>
+      <a class="active" href="index.html" aria-current="page">WASM binary size</a>
+      <a href="linux.html">Linux size &amp; build time</a>
       <a href="performance.html">Runtime performance</a>
       <a href="compatibility.html">Open-source compatibility</a>
     </nav>
+
     <header class="hero">
       <div>
-        <p class="eyebrow">LLGo compiler benchmarks</p>
-        <h1>Binary size &amp; build-time history</h1>
-        <p class="lede">Binary size and build wall time across Go and LLGo modes. Linked commit labels open the pull request that landed each revision.</p>
+        <p class="eyebrow">Go · TinyGo · LLGo</p>
+        <h1>WASM application size</h1>
+        <p class="lede">Final <code>wasip1/wasm</code> file sizes across Go, TinyGo, and LLGo. Columns track LLGo revisions; linked commit labels open the corresponding compiler commit. Smaller is better.</p>
       </div>
-      <p id="status" class="status" role="status">Loading results…</p>
+      <p id="wasm-status" class="status" role="status">Loading results…</p>
     </header>
 
-    <section class="environment-bar" aria-label="Displayed benchmark environment" aria-live="polite">
-      <div><span class="label">Runner</span><strong id="env-runner">—</strong></div>
-      <div><span class="label">Toolchain</span><strong id="env-toolchain">—</strong></div>
-      <div><span class="label">LLGo revision</span><strong id="env-llgo">—</strong></div>
-      <div><span class="label">Build protocol</span><strong id="env-protocol">—</strong></div>
+    <section class="environment-bar" aria-label="Displayed WASM benchmark environment" aria-live="polite">
+      <div><span class="label">Runner</span><strong id="wasm-runner">—</strong></div>
+      <div><span class="label">Toolchains</span><strong id="wasm-toolchains">—</strong></div>
+      <div><span class="label">LLGo revision</span><strong id="wasm-llgo">—</strong></div>
+      <div><span class="label">Build protocol</span><strong id="wasm-protocol">—</strong></div>
     </section>
 
-    <section class="commit-toolbar" aria-label="Commit navigation and comparison controls">
-      <label class="filter-label">Find commit<input id="commit-filter" type="search" placeholder="SHA or branch"></label>
-      <label class="page-size-label">Columns<select id="page-size"><option value="8" selected>8 commits</option><option value="12">12 commits</option><option value="20">20 commits</option></select></label>
-      <button id="compare-toggle" class="compare-toggle" type="button" aria-pressed="false">Compare commits</button>
-      <p id="commit-count" class="commit-count"></p>
-      <div id="pagination" class="pagination" aria-label="Commit pages"></div>
+    <section class="commit-toolbar wasm-history-toolbar" aria-label="WASM commit navigation">
+      <label class="filter-label">Find commit<input id="wasm-commit-filter" type="search" placeholder="SHA or branch"></label>
+      <label class="page-size-label">Columns<select id="wasm-page-size"><option value="8" selected>8 commits</option><option value="12">12 commits</option><option value="20">20 commits</option></select></label>
+      <p id="wasm-commit-count" class="commit-count"></p>
+      <div id="wasm-pagination" class="pagination" aria-label="WASM commit pages"></div>
+      <div class="result-links">
+        <a id="wasm-workflow" href="#">Workflow run</a>
+        <a id="wasm-raw" href="#">Raw JSON</a>
+        <a id="wasm-tsv" href="#">Size TSV</a>
+      </div>
     </section>
 
-    <section id="compare-hint" class="compare-hint" aria-live="polite" hidden>
-      <strong>Comparison mode</strong>
-      <span>Select A/B with the date buttons; linked SHAs open their merged pull requests.</span>
-    </section>
-    <section id="comparison-strip" class="comparison-strip" aria-live="polite" hidden>
-      <div class="compare-pair"><code id="compare-a">A</code><span>→</span><code id="compare-b">B</code></div>
-      <div><span class="label">Binary size · geomean</span><strong id="compare-size">—</strong></div>
-      <div><span class="label">Wall time · geomean</span><strong id="compare-time">—</strong></div>
-      <span class="comparison-note">B versus A; per-cell deltas appear only in column B.</span>
-      <button id="clear-comparison" type="button">Clear</button>
-    </section>
-
-    <section class="card" aria-labelledby="size-heading">
+    <section class="card" aria-labelledby="wasm-size-heading">
       <div class="card-heading">
-        <div><p class="eyebrow">Table 1</p><h2 id="size-heading">Binary size</h2></div>
-        <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
+        <div><p class="eyebrow">Table 1</p><h2 id="wasm-size-heading">Binary size</h2></div>
+        <div class="rank-legend" aria-label="Compiler rank colors: smaller is better"><span>all compilers · smaller</span><i class="rank-best"></i><i class="rank-mid"></i><i class="rank-worst"></i><span>larger</span></div>
       </div>
-      <div id="size-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
-        <table id="size-grid" class="comparison-table" aria-live="polite"></table>
-      </div>
-    </section>
-
-    <section class="card" aria-labelledby="time-heading">
-      <div class="card-heading">
-        <div><p class="eyebrow">Table 2</p><h2 id="time-heading">Build time</h2></div>
-        <div class="rank-legend" aria-label="Build-mode rank colors: shorter is better"><span>all rows · shorter</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>longer</span></div>
-      </div>
-      <div id="time-wrap" class="matrix-wrap" aria-label="Horizontally scrollable build-time matrix">
-        <table id="time-grid" class="comparison-table" aria-live="polite"></table>
+      <div id="wasm-size-wrap" class="matrix-wrap" aria-label="Horizontally scrollable WASM binary-size matrix">
+        <table id="wasm-size-grid" class="comparison-table" aria-live="polite"></table>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="trend-heading">
+    <section class="card" aria-labelledby="wasm-trend-heading">
       <div class="card-heading history-heading">
-        <div><p class="eyebrow">Aligned trend view</p><h2 id="trend-heading">Size and wall time</h2></div>
-        <label class="history-range">History range<select id="history-range"><option value="0" selected>All commits</option><option value="50">Latest 50</option><option value="20">Latest 20</option><option value="10">Latest 10</option></select></label>
+        <div><p class="eyebrow">Aligned trend view</p><h2 id="wasm-trend-heading">Binary-size history</h2></div>
+        <label class="history-range">History range<select id="wasm-history-range"><option value="0" selected>All commits</option><option value="50">Latest 50</option><option value="20">Latest 20</option><option value="10">Latest 10</option></select></label>
       </div>
       <div class="history-controls">
-        <label>Benchmark<select id="benchmark-select"></select></label>
-        <div><span class="control-label">Build modes</span><div id="config-filter" class="choice-row"></div></div>
+        <label>Application<select id="wasm-application-select"></select></label>
+        <div><span class="control-label">Compilers</span><div id="wasm-compiler-filter" class="choice-row"></div></div>
       </div>
-      <div id="trend-chart" class="trend-chart" aria-live="polite"></div>
+      <div id="wasm-trend-chart" class="trend-chart" aria-live="polite"></div>
     </section>
 
     <footer>
-      <a href="https://github.com/xgo-dev/benchmarks/tree/main/ci/llgo-size">Source and benchmark configuration</a>
+      <a href="https://github.com/xgo-dev/benchmarks/tree/main/ci/llgo-wasm-size">Source and benchmark applications</a>
       <span>·</span>
-      <a href="data/index.json">Raw run index</a>
+      <a href="data/wasm/index.json">Raw WASM run index</a>
     </footer>
   </main>
-  <script src="app.js"></script>
+  <script src="wasm.js"></script>
 </body>
 </html>
