@@ -2,11 +2,11 @@
 
 ## Goals and Repositories
 
-- Official repository: `xgo-dev/benchmarks`
+- Official repository: `llgo-test/benchmarks`
 - Official working branch: `main`
 - Personal testing repository: `zhouguangyuan0718/benchmarks` (only the historical run records below are kept here)
 - History/site source branch: `pages`
-- Dashboard URL: https://xgo-dev.github.io/benchmarks/ (available after the first deployment)
+- Dashboard URL: https://llgo-test.github.io/benchmarks/ (available after the first deployment)
 - Goal: for every update to the exact commit on `xgo-dev/llgo:main`, build binary sizes, persist the JSON results, and browse/compare them on Pages.
 
 ## Current Status Snapshot
@@ -97,7 +97,7 @@ This deployment pipeline has been verified in the personal testing repository. B
 
 ## Common Troubleshooting Entry Points
 
-- Actions list: https://github.com/xgo-dev/benchmarks/actions
-- Pages dashboard: https://xgo-dev.github.io/benchmarks/
-- Pages history index: https://xgo-dev.github.io/benchmarks/data/index.json
+- Actions list: https://github.com/llgo-test/benchmarks/actions
+- Pages dashboard: https://llgo-test.github.io/benchmarks/
+- Pages history index: https://llgo-test.github.io/benchmarks/data/index.json
 - GitHub Pages custom workflow documentation: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
