@@ -1,17 +1,26 @@
+const wasmBaseline = document.body.dataset.wasmBaseline === "TinyGo" ? "TinyGo" : "Go";
+const wasmModes = ["LLGoNoLTO", "LLGoDeadcodeDrop", "LLGoFullLTONoGlobalDCE", "LLGoFullLTOGlobalDCE"];
+const wasmCompilers = [wasmBaseline, ...wasmModes];
+const wasmLabels = {
+  Go: "Go", TinyGo: "TinyGo", LLGoNoLTO: "LLGo · no LTO",
+  LLGoDeadcodeDrop: "LLGo · deadcode drop",
+  LLGoFullLTONoGlobalDCE: "LLGo · full LTO (GlobalDCE off)",
+  LLGoFullLTOGlobalDCE: "LLGo · full LTO + GlobalDCE",
+};
 const wasmState = {
   index: null,
   runs: new Map(),
   applications: [],
   activeApplication: "",
-  activeCompilers: new Set(["Go", "TinyGo", "LLGo"]),
+  activeCompilers: new Set(wasmCompilers),
   page: 1,
   pageSize: 8,
   query: "",
 };
 
-const wasmCompilers = ["Go", "TinyGo", "LLGo"];
-const wasmCompilerColors = ["#64748b", "#7c3aed", "#2457d6"];
+const wasmCompilerColors = ["#64748b", "#2457d6", "#7c3aed", "#d97706", "#059669"];
 const wasmDom = {
+  geomean: document.querySelector("#wasm-geomean"),
   status: document.querySelector("#wasm-status"),
   sizeGrid: document.querySelector("#wasm-size-grid"),
   filter: document.querySelector("#wasm-commit-filter"),
@@ -125,7 +134,11 @@ function wasmBenchmarkMap(documentData) {
 }
 
 function wasmValue(benchmark, compiler) {
-  return Number(benchmark && benchmark.values && benchmark.values[compiler]);
+  if (!benchmark || !benchmark.values) return NaN;
+  const values = benchmark.values;
+  // Schema v1 stored only LLGo -Oz. Do not invent historical LTO results.
+  const value = compiler === "LLGoNoLTO" && !Object.hasOwn(values, compiler) ? values.LLGo : values[compiler];
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : NaN;
 }
 
 function wasmFilteredRuns() {
@@ -177,7 +190,7 @@ function wasmHeaderHtml(run) {
 
 function wasmRank(benchmark, compiler) {
   const value = wasmValue(benchmark, compiler);
-  if (!Number.isFinite(value)) return null;
+  if (!Number.isFinite(value) || !Number.isFinite(wasmValue(benchmark, wasmBaseline))) return null;
   const values = wasmCompilers.map(function (name) { return wasmValue(benchmark, name); }).filter(Number.isFinite);
   const unique = Array.from(new Set(values)).sort(function (a, b) { return a - b; });
   const rank = unique.indexOf(value) + 1;
@@ -190,12 +203,12 @@ function wasmCellHtml(benchmark, compiler) {
   const value = wasmValue(benchmark, compiler);
   if (!Number.isFinite(value)) return '<td class="matrix-cell missing">—</td>';
   const rank = wasmRank(benchmark, compiler);
-  const goValue = wasmValue(benchmark, "Go");
-  const delta = compiler === "Go" ? 0 : wasmPercentDelta(value, goValue);
-  const context = compiler === "Go"
-    ? '<span class="comparison-context flat">Go reference</span>'
-    : '<span class="comparison-context ' + wasmDeltaClass(delta) + '">' + wasmPercent(delta) + " vs Go</span>";
-  return '<td class="matrix-cell ' + rank.tone + '"><span class="rank-number">#' + rank.rank + (rank.ties > 1 ? "=" : "") + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + "</td>";
+  const baselineValue = wasmValue(benchmark, wasmBaseline);
+  const delta = compiler === wasmBaseline ? 0 : wasmPercentDelta(value, baselineValue);
+  const context = compiler === wasmBaseline
+    ? '<span class="comparison-context flat">' + wasmBaseline + ' reference</span>'
+    : '<span class="comparison-context ' + wasmDeltaClass(delta) + '">' + wasmPercent(delta) + " vs " + wasmBaseline + "</span>";
+  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + "</td>";
 }
 
 async function wasmRenderTable() {
@@ -210,12 +223,12 @@ async function wasmRenderTable() {
       const name = compilerIndex === 0 ? '<span class="benchmark-name">' + wasmEscape(application.command) + "</span>" : "";
       const source = compilerIndex === 0 ? '<span class="wasm-source-name">' + wasmEscape(application.provenance || application.kind || "") + "</span>" : "";
       const configClass = compilerIndex === 0 ? "config-name" : "config-name config-continuation";
-      const label = '<th class="matrix-label-cell" aria-label="' + wasmEscape(application.command + " · " + compiler) + '">' + name + '<span class="' + configClass + '">' + wasmEscape(compiler) + "</span>" + source + "</th>";
+      const label = '<th class="matrix-label-cell" aria-label="' + wasmEscape(application.command + " · " + wasmLabels[compiler]) + '">' + name + '<span class="' + configClass + '">' + wasmEscape(wasmLabels[compiler]) + "</span>" + source + "</th>";
       const cells = maps.map(function (map) { return wasmCellHtml(map.get(application.id), compiler); }).join("");
       rows.push('<tr class="' + (compilerIndex === 0 ? "benchmark-group-start" : "") + '">' + label + cells + "</tr>");
     });
   });
-  wasmDom.sizeGrid.style.minWidth = (156 + runs.length * 132) + "px";
+  wasmDom.sizeGrid.style.minWidth = (200 + runs.length * 132) + "px";
   wasmDom.sizeGrid.innerHTML = head + "<tbody>" + (rows.length ? rows.join("") : '<tr><td class="empty-state">No WASM application data.</td></tr>') + "</tbody>";
 }
 
@@ -234,14 +247,14 @@ function wasmChartHtml(documents, runs, applicationId) {
   const maps = documents.map(wasmBenchmarkMap);
   const selected = wasmCompilers.filter(function (compiler) { return wasmState.activeCompilers.has(compiler); });
   const series = selected.map(function (compiler) {
-    return { compiler: compiler, values: maps.map(function (map) { return wasmValue(map.get(applicationId), compiler); }) };
+    return { compiler: compiler, values: maps.map(function (map) { const row = map.get(applicationId); return wasmPercentDelta(wasmValue(row, compiler), wasmValue(row, wasmBaseline)); }) };
   });
   const finite = series.flatMap(function (item) { return item.values.filter(Number.isFinite); });
   if (!finite.length) return '<div class="chart-band"><div class="empty-state">No binary-size history for this application and compiler selection.</div></div>';
   let minimum = Math.min.apply(null, finite);
   let maximum = Math.max.apply(null, finite);
   const padding = (maximum - minimum || Math.abs(maximum) * .1 || 1) * .09;
-  minimum = Math.max(0, minimum - padding);
+  minimum -= padding;
   maximum += padding;
   const x = function (index) { return margin.left + (runs.length <= 1 ? plotWidth / 2 : index * plotWidth / (runs.length - 1)); };
   const y = function (value) { return margin.top + (maximum - value) * plotHeight / (maximum - minimum); };
@@ -250,7 +263,7 @@ function wasmChartHtml(documents, runs, applicationId) {
     const value = maximum - (maximum - minimum) * tick / 4;
     const py = margin.top + plotHeight * tick / 4;
     parts.push('<line class="chart-grid-line" x1="' + margin.left + '" y1="' + py + '" x2="' + (width - margin.right) + '" y2="' + py + '"></line>');
-    parts.push('<text class="chart-axis-label" x="' + (margin.left - 8) + '" y="' + (py + 3) + '" text-anchor="end">' + wasmEscape(wasmFormatBytes(value)) + "</text>");
+    parts.push('<text class="chart-axis-label" x="' + (margin.left - 8) + '" y="' + (py + 3) + '" text-anchor="end">' + wasmEscape(wasmPercent(value)) + "</text>");
   }
   const labelStep = Math.max(1, Math.ceil(runs.length / 8));
   runs.forEach(function (run, index) {
@@ -271,13 +284,13 @@ function wasmChartHtml(documents, runs, applicationId) {
     parts.push('<path class="history-series" stroke="' + color + '" d="' + path + '"></path>');
     item.values.forEach(function (value, index) {
       if (!Number.isFinite(value)) return;
-      const title = wasmEscape(item.compiler + " · " + wasmCommitLabel(runs[index]) + " · " + wasmFormatBytes(value));
+      const title = wasmEscape(wasmLabels[item.compiler] + " · " + wasmCommitLabel(runs[index]) + " · " + wasmPercent(value) + " vs " + wasmBaseline);
       const point = '<circle class="history-point" fill="' + color + '" cx="' + x(index) + '" cy="' + y(value) + '" r="3"><title>' + title + "</title></circle>";
       const url = wasmCommitUrl(runs[index]);
       parts.push(url ? '<a class="history-point-link" href="' + wasmEscape(url) + '">' + point + "</a>" : point);
     });
   });
-  return '<div class="chart-band"><div class="chart-title"><span>Final module size</span><span>bytes</span></div><svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="WASM binary-size trend">' + parts.join("") + "</svg></div>";
+  return '<div class="chart-band"><div class="chart-title"><span>Size relative to ' + wasmBaseline + '</span><span>% difference</span></div><svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="WASM binary-size trend">' + parts.join("") + "</svg></div>";
 }
 
 async function wasmRenderTrend() {
@@ -285,14 +298,14 @@ async function wasmRenderTrend() {
   const documents = await Promise.all(runs.map(wasmLoadRun));
   const legend = wasmCompilers.filter(function (compiler) { return wasmState.activeCompilers.has(compiler); }).map(function (compiler) {
     const color = wasmCompilerColors[wasmCompilers.indexOf(compiler)];
-    return '<span class="history-legend-item"><i style="--series:' + color + '"></i>' + wasmEscape(compiler) + "</span>";
+    return '<span class="history-legend-item"><i style="--series:' + color + '"></i>' + wasmEscape(wasmLabels[compiler]) + "</span>";
   }).join("");
   wasmDom.trendChart.innerHTML = wasmChartHtml(documents, runs, wasmState.activeApplication) + '<div class="history-legend">' + legend + "</div>";
 }
 
 function wasmRenderCompilerFilter() {
   wasmDom.compilerFilter.innerHTML = wasmCompilers.map(function (compiler, index) {
-    return '<button type="button" class="choice-button config-choice ' + (wasmState.activeCompilers.has(compiler) ? "active" : "") + '" data-compiler="' + compiler + '" style="--series:' + wasmCompilerColors[index] + '">' + compiler + "</button>";
+    return '<button type="button" class="choice-button config-choice ' + (wasmState.activeCompilers.has(compiler) ? "active" : "") + '" data-compiler="' + compiler + '" style="--series:' + wasmCompilerColors[index] + '">' + wasmEscape(wasmLabels[compiler]) + "</button>";
   }).join("");
 }
 
@@ -307,6 +320,13 @@ async function wasmRenderEnvironment() {
   const latest = wasmState.index.runs[0];
   const documentData = await wasmLoadRun(latest);
   const run = documentData.run || {};
+  wasmDom.geomean.innerHTML = '<span>Latest revision · geometric mean vs ' + wasmBaseline + '</span>' + wasmModes.map(function (mode) {
+    const ratios = (documentData.benchmarks || []).map(function (row) {
+      return wasmValue(row, mode) / wasmValue(row, wasmBaseline);
+    }).filter(function (value) { return Number.isFinite(value) && value > 0; });
+    const ratio = ratios.length ? Math.exp(ratios.reduce(function (sum, value) { return sum + Math.log(value); }, 0) / ratios.length) : NaN;
+    return '<span>' + wasmEscape(wasmLabels[mode]) + ': <strong>' + (Number.isFinite(ratio) ? ratio.toFixed(3) + 'x' : '—') + '</strong> (n=' + ratios.length + ')</span>';
+  }).join('');
   wasmDom.runner.textContent = wasmNormalizeRunner(run);
   wasmDom.toolchains.textContent = "Go " + (run.goVersion || latest.goVersion || "—") + " · TinyGo " + (run.tinygoVersion || latest.tinygoVersion || "—") + " · LLVM " + (run.llvmVersion || latest.llvmVersion || "—");
   wasmDom.llgo.textContent = wasmCommitLabel(latest) + " · " + (run.llgoRepository || latest.llgoRepository || "unknown");

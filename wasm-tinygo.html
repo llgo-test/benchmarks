@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WASM binary size (vs. Go)</title>
+  <title>WASM binary size (vs. TinyGo)</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body data-wasm-baseline="Go">
+<body data-wasm-baseline="TinyGo">
   <main class="shell">
     <nav class="site-nav" aria-label="Benchmark views">
-      <a class="active" href="index.html" aria-current="page">WASM binary size (vs. Go)</a>
-      <a href="wasm-tinygo.html">WASM binary size (vs. TinyGo)</a>
+      <a href="index.html">WASM binary size (vs. Go)</a>
+      <a class="active" href="wasm-tinygo.html" aria-current="page">WASM binary size (vs. TinyGo)</a>
       <a href="linux.html">Linux size &amp; build time</a>
       <a href="performance.html">Runtime performance</a>
       <a href="compatibility.html">Open-source compatibility</a>
@@ -18,9 +18,9 @@
 
     <header class="hero">
       <div>
-        <p class="eyebrow">Go · LLGo</p>
-        <h1>WASM binary size (vs. Go)</h1>
-        <p class="lede">Final <code>wasip1/wasm</code> file sizes for Go and four LLGo modes. Columns track LLGo revisions; linked commit labels open the corresponding compiler commit. Smaller is better.</p>
+        <p class="eyebrow">TinyGo · LLGo</p>
+        <h1>WASM binary size (vs. TinyGo)</h1>
+        <p class="lede">Final <code>wasip1/wasm</code> file sizes for TinyGo and four LLGo modes. Columns track LLGo revisions; linked commit labels open the corresponding compiler commit. Smaller is better.</p>
       </div>
       <p id="wasm-status" class="status" role="status">Loading results…</p>
     </header>
@@ -58,7 +58,7 @@
 
     <section class="card" aria-labelledby="wasm-trend-heading">
       <div class="card-heading history-heading">
-        <div><p class="eyebrow">Aligned trend view</p><h2 id="wasm-trend-heading">Size relative to Go</h2></div>
+        <div><p class="eyebrow">Aligned trend view</p><h2 id="wasm-trend-heading">Size relative to TinyGo</h2></div>
         <label class="history-range">History range<select id="wasm-history-range"><option value="0" selected>All commits</option><option value="50">Latest 50</option><option value="20">Latest 20</option><option value="10">Latest 10</option></select></label>
       </div>
       <div class="history-controls">
