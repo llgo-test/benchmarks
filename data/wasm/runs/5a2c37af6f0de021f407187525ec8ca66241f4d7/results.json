@@ -1,13 +1,13 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "format": "wasm-file-size",
   "run": {
-    "id": "34079602539",
+    "id": "34093017746",
     "attempt": 1,
-    "number": 401,
-    "createdAt": "2026-09-07T03:32:04.108588Z",
+    "number": 403,
+    "createdAt": "2026-09-07T07:11:46.289996Z",
     "repository": "llgo-test/benchmarks",
-    "sourceCommit": "1492b853ef6862bb69ad61e5ff13a49a2e6d1c96",
+    "sourceCommit": "ab0765f678d5913dbdc078b041c7b1400d362663",
     "ref": "main",
     "llgoRepository": "xgo-dev/llgo",
     "llgoCommit": "5a2c37af6f0de021f407187525ec8ca66241f4d7",
@@ -18,8 +18,8 @@
     "llvmVersion": "22",
     "tinygoVersion": "0.41.1",
     "binaryenVersion": "132",
-    "event": "repository_dispatch",
-    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/34079602539",
+    "event": "push",
+    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/34093017746",
     "runnerOS": "Linux",
     "runnerArch": "X64",
     "runnerImage": "ubuntu24"
@@ -31,8 +31,57 @@
   "configs": [
     "Go",
     "TinyGo",
-    "LLGo"
+    "LLGoNoLTO",
+    "LLGoDeadcodeDrop",
+    "LLGoFullLTONoGlobalDCE",
+    "LLGoFullLTOGlobalDCE"
   ],
+  "configLabels": {
+    "Go": "Go",
+    "TinyGo": "TinyGo",
+    "LLGoNoLTO": "LLGo \u00b7 no LTO",
+    "LLGoDeadcodeDrop": "LLGo \u00b7 deadcode drop",
+    "LLGoFullLTONoGlobalDCE": "LLGo \u00b7 full LTO (GlobalDCE off)",
+    "LLGoFullLTOGlobalDCE": "LLGo \u00b7 full LTO + GlobalDCE"
+  },
+  "comparisons": {
+    "Go": {
+      "LLGoNoLTO": {
+        "ratio": 0.6577832201513514,
+        "samples": 10
+      },
+      "LLGoDeadcodeDrop": {
+        "ratio": 0.4691460811098909,
+        "samples": 10
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "ratio": 0.4369989034279687,
+        "samples": 10
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "ratio": 0.3416757287214771,
+        "samples": 10
+      }
+    },
+    "TinyGo": {
+      "LLGoNoLTO": {
+        "ratio": 11.217334259362572,
+        "samples": 10
+      },
+      "LLGoDeadcodeDrop": {
+        "ratio": 8.000460101534351,
+        "samples": 10
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "ratio": 7.452246607322273,
+        "samples": 10
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "ratio": 5.826677756386401,
+        "samples": 10
+      }
+    }
+  },
   "metric": "total-bytes",
   "protocol": {
     "Go": [
@@ -45,22 +94,77 @@
       "-opt=z",
       "-no-debug"
     ],
-    "LLGo": [
+    "LLGoNoLTO": [
       "build",
+      "-a",
       "-Oz"
+    ],
+    "LLGoDeadcodeDrop": [
+      "build",
+      "-a",
+      "-Oz",
+      "-deadcodedrop"
+    ],
+    "LLGoFullLTONoGlobalDCE": [
+      "build",
+      "-a",
+      "-Oz",
+      "-lto=full",
+      "-globaldce=false"
+    ],
+    "LLGoFullLTOGlobalDCE": [
+      "build",
+      "-a",
+      "-Oz",
+      "-lto=full",
+      "-globaldce=true"
     ],
     "LLGoPostLink": [
       "Emscripten wasm-opt",
       "Asyncify and standardized exception translation"
     ],
-    "sameGoToolchain": true
+    "sameGoToolchain": true,
+    "environment": {
+      "Go": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "TinyGo": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoNoLTO": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoDeadcodeDrop": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "CCFLAGS": "-flto=full",
+        "LDFLAGS": "-Wl,--lto-O2",
+        "CFLAGS": ""
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "CCFLAGS": "-flto=full -fvirtual-function-elimination -fwhole-program-vtables",
+        "LDFLAGS": "-Wl,--lto-O2",
+        "CFLAGS": ""
+      }
+    },
+    "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives"
   },
   "toolVersions": {
     "Go": "go version go1.26.2 linux/amd64",
     "TinyGo": "tinygo version 0.41.1 linux/amd64 (using go version go1.26.2 and LLVM version 20.1.1)",
     "LLGo": "llgo v1.0.3-0.20260907032505-5a2c37af6f0d linux/amd64",
     "Clang": "Ubuntu clang version 22.1.8 (++20260714014902+ca7933e47d3a-1~exp1~20260714135019.80)",
-    "TinyGo wasm-opt": "wasm-opt version 116",
+    "Wasm linker": "Ubuntu LLD 22.1.8",
+    "TinyGo wasm-opt": "wasm-opt version 132 (version_132)",
     "LLGo wasm-opt": "wasm-opt version 125 (version_125-6-gf03355bd6)"
   },
   "benchmarks": [
@@ -71,10 +175,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "streaming codec",
       "description": "Encode or decode standard input as Base64",
+      "tinygo": "required",
       "values": {
         "Go": 2275731,
-        "TinyGo": 97341,
-        "LLGo": 1120970
+        "TinyGo": 96760,
+        "LLGoNoLTO": 1120970,
+        "LLGoDeadcodeDrop": 744525,
+        "LLGoFullLTONoGlobalDCE": 782279,
+        "LLGoFullLTOGlobalDCE": 596317
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/base64.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/base64.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/base64.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/base64.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/base64.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/base64.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -84,10 +218,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "streaming checksum",
       "description": "Calculate CRC-32 and FNV-1a digests from standard input",
+      "tinygo": "required",
       "values": {
         "Go": 2264417,
-        "TinyGo": 93266,
-        "LLGo": 1098641
+        "TinyGo": 92685,
+        "LLGoNoLTO": 1098641,
+        "LLGoDeadcodeDrop": 720719,
+        "LLGoFullLTONoGlobalDCE": 766749,
+        "LLGoFullLTOGlobalDCE": 577246
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/checksum.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/checksum.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/checksum.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/checksum.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/checksum.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/checksum.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -97,10 +261,40 @@
       "provenance": "universonic/go-rust-wasm-bench",
       "kind": "image processing",
       "description": "Apply a Gaussian convolution kernel to RGBA input",
+      "tinygo": "required",
       "values": {
         "Go": 2608055,
-        "TinyGo": 202369,
-        "LLGo": 2147320
+        "TinyGo": 201149,
+        "LLGoNoLTO": 2147320,
+        "LLGoDeadcodeDrop": 1491152,
+        "LLGoFullLTONoGlobalDCE": 1518341,
+        "LLGoFullLTOGlobalDCE": 1069468
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/convolution.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/convolution.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/convolution.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/convolution.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/convolution.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/convolution.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -110,10 +304,40 @@
       "provenance": "mattn/wasi-benchmark",
       "kind": "recursive computation",
       "description": "Parse an integer argument and calculate Fibonacci recursively",
+      "tinygo": "required",
       "values": {
         "Go": 2230980,
-        "TinyGo": 62846,
-        "LLGo": 976102
+        "TinyGo": 62386,
+        "LLGoNoLTO": 976102,
+        "LLGoDeadcodeDrop": 680003,
+        "LLGoFullLTONoGlobalDCE": 499215,
+        "LLGoFullLTOGlobalDCE": 474575
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/fibonacci.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/fibonacci.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/fibonacci.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/fibonacci.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/fibonacci.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/fibonacci.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -123,10 +347,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "text search",
       "description": "Filter input lines with a regular expression",
+      "tinygo": "required",
       "values": {
         "Go": 2848917,
-        "TinyGo": 305182,
-        "LLGo": 1887235
+        "TinyGo": 303772,
+        "LLGoNoLTO": 1887235,
+        "LLGoDeadcodeDrop": 1425672,
+        "LLGoFullLTONoGlobalDCE": 1285652,
+        "LLGoFullLTOGlobalDCE": 1033751
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/grep.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/grep.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/grep.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/grep.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/grep.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/grep.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -136,10 +390,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "text search",
       "description": "Filter input lines with a wildcard pattern",
+      "tinygo": "required",
       "values": {
         "Go": 2257634,
-        "TinyGo": 93733,
-        "LLGo": 1516228
+        "TinyGo": 93153,
+        "LLGoNoLTO": 1516228,
+        "LLGoDeadcodeDrop": 1121116,
+        "LLGoFullLTONoGlobalDCE": 992498,
+        "LLGoFullLTOGlobalDCE": 779649
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/glob.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/glob.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/glob.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/glob.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/glob.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/glob.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -149,10 +433,40 @@
       "provenance": "universonic/go-rust-wasm-bench",
       "kind": "structured data",
       "description": "Decode, filter, sort, and encode JSON records",
+      "tinygo": "required",
       "values": {
         "Go": 3314554,
-        "TinyGo": 496712,
-        "LLGo": 3046232
+        "TinyGo": 493590,
+        "LLGoNoLTO": 3046232,
+        "LLGoDeadcodeDrop": 2126668,
+        "LLGoFullLTONoGlobalDCE": 2184662,
+        "LLGoFullLTOGlobalDCE": 1609113
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/json-roundtrip.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/json-roundtrip.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/json-roundtrip.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/json-roundtrip.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/json-roundtrip.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/json-roundtrip.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -162,10 +476,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "report generator",
       "description": "Normalize input paths and render an escaped HTML report",
+      "tinygo": "required",
       "values": {
         "Go": 2381190,
-        "TinyGo": 117553,
-        "LLGo": 1796846
+        "TinyGo": 116889,
+        "LLGoNoLTO": 1796846,
+        "LLGoDeadcodeDrop": 1397645,
+        "LLGoFullLTONoGlobalDCE": 1177751,
+        "LLGoFullLTOGlobalDCE": 959568
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/path-report.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/path-report.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/path-report.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/path-report.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/path-report.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/path-report.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -175,10 +519,40 @@
       "provenance": "universonic/go-rust-wasm-bench",
       "kind": "cryptographic hash",
       "description": "Calculate and format a SHA-256 digest",
+      "tinygo": "required",
       "values": {
         "Go": 2780938,
-        "TinyGo": 289085,
-        "LLGo": 2411185
+        "TinyGo": 287449,
+        "LLGoNoLTO": 2411185,
+        "LLGoDeadcodeDrop": 1736759,
+        "LLGoFullLTONoGlobalDCE": 1704177,
+        "LLGoFullLTOGlobalDCE": 1258686
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/sha256.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/sha256.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/sha256.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/sha256.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/sha256.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/sha256.LLGoFullLTOGlobalDCE.log"
+        }
       }
     },
     {
@@ -188,10 +562,40 @@
       "provenance": "llgo-test/benchmarks",
       "kind": "text analysis",
       "description": "Count bytes, lines, words, and UTF-8 runes from standard input",
+      "tinygo": "required",
       "values": {
         "Go": 2253620,
-        "TinyGo": 87389,
-        "LLGo": 1483903
+        "TinyGo": 86834,
+        "LLGoNoLTO": 1483903,
+        "LLGoDeadcodeDrop": 1097516,
+        "LLGoFullLTONoGlobalDCE": 952446,
+        "LLGoFullLTOGlobalDCE": 755875
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/word-count.Go.log"
+        },
+        "TinyGo": {
+          "status": "success",
+          "log": "logs/word-count.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "success",
+          "log": "logs/word-count.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "success",
+          "log": "logs/word-count.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "success",
+          "log": "logs/word-count.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "success",
+          "log": "logs/word-count.LLGoFullLTOGlobalDCE.log"
+        }
       }
     }
   ],
