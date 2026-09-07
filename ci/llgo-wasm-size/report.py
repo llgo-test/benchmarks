@@ -8,10 +8,35 @@ import json
 import math
 import os
 import re
+import shlex
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+# Shared with run.sh via --configs; flags are passed as separate TSV fields.
+PROTOCOL = {
+    "Go": ["build", "-trimpath", "-ldflags=-s -w"],
+    "TinyGo": ["build", "-opt=z", "-no-debug"],
+    "LLGoNoLTO": ["build", "-a", "-Oz"],
+    "LLGoDeadcodeDrop": ["build", "-a", "-Oz", "-deadcodedrop"],
+    "LLGoFullLTONoGlobalDCE": ["build", "-a", "-Oz", "-lto=full", "-globaldce=false"],
+    "LLGoFullLTOGlobalDCE": ["build", "-a", "-Oz", "-lto=full", "-globaldce=true"],
+}
+# LLGo main's WASI external-clang path needs explicit LTO flags. Keep them
+# visible in the published protocol. -a prevents reuse of archives created
+# with different ambient CCFLAGS (not yet part of LLGo's cache fingerprint).
+ENVIRONMENT = {
+    "LLGoFullLTONoGlobalDCE": {"CCFLAGS": "-flto=full", "LDFLAGS": "-Wl,--lto-O2"},
+    "LLGoFullLTOGlobalDCE": {
+        "CCFLAGS": "-flto=full -fvirtual-function-elimination -fwhole-program-vtables",
+        "LDFLAGS": "-Wl,--lto-O2",
+    },
+}
+CONFIGS = list(PROTOCOL)
+LLGO_CONFIGS = CONFIGS[2:]
+LABELS = dict(zip(CONFIGS, ["Go", "TinyGo", "LLGo · no LTO", "LLGo · deadcode drop",
+                          "LLGo · full LTO (GlobalDCE off)", "LLGo · full LTO + GlobalDCE"]))
 
 APP_ID = re.compile(r"[a-z0-9][a-z0-9-]*")
 
@@ -19,7 +44,7 @@ APP_ID = re.compile(r"[a-z0-9][a-z0-9-]*")
 def read_manifest(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as source:
         rows = list(csv.DictReader(source, delimiter="\t"))
-    expected = {"id", "command", "source", "provenance", "kind", "description"}
+    expected = {"id", "command", "source", "provenance", "kind", "description", "tinygo"}
     if not rows or set(rows[0]) != expected:
         raise ValueError(f"{path}: expected columns {sorted(expected)}")
     seen: set[str] = set()
@@ -29,26 +54,45 @@ def read_manifest(path: Path) -> list[dict[str, str]]:
             raise ValueError(f"{path}: invalid or duplicate app id {app_id!r}")
         if not all(row[field] for field in expected):
             raise ValueError(f"{path}: empty field in app {app_id!r}")
+        if row["tinygo"] not in {"required", "optional"}:
+            raise ValueError(f"{path}: invalid TinyGo policy for {app_id!r}")
         seen.add(app_id)
     return rows
 
 
-def read_sizes(path: Path) -> dict[str, tuple[int, int, int]]:
+def read_sizes(path: Path) -> dict[str, dict]:
     with path.open(newline="", encoding="utf-8") as source:
         rows = list(csv.DictReader(source, delimiter="\t"))
-    expected = {"app", "go_bytes", "tinygo_bytes", "llgo_bytes"}
+    expected = {"app", "config", "bytes", "status"}
     if not rows or set(rows[0]) != expected:
         raise ValueError(f"{path}: expected columns {sorted(expected)}")
-    sizes: dict[str, tuple[int, int, int]] = {}
+    sizes: dict[str, dict] = {}
     for row in rows:
-        app_id = row["app"]
-        if app_id in sizes:
-            raise ValueError(f"{path}: duplicate app {app_id!r}")
-        values = (int(row["go_bytes"]), int(row["tinygo_bytes"]), int(row["llgo_bytes"]))
-        if min(values) <= 0:
-            raise ValueError(f"{path}: non-positive size for {app_id!r}")
-        sizes[app_id] = values
+        app_id, config, status = row["app"], row["config"], row["status"]
+        results = sizes.setdefault(app_id, {})
+        if config not in CONFIGS or config in results:
+            raise ValueError(f"{path}: unknown or duplicate config {config!r} for {app_id!r}")
+        value = None if row["bytes"] == "null" else int(row["bytes"])
+        if status not in {"success", "failed"} or (status == "success") != (value is not None):
+            raise ValueError(f"{path}: inconsistent status/size for {app_id!r}/{config}")
+        if value is not None and value <= 0:
+            raise ValueError(f"{path}: non-positive size for {app_id!r}/{config}")
+        results[config] = {"bytes": value, "status": status}
     return sizes
+
+
+def comparisons(benchmarks: list[dict]) -> dict:
+    result = {}
+    for baseline in ("Go", "TinyGo"):
+        result[baseline] = {}
+        for config in LLGO_CONFIGS:
+            ratios = [row["values"][config] / row["values"][baseline] for row in benchmarks
+                      if row["values"][config] and row["values"][baseline]]
+            result[baseline][config] = {
+                "ratio": math.exp(sum(map(math.log, ratios)) / len(ratios)) if ratios else None,
+                "samples": len(ratios),
+            }
+    return result
 
 
 def env_number(name: str) -> int | None:
@@ -67,7 +111,7 @@ def workflow_url(repository: str, run_id: str) -> str:
     return ""
 
 
-def build_document(manifest: list[dict[str, str]], sizes: dict[str, tuple[int, int, int]]) -> dict:
+def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> dict:
     manifest_ids = {row["id"] for row in manifest}
     if set(sizes) != manifest_ids:
         missing = sorted(manifest_ids - set(sizes))
@@ -76,7 +120,16 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, tuple[int, i
 
     benchmarks = []
     for app in manifest:
-        go_bytes, tinygo_bytes, llgo_bytes = sizes[app["id"]]
+        results = sizes[app["id"]]
+        if set(results) != set(CONFIGS):
+            raise ValueError(f"incomplete configuration set for {app['id']!r}")
+        for config, result in results.items():
+            value, status = result["bytes"], result["status"]
+            if status == "success" and type(value) is int and value > 0:
+                continue
+            if config == "TinyGo" and app["tinygo"] == "optional" and status == "failed" and value is None:
+                continue
+            raise ValueError(f"invalid or failed required build: {app['id']}/{config}")
         benchmarks.append({
             "id": app["id"],
             "command": app["command"],
@@ -84,7 +137,10 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, tuple[int, i
             "provenance": app["provenance"],
             "kind": app["kind"],
             "description": app["description"],
-            "values": {"Go": go_bytes, "TinyGo": tinygo_bytes, "LLGo": llgo_bytes},
+            "tinygo": app["tinygo"],
+            "values": {config: results[config]["bytes"] for config in CONFIGS},
+            "builds": {config: {"status": results[config]["status"],
+                                "log": f"logs/{app['id']}.{config}.log"} for config in CONFIGS},
         })
 
     repository = os.environ.get("GITHUB_REPOSITORY", "")
@@ -113,24 +169,28 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, tuple[int, i
         "runnerImage": os.environ.get("ImageOS", ""),
     }
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "format": "wasm-file-size",
         "run": run,
         "target": {"goos": "wasip1", "goarch": "wasm"},
-        "configs": ["Go", "TinyGo", "LLGo"],
+        "configs": CONFIGS,
+        "configLabels": LABELS,
+        "comparisons": comparisons(benchmarks),
         "metric": "total-bytes",
         "protocol": {
-            "Go": ["build", "-trimpath", "-ldflags=-s -w"],
-            "TinyGo": ["build", "-opt=z", "-no-debug"],
-            "LLGo": ["build", "-Oz"],
+            **PROTOCOL,
             "LLGoPostLink": ["Emscripten wasm-opt", "Asyncify and standardized exception translation"],
             "sameGoToolchain": True,
+            "environment": {config: {"CCFLAGS": "", "LDFLAGS": "", "CFLAGS": "", **ENVIRONMENT.get(config, {})}
+                            for config in CONFIGS},
+            "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
         },
         "toolVersions": {
             "Go": os.environ.get("GO_ACTUAL_VERSION", ""),
             "TinyGo": os.environ.get("TINYGO_ACTUAL_VERSION", ""),
             "LLGo": os.environ.get("LLGO_ACTUAL_VERSION", ""),
             "Clang": os.environ.get("CLANG_ACTUAL_VERSION", ""),
+            "Wasm linker": os.environ.get("WASM_LD_ACTUAL_VERSION", ""),
             "TinyGo wasm-opt": os.environ.get("TINYGO_WASM_OPT_ACTUAL_VERSION", ""),
             "LLGo wasm-opt": os.environ.get("LLGO_WASM_OPT_ACTUAL_VERSION", ""),
         },
@@ -144,39 +204,42 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, tuple[int, i
 
 
 def write_summary(document: dict, path: Path) -> None:
-    rows = document["benchmarks"]
-    tinygo_ratios = [row["values"]["TinyGo"] / row["values"]["Go"] for row in rows]
-    llgo_ratios = [row["values"]["LLGo"] / row["values"]["Go"] for row in rows]
-    tinygo_geomean = math.exp(sum(math.log(value) for value in tinygo_ratios) / len(tinygo_ratios))
-    llgo_geomean = math.exp(sum(math.log(value) for value in llgo_ratios) / len(llgo_ratios))
-    lines = [
-        "# Go, TinyGo, and LLGo WASM application size",
-        "",
-        "`wasip1/wasm`; smaller is better. All three compilers use the same pinned Go toolchain.",
-        "Go uses `-trimpath -ldflags='-s -w'`; TinyGo uses `-opt=z -no-debug`; LLGo uses `-Oz`.",
-        "LLGo uses the `wasm-opt` bundled with pinned Emscripten for Asyncify and exception",
-        "translation; TinyGo continues to use its separately pinned Binaryen release.",
-        "",
-        f"Geometric-mean TinyGo/Go size ratio: **{tinygo_geomean:.3f}x**.",
-        f"Geometric-mean LLGo/Go size ratio: **{llgo_geomean:.3f}x**.",
-        "",
-        "| Application | Kind | Go bytes | TinyGo bytes | LLGo bytes | TinyGo vs Go | LLGo vs Go |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
-    ]
-    for row in rows:
-        go_bytes = row["values"]["Go"]
-        tinygo_bytes = row["values"]["TinyGo"]
-        llgo_bytes = row["values"]["LLGo"]
-        tinygo_delta = (tinygo_bytes / go_bytes - 1) * 100
-        llgo_delta = (llgo_bytes / go_bytes - 1) * 100
-        lines.append(
-            f"| `{row['command']}` | {row['kind']} | {go_bytes} | {tinygo_bytes} | {llgo_bytes} | "
-            f"{tinygo_delta:+.1f}% | {llgo_delta:+.1f}% |"
-        )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    lines = ["# WASM binary size", "", "`wasip1/wasm`; smaller is better.",
+             "All application builds use the same pinned Go toolchain.", ""]
+    for config in CONFIGS:
+        environment = " ".join(f"{key}={value!r}" for key, value in ENVIRONMENT.get(config, {}).items())
+        lines.append(f"- {LABELS[config]}: `{environment + ' ' if environment else ''}{shlex.join(PROTOCOL[config])}`")
+    lines += ["", "LLGo uses Emscripten wasm-opt for Asyncify and exception translation;",
+              "TinyGo uses its separately pinned Binaryen release.",
+              "Optional TinyGo failures are shown as —; logs are included in the CI artifact.", ""]
+    for baseline in ("Go", "TinyGo"):
+        lines += [f"## WASM binary size (vs. {baseline})", "",
+                  "| LLGo mode | Geometric mean / baseline | Valid samples |",
+                  "| --- | ---: | ---: |"]
+        for config, result in document["comparisons"][baseline].items():
+            ratio = f"{result['ratio']:.3f}x" if result["ratio"] is not None else "—"
+            lines.append(f"| {LABELS[config]} | {ratio} | {result['samples']} |")
+        lines += ["", f"| Application | {baseline} bytes | LLGo mode | LLGo bytes | vs. {baseline} |",
+                  "| --- | ---: | --- | ---: | ---: |"]
+        for row in document["benchmarks"]:
+            reference = row["values"][baseline]
+            for config in LLGO_CONFIGS:
+                value = row["values"][config]
+                delta = f"{(value / reference - 1) * 100:+.1f}%" if reference else "—"
+                lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value} | {delta} |")
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main(argv: list[str]) -> int:
+    if len(argv) == 3 and argv[1] == "--configs":
+        # Validate policy and identifiers before run.sh starts any compiler.
+        read_manifest(Path(argv[2]))
+        for config, flags in PROTOCOL.items():
+            environment = ENVIRONMENT.get(config, {})
+            print("\t".join([config, "CCFLAGS=" + environment.get("CCFLAGS", ""),
+                             "LDFLAGS=" + environment.get("LDFLAGS", ""), *flags]))
+        return 0
     if len(argv) != 4:
         print("usage: report.py MANIFEST_TSV SIZES_TSV OUTPUT_DIR", file=sys.stderr)
         return 2

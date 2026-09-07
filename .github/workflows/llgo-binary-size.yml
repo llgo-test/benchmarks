@@ -258,6 +258,13 @@ jobs:
           # seeds. Do not import a previous CI run's Go build cache.
           cache: false
 
+      - name: Validate the WASM pipeline and site
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
+          node --test ci/llgo-wasm-size/test_wasm_site.cjs
+          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/publish.sh ci/llgo-size/publish-site.sh
+
       - name: Install LLVM and CMake dependencies
         run: |
           set -euo pipefail
@@ -370,7 +377,9 @@ jobs:
           go_toolchain="go${GO_VERSION#go}"
           GOROOT="$(GOTOOLCHAIN="$go_toolchain" go env GOROOT)"
           export GOROOT
-          export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
+          # Linux TinyGo bundles an older wasm-opt in its own bin directory.
+          # Resolve the independently pinned Binaryen before that directory.
+          export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
           export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
           ci/llgo-wasm-size/run.sh .ci/wasm-run
@@ -522,11 +531,13 @@ jobs:
           set -euo pipefail
           source ci/llgo-size/llgo-version.env
           python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
+          node --test ci/llgo-wasm-size/test_wasm_site.cjs
+          shellcheck ci/llgo-wasm-size/run.sh
           (
             cd ci/llgo-wasm-size/apps
             GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...
             mkdir -p "$GITHUB_WORKSPACE/.ci/wasm-go-validation"
-            while IFS=$'\t' read -r app_id _command source _provenance _kind _description; do
+            while IFS=$'\t' read -r app_id _command source _provenance _kind _description _tinygo; do
               [[ "$app_id" != "id" ]] || continue
               (
                 cd "$source"

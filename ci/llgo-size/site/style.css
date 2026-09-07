@@ -125,7 +125,10 @@ select:focus, input:focus, button:focus-visible, a:focus-visible { border-color:
 .wasm-history-toolbar { grid-template-columns: minmax(190px, 1fr) 118px auto auto minmax(260px, auto); }
 .wasm-history-toolbar > * { min-width: 0; }
 .wasm-source-name { display: block; margin-top: 3px; color: #8794a7; font-size: 8px; font-weight: 650; line-height: 1.15; }
-#wasm-size-grid .matrix-label-cell { width: 156px; min-width: 156px; max-width: 156px; }
+#wasm-size-grid .matrix-label-cell { width: 200px; min-width: 200px; max-width: 200px; }
+.wasm-comparison-note { padding: 0 18px; color: var(--muted); font-size: 12px; }
+.wasm-geomean { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0 18px 16px; font-size: 12px; }
+.wasm-geomean > span:first-child { flex-basis: 100%; font-weight: 650; }
 
 .card { margin-bottom: 14px; border-radius: 13px; overflow: hidden; }
 .card-heading { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 13px 16px 11px; border-bottom: 1px solid var(--line); background: #fff; }

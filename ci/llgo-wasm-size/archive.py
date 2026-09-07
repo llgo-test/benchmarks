@@ -32,6 +32,8 @@ def archive(run_dir: Path, pages_dir: Path) -> str:
         document = json.load(source)
     if document.get("format") != "wasm-file-size":
         raise ValueError(f"unexpected WASM result format: {document.get('format')!r}")
+    if document.get("schemaVersion", 1) not in (1, 2):
+        raise ValueError(f"unsupported WASM schema: {document.get('schemaVersion')!r}")
 
     key = run_key(document)
     data_dir = pages_dir / "data" / "wasm"
@@ -39,6 +41,13 @@ def archive(run_dir: Path, pages_dir: Path) -> str:
     published_dir.mkdir(parents=True, exist_ok=True)
     for source in required:
         shutil.copy2(source, published_dir / source.name)
+    # Keep build-status log references usable from the archived JSON as well
+    # as from the full CI artifact. Older schema-v1 runs may have no logs.
+    logs = published_dir / "logs"
+    if logs.exists():
+        shutil.rmtree(logs)
+    if (run_dir / "logs").is_dir():
+        shutil.copytree(run_dir / "logs", logs)
 
     runs = []
     for result_path_string in glob.glob(str(data_dir / "runs" / "*" / "results.json")):
@@ -48,6 +57,8 @@ def archive(run_dir: Path, pages_dir: Path) -> str:
         run = stored.get("run", {})
         stored_key = result_path.parent.name
         runs.append({
+            "schemaVersion": stored.get("schemaVersion", 1),
+            "configs": stored.get("configs", ["Go", "TinyGo", "LLGo"]),
             "key": stored_key,
             "id": run.get("id", ""),
             "attempt": run.get("attempt"),

@@ -72,11 +72,12 @@ The workflow keeps Bent's native benchsize files, the existing Markdown summary,
 
 For pushes to `main`, LLGo merge dispatches, and manual runs from `main`, the
 workflow copies the structured result into the pages branch. The Pages root is
-the Go/TinyGo/LLGo WASM application-size comparison. The previous Linux ELF size and
-build-time history lives at `linux.html`, where readers can compare any two runs
-by benchmark and configuration. Pull requests use the lightweight Go-only
-validation job described below; they do not produce a binary-size artifact or
-modify the history.
+the WASM binary-size comparison against Go; `wasm-tinygo.html` compares against
+TinyGo. Both views show four LLGo modes and share the same results. Linux ELF
+size and build-time history lives at `linux.html`, where readers can compare
+any two runs by benchmark and configuration. Pull requests that change the
+LLGo pin or benchmark cases run the full matrix without publishing; other
+changes use the lightweight Go-only validation job described below.
 Existing published runs load their retained `build-times.tsv` directly, while
 new `results.json` documents also embed the same timing fields for each cell.
 New documents additionally record runner metadata for the prominent
