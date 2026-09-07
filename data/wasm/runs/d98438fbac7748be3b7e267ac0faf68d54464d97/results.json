@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "format": "wasm-file-size",
+  "run": {
+    "id": "34076460895",
+    "attempt": 1,
+    "number": 399,
+    "createdAt": "2026-09-07T02:36:09.272370Z",
+    "repository": "llgo-test/benchmarks",
+    "sourceCommit": "7065e0c40fd0bb19e4ada56a0a0343ebaab74f45",
+    "ref": "main",
+    "llgoRepository": "xgo-dev/llgo",
+    "llgoCommit": "d98438fbac7748be3b7e267ac0faf68d54464d97",
+    "llgoMainIndex": 1625,
+    "llgoCommittedAt": "2026-09-07T10:29:04+08:00",
+    "llgoBuildGoVersion": "1.27.0",
+    "goVersion": "1.26.2",
+    "llvmVersion": "22",
+    "tinygoVersion": "0.41.1",
+    "binaryenVersion": "132",
+    "event": "repository_dispatch",
+    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/34076460895",
+    "runnerOS": "Linux",
+    "runnerArch": "X64",
+    "runnerImage": "ubuntu24"
+  },
+  "target": {
+    "goos": "wasip1",
+    "goarch": "wasm"
+  },
+  "configs": [
+    "Go",
+    "TinyGo",
+    "LLGo"
+  ],
+  "metric": "total-bytes",
+  "protocol": {
+    "Go": [
+      "build",
+      "-trimpath",
+      "-ldflags=-s -w"
+    ],
+    "TinyGo": [
+      "build",
+      "-opt=z",
+      "-no-debug"
+    ],
+    "LLGo": [
+      "build",
+      "-Oz"
+    ],
+    "LLGoPostLink": [
+      "Emscripten wasm-opt",
+      "Asyncify and standardized exception translation"
+    ],
+    "sameGoToolchain": true
+  },
+  "toolVersions": {
+    "Go": "go version go1.26.2 linux/amd64",
+    "TinyGo": "tinygo version 0.41.1 linux/amd64 (using go version go1.26.2 and LLVM version 20.1.1)",
+    "LLGo": "llgo v1.0.3-0.20260907022904-d98438fbac77 linux/amd64",
+    "Clang": "Ubuntu clang version 22.1.8 (++20260714014902+ca7933e47d3a-1~exp1~20260714135019.80)",
+    "TinyGo wasm-opt": "wasm-opt version 116",
+    "LLGo wasm-opt": "wasm-opt version 125 (version_125-6-gf03355bd6)"
+  },
+  "benchmarks": [
+    {
+      "id": "base64",
+      "command": "base64",
+      "source": "base64",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "streaming codec",
+      "description": "Encode or decode standard input as Base64",
+      "values": {
+        "Go": 2275731,
+        "TinyGo": 97341,
+        "LLGo": 1108781
+      }
+    },
+    {
+      "id": "checksum",
+      "command": "checksum",
+      "source": "checksum",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "streaming checksum",
+      "description": "Calculate CRC-32 and FNV-1a digests from standard input",
+      "values": {
+        "Go": 2264417,
+        "TinyGo": 93266,
+        "LLGo": 1087044
+      }
+    },
+    {
+      "id": "convolution",
+      "command": "conv-wasi",
+      "source": "external/go-rust-wasm-bench/go/cmd/conv-wasi",
+      "provenance": "universonic/go-rust-wasm-bench",
+      "kind": "image processing",
+      "description": "Apply a Gaussian convolution kernel to RGBA input",
+      "values": {
+        "Go": 2608055,
+        "TinyGo": 202369,
+        "LLGo": 2118732
+      }
+    },
+    {
+      "id": "fibonacci",
+      "command": "fibonacci",
+      "source": "fibonacci",
+      "provenance": "mattn/wasi-benchmark",
+      "kind": "recursive computation",
+      "description": "Parse an integer argument and calculate Fibonacci recursively",
+      "values": {
+        "Go": 2230980,
+        "TinyGo": 62846,
+        "LLGo": 965156
+      }
+    },
+    {
+      "id": "grep",
+      "command": "grep",
+      "source": "grep",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "text search",
+      "description": "Filter input lines with a regular expression",
+      "values": {
+        "Go": 2848917,
+        "TinyGo": 305182,
+        "LLGo": 1865008
+      }
+    },
+    {
+      "id": "glob",
+      "command": "glob",
+      "source": "glob",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "text search",
+      "description": "Filter input lines with a wildcard pattern",
+      "values": {
+        "Go": 2257634,
+        "TinyGo": 93733,
+        "LLGo": 1499906
+      }
+    },
+    {
+      "id": "json-roundtrip",
+      "command": "json-wasi",
+      "source": "external/go-rust-wasm-bench/go/cmd/json-wasi",
+      "provenance": "universonic/go-rust-wasm-bench",
+      "kind": "structured data",
+      "description": "Decode, filter, sort, and encode JSON records",
+      "values": {
+        "Go": 3314554,
+        "TinyGo": 496712,
+        "LLGo": 3004608
+      }
+    },
+    {
+      "id": "path-report",
+      "command": "path-report",
+      "source": "path-report",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "report generator",
+      "description": "Normalize input paths and render an escaped HTML report",
+      "values": {
+        "Go": 2381190,
+        "TinyGo": 117553,
+        "LLGo": 1780110
+      }
+    },
+    {
+      "id": "sha256",
+      "command": "sha-wasi",
+      "source": "external/go-rust-wasm-bench/go/cmd/sha-wasi",
+      "provenance": "universonic/go-rust-wasm-bench",
+      "kind": "cryptographic hash",
+      "description": "Calculate and format a SHA-256 digest",
+      "values": {
+        "Go": 2780938,
+        "TinyGo": 289085,
+        "LLGo": 2379717
+      }
+    },
+    {
+      "id": "word-count",
+      "command": "word-count",
+      "source": "word-count",
+      "provenance": "llgo-test/benchmarks",
+      "kind": "text analysis",
+      "description": "Count bytes, lines, words, and UTF-8 runes from standard input",
+      "values": {
+        "Go": 2253620,
+        "TinyGo": 87389,
+        "LLGo": 1467445
+      }
+    }
+  ],
+  "native": {
+    "summary": "summary.md",
+    "tsv": "sizes.tsv",
+    "binaryDir": "raw"
+  }
+}
