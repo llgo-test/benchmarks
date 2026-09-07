@@ -48,6 +48,10 @@ LLGO_WASM_OPT_ACTUAL_VERSION="$($llgo_wasm_opt_bin --version | head -n 1)"
 export GO_ACTUAL_VERSION TINYGO_ACTUAL_VERSION LLGO_ACTUAL_VERSION CLANG_ACTUAL_VERSION
 export TINYGO_WASM_OPT_ACTUAL_VERSION LLGO_WASM_OPT_ACTUAL_VERSION
 export WASM_LD_ACTUAL_VERSION
+if [[ "$TINYGO_WASM_OPT_ACTUAL_VERSION" != "wasm-opt version $BINARYEN_VERSION" ]]; then
+  echo "expected TinyGo Binaryen $BINARYEN_VERSION, got: $TINYGO_WASM_OPT_ACTUAL_VERSION ($wasm_opt_bin)" >&2
+  exit 1
+fi
 # Bitcode requires a matching compiler/linker pair; a native-only build can
 # accidentally hide an older wasm-ld elsewhere on PATH.
 python3 - "$CLANG_ACTUAL_VERSION" "$WASM_LD_ACTUAL_VERSION" "${LLVM_VERSION:?LLVM_VERSION must identify the LLVM release}" <<'PY'

@@ -377,7 +377,9 @@ jobs:
           go_toolchain="go${GO_VERSION#go}"
           GOROOT="$(GOTOOLCHAIN="$go_toolchain" go env GOROOT)"
           export GOROOT
-          export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
+          # Linux TinyGo bundles an older wasm-opt in its own bin directory.
+          # Resolve the independently pinned Binaryen before that directory.
+          export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
           export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
           ci/llgo-wasm-size/run.sh .ci/wasm-run

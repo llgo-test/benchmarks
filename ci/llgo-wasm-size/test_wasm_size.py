@@ -181,7 +181,7 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132"):
         script = root / "script"
         script.mkdir()
         for name in ("run.sh", "report.py"):
@@ -202,7 +202,7 @@ import json, os, sys
 from pathlib import Path
 name = Path(sys.argv[0]).name
 if "-o" not in sys.argv:
-    print(name + " fixture 22.1.8")
+    print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
     raise SystemExit(0)
 config = {"go": "Go", "tinygo": "TinyGo"}.get(name, "LLGoNoLTO")
 if name == "llgo":
@@ -227,7 +227,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "TINYGO_VERSION": "0.41.1", "BINARYEN_VERSION": "132", "LLVM_VERSION": "22",
                "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"),
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
-               "INVALID_WASM": "1" if invalid else "0", "GOWORK": "/unrelated/go.work"}
+               "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
         output = root / "output"
         # Pre-existing success must not mask a failing compiler invocation.
         stale = output / "raw" / "TinyGo" / "base64.wasm"
@@ -275,6 +275,15 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                     self.assertNotEqual(completed.returncode, 0)
                     self.assertFalse((output / "results.json").exists())
                     self.assertIn(f"{config}\tnull\tfailed", (output / "sizes.tsv").read_text())
+
+    def test_shadowed_binaryen_is_rejected_before_building(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            completed, output = self.run_fixture(root, binaryen="116")
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("expected TinyGo Binaryen 132", completed.stderr)
+            self.assertFalse((root / "calls.jsonl").exists())
+            self.assertFalse((output / "results.json").exists())
 
     def test_invalid_policy_is_rejected_before_building(self):
         with tempfile.TemporaryDirectory() as temp:

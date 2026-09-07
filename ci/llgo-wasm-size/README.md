@@ -53,6 +53,9 @@ fingerprint. This deliberately rebuilds packages instead of measuring potentiall
 stale archives. Compilation and linking must both use LLVM 22 (including
 `wasm-ld`). `--lto-O2` matches LLGo's size-optimization linker setting on Linux;
 LLVM and Binaryen still optimize each application at `-Oz`.
+Put the pinned Binaryen's `bin` directory before TinyGo's `bin` on `PATH`:
+the Linux TinyGo release bundles an older `wasm-opt`. The runner verifies the
+resolved Binaryen version so this cannot silently change the baseline.
 `report.py` is the source of truth for flags and records the complete protocol.
 No LTO pass plugin is used for WASM.
 
