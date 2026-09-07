@@ -48,13 +48,11 @@ LLGO_WASM_OPT_ACTUAL_VERSION="$($llgo_wasm_opt_bin --version | head -n 1)"
 export GO_ACTUAL_VERSION TINYGO_ACTUAL_VERSION LLGO_ACTUAL_VERSION CLANG_ACTUAL_VERSION
 export TINYGO_WASM_OPT_ACTUAL_VERSION LLGO_WASM_OPT_ACTUAL_VERSION
 export WASM_LD_ACTUAL_VERSION
-if [[ "$TINYGO_WASM_OPT_ACTUAL_VERSION" != "wasm-opt version $BINARYEN_VERSION" ]]; then
-  echo "expected TinyGo Binaryen $BINARYEN_VERSION, got: $TINYGO_WASM_OPT_ACTUAL_VERSION ($wasm_opt_bin)" >&2
-  exit 1
-fi
 # Bitcode requires a matching compiler/linker pair; a native-only build can
 # accidentally hide an older wasm-ld elsewhere on PATH.
-python3 - "$CLANG_ACTUAL_VERSION" "$WASM_LD_ACTUAL_VERSION" "${LLVM_VERSION:?LLVM_VERSION must identify the LLVM release}" <<'PY'
+python3 - "$CLANG_ACTUAL_VERSION" "$WASM_LD_ACTUAL_VERSION" \
+  "${LLVM_VERSION:?LLVM_VERSION must identify the LLVM release}" \
+  "$TINYGO_WASM_OPT_ACTUAL_VERSION" "$BINARYEN_VERSION" "$wasm_opt_bin" <<'PY'
 import re
 import sys
 
@@ -62,6 +60,10 @@ for version in sys.argv[1:3]:
     match = re.search(r"\b(\d+)\.\d+", version)
     if not match or match[1] != sys.argv[3]:
         raise SystemExit(f"expected LLVM {sys.argv[3]} compiler and wasm-ld, got: {version}")
+# Release archives may append a git tag, e.g. "132 (version_132)".
+match = re.match(r"^wasm-opt version (\d+)(?:\s|$)", sys.argv[4])
+if not match or match[1] != sys.argv[5]:
+    raise SystemExit(f"expected TinyGo Binaryen {sys.argv[5]}, got: {sys.argv[4]} ({sys.argv[6]})")
 PY
 
 verify_wasm() {

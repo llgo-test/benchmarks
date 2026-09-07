@@ -242,7 +242,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
     def test_six_builds_and_recorded_flags_match_actual_argv(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            completed, output = self.run_fixture(root)
+            completed, output = self.run_fixture(root, binaryen="132 (version_132)")
             self.assertEqual(completed.returncode, 0, completed.stderr)
             document = json.loads((output / "results.json").read_text())
             calls = [json.loads(line) for line in (root / "calls.jsonl").read_text().splitlines()]
