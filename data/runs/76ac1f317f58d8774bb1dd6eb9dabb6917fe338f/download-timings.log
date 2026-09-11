@@ -1,0 +1,187 @@
+
+[bent-download] start benchmark=toml cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/toml command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v github.com/BurntSushi/toml@v1.6.0 
+go: downloading github.com/BurntSushi/toml v1.6.0
+go: added github.com/BurntSushi/toml v1.6.0
+[bent-download] end benchmark=toml status=0 duration_ms=240
+
+[bent-download] start benchmark=aws_restjson_v1 cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/aws_restjson_v1 command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v github.com/aws/aws-sdk-go/private/protocol/restjson@v1.41.1 
+go: downloading github.com/aws/aws-sdk-go v1.41.1
+go: downloading github.com/jmespath/go-jmespath v0.4.0
+go: module github.com/aws/aws-sdk-go is deprecated: aws-sdk-go is deprecated. Use aws-sdk-go-v2.
+go: added github.com/aws/aws-sdk-go v1.41.1
+go: added github.com/jmespath/go-jmespath v0.4.0
+[bent-download] end benchmark=aws_restjson_v1 status=0 duration_ms=3172
+
+[bent-download] start benchmark=dustin_humanize cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/dustin_humanize command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v github.com/dustin/go-humanize@v1.0.1 
+go: downloading github.com/dustin/go-humanize v1.0.1
+go: added github.com/dustin/go-humanize v1.0.1
+[bent-download] end benchmark=dustin_humanize status=0 duration_ms=163
+
+[bent-download] start benchmark=k8s_workqueue cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/k8s_workqueue command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v k8s.io/client-go/util/workqueue@v0.36.2 
+go: downloading k8s.io/client-go v0.36.2
+go: accepting indirect upgrade from go@1.25 to 1.26.0
+go: downloading k8s.io/apimachinery v0.36.2
+go: downloading golang.org/x/time v0.14.0
+go: downloading k8s.io/klog/v2 v2.140.0
+go: downloading k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
+go: downloading github.com/google/go-cmp v0.7.0
+go: downloading github.com/go-logr/logr v1.4.3
+go: upgraded go 1.25 => 1.26.0
+go: added github.com/go-logr/logr v1.4.3
+go: added golang.org/x/time v0.14.0
+go: added k8s.io/apimachinery v0.36.2
+go: added k8s.io/client-go v0.36.2
+go: added k8s.io/klog/v2 v2.140.0
+go: added k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
+[bent-download] end benchmark=k8s_workqueue status=0 duration_ms=1472
+
+[bent-download] start benchmark=uber_zap cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/uber_zap command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v go.uber.org/zap/zapcore@v1.27.0 
+go: downloading go.uber.org/zap v1.27.0
+go: downloading go.uber.org/multierr v1.10.0
+go: downloading github.com/stretchr/testify v1.8.1
+go: downloading go.uber.org/goleak v1.3.0
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading github.com/davecgh/go-spew v1.1.1
+go: downloading github.com/pmezard/go-difflib v1.0.0
+go: added go.uber.org/multierr v1.10.0
+go: added go.uber.org/zap v1.27.0
+[bent-download] end benchmark=uber_zap status=0 duration_ms=3447
+
+[bent-download] start benchmark=gorm_schema cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/gorm_schema command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v gorm.io/gorm/schema@v1.31.2 
+go: downloading gorm.io/gorm v1.31.2
+go: downloading github.com/jinzhu/inflection v1.0.0
+go: downloading github.com/jinzhu/now v1.1.5
+go: downloading golang.org/x/text v0.20.0
+go: added github.com/jinzhu/inflection v1.0.0
+go: added github.com/jinzhu/now v1.1.5
+go: added golang.org/x/text v0.20.0
+go: added gorm.io/gorm v1.31.2
+[bent-download] end benchmark=gorm_schema status=0 duration_ms=1665
+
+[bent-download] start benchmark=etcdctl cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/etcdctl command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v go.etcd.io/etcd/etcdctl/v3@v3.6.14 
+go: downloading go.etcd.io/etcd/etcdctl/v3 v3.6.14
+go: accepting indirect upgrade from go@1.25 to 1.25.0
+go: downloading go.etcd.io/etcd/pkg/v3 v3.6.14
+go: downloading github.com/spf13/cobra v1.10.2
+go: downloading go.etcd.io/etcd/api/v3 v3.6.14
+go: downloading github.com/bgentry/speakeasy v0.2.0
+go: downloading github.com/cheggaaa/pb/v3 v3.1.6
+go: downloading github.com/olekukonko/tablewriter v0.0.5
+go: downloading github.com/spf13/pflag v1.0.10
+go: downloading go.etcd.io/etcd/client/pkg/v3 v3.6.14
+go: downloading go.etcd.io/etcd/client/v3 v3.6.14
+go: downloading golang.org/x/time v0.9.0
+go: downloading google.golang.org/grpc v1.82.1
+go: downloading github.com/inconshreveable/mousetrap v1.1.0
+go: downloading github.com/coreos/go-semver v0.3.1
+go: downloading github.com/mattn/go-runewidth v0.0.16
+go: downloading github.com/gogo/protobuf v1.3.2
+go: downloading github.com/golang/protobuf v1.5.4
+go: downloading github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
+go: downloading google.golang.org/genproto/googleapis/api v0.0.0-20260414002931-afd174a4e478
+go: downloading github.com/VividCortex/ewma v1.2.0
+go: downloading github.com/fatih/color v1.18.0
+go: downloading github.com/mattn/go-colorable v0.1.14
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading github.com/coreos/go-systemd/v22 v22.5.0
+go: downloading golang.org/x/sys v0.45.0
+go: downloading go.uber.org/multierr v1.11.0
+go: downloading github.com/rivo/uniseg v0.4.7
+go: downloading google.golang.org/protobuf v1.36.11
+go: downloading golang.org/x/net v0.55.0
+go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478
+go: downloading golang.org/x/text v0.37.0
+go: upgraded go 1.25 => 1.25.0
+go: added github.com/VividCortex/ewma v1.2.0
+go: added github.com/bgentry/speakeasy v0.2.0
+go: added github.com/cheggaaa/pb/v3 v3.1.6
+go: added github.com/coreos/go-semver v0.3.1
+go: added github.com/coreos/go-systemd/v22 v22.5.0
+go: added github.com/dustin/go-humanize v1.0.1
+go: added github.com/fatih/color v1.18.0
+go: added github.com/gogo/protobuf v1.3.2
+go: added github.com/golang/protobuf v1.5.4
+go: added github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
+go: added github.com/inconshreveable/mousetrap v1.1.0
+go: added github.com/mattn/go-colorable v0.1.14
+go: added github.com/mattn/go-isatty v0.0.20
+go: added github.com/mattn/go-runewidth v0.0.16
+go: added github.com/olekukonko/tablewriter v0.0.5
+go: added github.com/rivo/uniseg v0.4.7
+go: added github.com/spf13/cobra v1.10.2
+go: added github.com/spf13/pflag v1.0.10
+go: added go.etcd.io/etcd/api/v3 v3.6.14
+go: added go.etcd.io/etcd/client/pkg/v3 v3.6.14
+go: added go.etcd.io/etcd/client/v3 v3.6.14
+go: added go.etcd.io/etcd/etcdctl/v3 v3.6.14
+go: added go.etcd.io/etcd/pkg/v3 v3.6.14
+go: added go.uber.org/multierr v1.11.0
+go: added go.uber.org/zap v1.27.0
+go: added golang.org/x/net v0.55.0
+go: added golang.org/x/sys v0.45.0
+go: added golang.org/x/text v0.37.0
+go: added golang.org/x/time v0.9.0
+go: added google.golang.org/genproto/googleapis/api v0.0.0-20260414002931-afd174a4e478
+go: added google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478
+go: added google.golang.org/grpc v1.82.1
+go: added google.golang.org/protobuf v1.36.11
+[bent-download] end benchmark=etcdctl status=0 duration_ms=4789
+
+[bent-download] start benchmark=XGo cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/XGo command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v github.com/goplus/xgo/cmd/xgo@v1.7.5 
+go: downloading github.com/goplus/xgo v1.7.5
+go: downloading github.com/goplus/cobra v1.10.7
+go: downloading github.com/goplus/gogen v1.23.5
+go: downloading github.com/qiniu/x v1.18.0
+go: downloading github.com/goplus/mod v0.21.1
+go: downloading github.com/goccy/go-yaml v1.19.2
+go: downloading golang.org/x/mod v0.20.0
+go: downloading github.com/fsnotify/fsnotify v1.10.1
+go: downloading golang.org/x/sys v0.41.0
+go: added github.com/fsnotify/fsnotify v1.10.1
+go: added github.com/goccy/go-yaml v1.19.2
+go: added github.com/goplus/cobra v1.10.7
+go: added github.com/goplus/gogen v1.23.5
+go: added github.com/goplus/mod v0.21.1
+go: added github.com/goplus/xgo v1.7.5
+go: added github.com/qiniu/x v1.18.0
+go: added golang.org/x/mod v0.20.0
+go: added golang.org/x/sys v0.41.0
+[bent-download] end benchmark=XGo status=0 duration_ms=3023
+
+[bent-download] start benchmark=iXGo cwd=/home/runner/work/benchmarks/benchmarks/.ci/bent-run/build/iXGo command=/opt/hostedtoolcache/go/1.26.2/x64/bin/go get -t -v github.com/goplus/ixgo/cmd/ixgo@v1.1.5 
+go: downloading github.com/goplus/ixgo v1.1.5
+go: accepting indirect upgrade from go@1.25 to 1.25.0
+go: downloading github.com/goplus/reflectx v1.7.6
+go: downloading golang.org/x/tools v0.41.0
+go: downloading github.com/goplus/xgo v1.7.6-0.20260818050008-fd36b6192e30
+go: downloading github.com/peterh/liner v1.2.2
+go: downloading github.com/goplus/gogen v1.23.6-0.20260816085451-b240c8b2c5b1
+go: downloading github.com/goplus/mod v0.21.2
+go: downloading github.com/visualfc/funcval v0.1.5
+go: downloading github.com/visualfc/gid v0.3.5
+go: downloading github.com/visualfc/xtype v0.3.3
+go: downloading github.com/mattn/go-runewidth v0.0.3
+go: downloading golang.org/x/sys v0.47.0
+go: downloading github.com/qiniu/x v1.18.3
+go: downloading golang.org/x/mod v0.32.0
+go: downloading golang.org/x/net v0.57.0
+go: downloading github.com/visualfc/goembed v0.3.4
+go: upgraded go 1.25 => 1.25.0
+go: added github.com/goccy/go-yaml v1.19.2
+go: added github.com/goplus/gogen v1.23.6-0.20260816085451-b240c8b2c5b1
+go: added github.com/goplus/ixgo v1.1.5
+go: added github.com/goplus/mod v0.21.2
+go: added github.com/goplus/reflectx v1.7.6
+go: added github.com/goplus/xgo v1.7.6-0.20260818050008-fd36b6192e30
+go: added github.com/mattn/go-runewidth v0.0.3
+go: added github.com/peterh/liner v1.2.2
+go: added github.com/qiniu/x v1.18.3
+go: added github.com/visualfc/funcval v0.1.5
+go: added github.com/visualfc/gid v0.3.5
+go: added github.com/visualfc/goembed v0.3.4
+go: added github.com/visualfc/xtype v0.3.3
+go: added golang.org/x/mod v0.32.0
+go: added golang.org/x/net v0.57.0
+go: added golang.org/x/sys v0.47.0
+go: added golang.org/x/tools v0.41.0
+[bent-download] end benchmark=iXGo status=0 duration_ms=5192
