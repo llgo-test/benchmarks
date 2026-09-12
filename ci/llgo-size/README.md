@@ -109,7 +109,7 @@ updates its existing entry instead of adding another build-round entry.
 
 The same full benchmark job also runs the applications under `ci/llgo-wasm-size` and
 publishes their compact results in the same Pages commit. See that directory's
-README for the shared-toolchain protocol and the explicit LLVM 22 compatibility
+README for the per-application shared-toolchain protocol and the explicit LLVM 22 compatibility
 flag. Full WASM binaries and compiler logs remain in the workflow artifact;
 Pages stores only JSON, TSV, and Markdown results.
 

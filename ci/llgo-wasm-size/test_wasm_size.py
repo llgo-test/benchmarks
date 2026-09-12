@@ -184,7 +184,7 @@ class RunnerTest(unittest.TestCase):
     def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132"):
         script = root / "script"
         script.mkdir()
-        for name in ("run.sh", "report.py"):
+        for name in ("run.sh", "report.py", "prepare_sources.py"):
             shutil.copy2(HERE / name, script / name)
         app = report.read_manifest(HERE / "apps.tsv")[0]
         app["tinygo"] = policy

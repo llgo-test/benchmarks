@@ -533,19 +533,18 @@ jobs:
           python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
           node --test ci/llgo-wasm-size/test_wasm_site.cjs
           shellcheck ci/llgo-wasm-size/run.sh
-          (
-            cd ci/llgo-wasm-size/apps
-            GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...
-            mkdir -p "$GITHUB_WORKSPACE/.ci/wasm-go-validation"
-            while IFS=$'\t' read -r app_id _command source _provenance _kind _description _tinygo; do
-              [[ "$app_id" != "id" ]] || continue
-              (
-                cd "$source"
-                GOTOOLCHAIN="go${GO_VERSION#go}" GOOS=wasip1 GOARCH=wasm \
-                  go build -o "$GITHUB_WORKSPACE/.ci/wasm-go-validation/$app_id.wasm" .
-              )
-            done < ../apps.tsv
-          )
+          (cd ci/llgo-wasm-size/apps && GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...)
+          export GO_VERSION
+          python3 ci/llgo-wasm-size/prepare_sources.py ci/llgo-wasm-size/apps.tsv \
+            ci/llgo-wasm-size/apps .ci/wasm-sources .ci/wasm-source-plan.tsv
+          mkdir -p .ci/wasm-go-validation
+          while IFS=$'\t' read -r app_id _command source_dir target _tinygo app_toolchain _revision; do
+            (
+              cd "$source_dir"
+              GOWORK=off GOFLAGS=-mod=readonly GO111MODULE=on GOTOOLCHAIN="$app_toolchain" GOOS=wasip1 GOARCH=wasm \
+                go build -o "$GITHUB_WORKSPACE/.ci/wasm-go-validation/$app_id.wasm" "$target"
+            )
+          done < .ci/wasm-source-plan.tsv
           go build -o .ci/bent ./cmd/bent
           mkdir -p .ci/bent-pr
           (

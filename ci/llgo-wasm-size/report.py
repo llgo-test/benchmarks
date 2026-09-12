@@ -44,7 +44,7 @@ APP_ID = re.compile(r"[a-z0-9][a-z0-9-]*")
 def read_manifest(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as source:
         rows = list(csv.DictReader(source, delimiter="\t"))
-    expected = {"id", "command", "source", "provenance", "kind", "description", "tinygo"}
+    expected = {"id", "command", "source", "provenance", "kind", "description", "tinygo", "repository", "revision", "go_version"}
     if not rows or set(rows[0]) != expected:
         raise ValueError(f"{path}: expected columns {sorted(expected)}")
     seen: set[str] = set()
@@ -56,6 +56,15 @@ def read_manifest(path: Path) -> list[dict[str, str]]:
             raise ValueError(f"{path}: empty field in app {app_id!r}")
         if row["tinygo"] not in {"required", "optional"}:
             raise ValueError(f"{path}: invalid TinyGo policy for {app_id!r}")
+        if row["repository"] == "-":
+            if row["revision"] != "-":
+                raise ValueError(f"{path}: local app cannot have an external revision")
+        elif not re.fullmatch(r"https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\.git", row["repository"]) or not re.fullmatch(r"[0-9a-f]{40}", row["revision"]):
+            raise ValueError(f"{path}: external app requires a repository URL and full commit SHA")
+        if row["go_version"] != "default" and not re.fullmatch(r"1\.\d+\.\d+", row["go_version"]):
+            raise ValueError(f"{path}: invalid Go version")
+        if Path(row["source"]).is_absolute() or ".." in Path(row["source"]).parts or "\\" in row["source"]:
+            raise ValueError(f"{path}: entry must stay inside its source root")
         seen.add(app_id)
     return rows
 
@@ -138,6 +147,9 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "kind": app["kind"],
             "description": app["description"],
             "tinygo": app["tinygo"],
+            "repository": app.get("repository", "-"),
+            "revision": app.get("revision", "-"),
+            "goVersion": os.environ.get("GO_VERSION", "") if app.get("go_version", "default") == "default" else app["go_version"],
             "values": {config: results[config]["bytes"] for config in CONFIGS},
             "builds": {config: {"status": results[config]["status"],
                                 "log": f"logs/{app['id']}.{config}.log"} for config in CONFIGS},
@@ -180,7 +192,10 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "protocol": {
             **PROTOCOL,
             "LLGoPostLink": ["Emscripten wasm-opt", "Asyncify and standardized exception translation"],
-            "sameGoToolchain": True,
+            "sameGoToolchain": len({app["goVersion"] for app in benchmarks}) == 1,
+            "sameGoToolchainPerApplication": True,
+            "modulePolicy": "GOFLAGS=-mod=readonly, GO111MODULE=on, GOWORK=off; no module rewrites",
+            "sourcePolicy": "Download pinned upstream commits and build original entries with unchanged modules",
             "environment": {config: {"CCFLAGS": "", "LDFLAGS": "", "CFLAGS": "", **ENVIRONMENT.get(config, {})}
                             for config in CONFIGS},
             "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
@@ -205,13 +220,18 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
 
 def write_summary(document: dict, path: Path) -> None:
     lines = ["# WASM binary size", "", "`wasip1/wasm`; smaller is better.",
-             "All application builds use the same pinned Go toolchain.", ""]
+             "Each application uses the same pinned Go toolchain across compilers; per-application versions are recorded below.", ""]
     for config in CONFIGS:
         environment = " ".join(f"{key}={value!r}" for key, value in ENVIRONMENT.get(config, {}).items())
         lines.append(f"- {LABELS[config]}: `{environment + ' ' if environment else ''}{shlex.join(PROTOCOL[config])}`")
     lines += ["", "LLGo uses Emscripten wasm-opt for Asyncify and exception translation;",
               "TinyGo uses its separately pinned Binaryen release.",
               "Optional TinyGo failures are shown as —; logs are included in the CI artifact.", ""]
+    lines += ["| Application | Go toolchain | Source repository | Commit | Entry |",
+              "| --- | --- | --- | --- | --- |"]
+    for app in document["benchmarks"]:
+        lines.append(f"| {app['id']} | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
+    lines.append("")
     for baseline in ("Go", "TinyGo"):
         lines += [f"## WASM binary size (vs. {baseline})", "",
                   "| LLGo mode | Geometric mean / baseline | Valid samples |",

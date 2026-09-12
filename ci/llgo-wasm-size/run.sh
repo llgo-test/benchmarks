@@ -77,18 +77,10 @@ if path.read_bytes()[:4] != b"\0asm":
 PY
 }
 
-while IFS=$'\t' read -r app_id command source _provenance _kind _description tinygo_policy; do
-  [[ "$app_id" != "id" ]] || continue
-  tinygo_policy="${tinygo_policy%$'\r'}"
-  if [[ ! -d "$apps_dir/$source" ]]; then
-    echo "application source does not exist: $source" >&2
-    exit 1
-  fi
-  source_dir="$(cd -- "$apps_dir/$source" && pwd)"
-  case "$source_dir/" in
-    "$apps_dir"/*/) ;;
-    *) echo "refusing application source outside $apps_dir: $source" >&2; exit 1 ;;
-  esac
+python3 "$script_dir/prepare_sources.py" "$manifest" "$apps_dir" \
+  "$output_dir/../wasm-sources" "$output_dir/sources.tsv"
+
+while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolchain source_revision; do
   while IFS=$'\t' read -r -a config_fields; do
     config="${config_fields[0]}"
     config_env=("${config_fields[@]:1:2}")
@@ -108,8 +100,8 @@ while IFS=$'\t' read -r app_id command source _provenance _kind _description tin
     build_status=success
     if (
       cd "$source_dir" &&
-      env "${config_env[@]}" CFLAGS= WASMOPT="$postlink" GOTOOLCHAIN="$go_toolchain" GOOS=wasip1 GOARCH=wasm \
-        "$compiler" "${flags[@]}" -o "$binary" . && verify_wasm "$binary"
+      env "${config_env[@]}" CFLAGS= WASMOPT="$postlink" GOTOOLCHAIN="$app_toolchain" GOFLAGS=-mod=readonly GO111MODULE=on GOOS=wasip1 GOARCH=wasm \
+        "$compiler" "${flags[@]}" -o "$binary" "$target" && verify_wasm "$binary"
     ) >"$log" 2>&1; then
       bytes="$(wc -c < "$binary" | tr -d ' ')"
     else
@@ -117,6 +109,12 @@ while IFS=$'\t' read -r app_id command source _provenance _kind _description tin
       bytes=null
       rm -f "$binary"
       tail -n 80 "$log" >&2
+    fi
+    if [[ "$source_revision" != - ]]; then
+      if [[ "$(git -C "$source_dir" rev-parse HEAD)" != "$source_revision" || -n "$(git -C "$source_dir" status --porcelain --untracked-files=all)" ]]; then
+        echo "upstream source changed during build: $app_id/$config" >&2
+        exit 1
+      fi
     fi
     printf '%s\t%s\t%s\t%s\n' "$app_id" "$config" "$bytes" "$build_status" >> "$sizes"
     if [[ "$build_status" == failed ]]; then
@@ -127,7 +125,7 @@ while IFS=$'\t' read -r app_id command source _provenance _kind _description tin
       fi
     fi
   done < "$output_dir/configs.tsv"
-done < "$manifest"
+done < "$output_dir/sources.tsv"
 
 python3 "$script_dir/report.py" "$manifest" "$sizes" "$output_dir"
 cat "$output_dir/summary.md"

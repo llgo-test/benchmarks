@@ -73,3 +73,13 @@ test('all pages have two WASM links and correct active navigation', () => {
     assert.equal((html.match(/aria-current="page"/g) || []).length, 1);
   }
 });
+
+test('application toolchain metadata stays with its historical cell', () => {
+  const p = page('Go');
+  p.run('oldRow = {goVersion:"1.26.2",values:{Go:100}}; newRow = {goVersion:"1.27.0",values:{Go:120}}');
+  assert.match(p.run('wasmCellHtml(oldRow, "Go")'), /Go toolchain 1\.26\.2/);
+  assert.match(p.run('wasmCellHtml(newRow, "Go")'), /Go toolchain 1\.27\.0/);
+  assert.doesNotMatch(p.run('wasmCellHtml({values:{Go:100}}, "Go")'), /Go toolchain/);
+  const tiny = page('TinyGo');
+  assert.match(tiny.run('wasmCellHtml({goVersion:"1.27.0",values:{TinyGo:null}}, "TinyGo")'), /Go toolchain 1\.27\.0/);
+});

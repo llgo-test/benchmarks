@@ -8,34 +8,38 @@ codec, multi-hash checksums, recursive computation, regular-expression and
 wildcard filters, an HTML path report, Unicode-aware text statistics, and Go
 package import/type metadata processing.
 
-Four commands are verbatim snapshots of upstream WASI applications: Fibonacci
-from [`mattn/wasi-benchmark`](https://github.com/mattn/wasi-benchmark), plus
-convolution, JSON, and SHA-256 from
-[`universonic/go-rust-wasm-bench`](https://github.com/universonic/go-rust-wasm-bench).
-The fifth upstream snapshot is `goplus/llcppg/cmd/llimport`. Fixed revisions and
-licenses are recorded in [`THIRD_PARTY.md`](THIRD_PARTY.md). The other six
-commands are purpose-built fixtures maintained in this repository. Those
-commands have standard-stream
-I/O, argument/error handling, separate implementation packages, and functional
-tests.
+External applications are **not stored in this repository**. `apps.tsv` records
+an HTTPS repository URL, a full commit SHA, and the upstream command directory
+or Go entry file. `prepare_sources.py` fetches that exact commit at test time,
+checks the resolved HEAD and clean working tree, and builds directly from the
+upstream checkout. The original source, `go.mod`, and `go.sum` are not rewritten.
+The six local fixtures remain under `apps/`.
 
-The pinned `goplus/llcppg/cmd/llimport` command adds Go package import and type
-metadata processing to the size comparison. Go, TinyGo, and all four LLGo
-builds are required. The original command spawns `go` to import ordinary
-packages, so these are WASM **size** results, not full WASI functionality claims.
-See [source provenance and module adaptation](THIRD_PARTY.md#llimport).
+See [`THIRD_PARTY.md`](THIRD_PARTY.md) for the external repositories and entries.
+Fibonacci's upstream has no Go module, so its original `main.go` is built as a
+file argument without synthesizing a module. The other commands use their
+original modules and command-package paths.
 
-All three application builds resolve the same `GO_VERSION` from
-`ci/llgo-size/llgo-version.env`; the newer toolchain needed to build the LLGo
-command is pinned separately as `LLGO_BUILD_GO_VERSION`. Go uses
-`-trimpath -ldflags='-s -w'` to remove path and debug metadata from the release
-artifact. TinyGo uses `-opt=z -no-debug`, and LLGo uses `-Oz` with the pinned
-LLVM 22 toolchain used by the selected `xgo-dev/llgo` main revision. TinyGo's
-Binaryen 132 is pinned independently. LLGo uses the `wasm-opt` bundled with
-Emscripten 4.0.21 for Asyncify and standardized exception translation,
-matching LLGo main's own CI setup.
-The runner disables any ambient Go workspace so all three compilers resolve the
-application modules and LLGo runtime independently of the checkout location.
+All compilers use the same Go toolchain **for a given application**. The default
+is `GO_VERSION` from `ci/llgo-size/llgo-version.env`; an explicit `go_version` in
+`apps.tsv` handles an upstream module that requires a newer release. Each
+result records the application's Go version, repository, commit, and entry.
+The Go toolchain is fixed through `GOTOOLCHAIN`, and `GOFLAGS=-mod=readonly`
+prevents automatic module edits. The runner disables ambient Go workspaces and
+checks that external checkouts remain unchanged after every build.
+
+`llimport` keeps upstream's Go 1.27.0 requirement. Go and all four LLGo builds
+are required. TinyGo 0.41.1 supports Go through 1.26, so it is attempted as an
+optional build; the incompatibility produces a missing value and a compiler
+log. Ordinary package imports spawn an external `go` command, which WASI cannot
+run. Usage output and importing `unsafe` are limited runtime smoke checks,
+not a claim of complete package-import functionality under WASI.
+
+The newer toolchain needed to build LLGo itself is pinned separately as
+`LLGO_BUILD_GO_VERSION`. Go uses `-trimpath -ldflags='-s -w'`, TinyGo uses
+`-opt=z -no-debug`, and LLGo uses `-Oz` with the pinned LLVM 22 toolchain.
+TinyGo's Binaryen 132 is pinned independently of LLGo's Emscripten 4.0.21
+`wasm-opt`, which supplies Asyncify and exception translation.
 
 `run.sh` writes `results.json`, `summary.md`, `sizes.tsv`, compiler logs, and the
 six sets of WASM binaries. CI uploads the complete directory as an artifact;
