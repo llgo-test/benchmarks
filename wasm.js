@@ -201,14 +201,16 @@ function wasmRank(benchmark, compiler) {
 
 function wasmCellHtml(benchmark, compiler) {
   const value = wasmValue(benchmark, compiler);
-  if (!Number.isFinite(value)) return '<td class="matrix-cell missing">—</td>';
+  const toolchain = compiler === wasmBaseline && benchmark && benchmark.goVersion
+    ? '<span class="secondary-value">Go toolchain ' + wasmEscape(benchmark.goVersion) + '</span>' : '';
+  if (!Number.isFinite(value)) return '<td class="matrix-cell missing">—' + toolchain + '</td>';
   const rank = wasmRank(benchmark, compiler);
   const baselineValue = wasmValue(benchmark, wasmBaseline);
   const delta = compiler === wasmBaseline ? 0 : wasmPercentDelta(value, baselineValue);
   const context = compiler === wasmBaseline
     ? '<span class="comparison-context flat">' + wasmBaseline + ' reference</span>'
     : '<span class="comparison-context ' + wasmDeltaClass(delta) + '">' + wasmPercent(delta) + " vs " + wasmBaseline + "</span>";
-  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + "</td>";
+  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + toolchain + "</td>";
 }
 
 async function wasmRenderTable() {
@@ -328,7 +330,7 @@ async function wasmRenderEnvironment() {
     return '<span>' + wasmEscape(wasmLabels[mode]) + ': <strong>' + (Number.isFinite(ratio) ? ratio.toFixed(3) + 'x' : '—') + '</strong> (n=' + ratios.length + ')</span>';
   }).join('');
   wasmDom.runner.textContent = wasmNormalizeRunner(run);
-  wasmDom.toolchains.textContent = "Go " + (run.goVersion || latest.goVersion || "—") + " · TinyGo " + (run.tinygoVersion || latest.tinygoVersion || "—") + " · LLVM " + (run.llvmVersion || latest.llvmVersion || "—");
+  wasmDom.toolchains.textContent = "Go default " + (run.goVersion || latest.goVersion || "—") + " · TinyGo " + (run.tinygoVersion || latest.tinygoVersion || "—") + " · LLVM " + (run.llvmVersion || latest.llvmVersion || "—");
   wasmDom.llgo.textContent = wasmCommitLabel(latest) + " · " + (run.llgoRepository || latest.llgoRepository || "unknown");
   wasmDom.protocol.textContent = "wasip1/wasm · final .wasm bytes";
   const rawPath = "data/" + latest.path;
