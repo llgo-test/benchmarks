@@ -22,3 +22,22 @@ without downloading mutable source during CI.
 the upstream Go module metadata, three shared implementations, and three WASI
 command entry points. Browser, Rust, harness, and generated-result directories
 are outside this Go/TinyGo/LLGo size comparison and are not copied.
+
+## llimport
+
+- Project: [goplus/llcppg](https://github.com/goplus/llcppg)
+- Revision: [`d62a300b00d567ce2737ab085cef18c06d43f7d7`](https://github.com/goplus/llcppg/commit/d62a300b00d567ce2737ab085cef18c06d43f7d7) (dev)
+- Source: [`cmd/llimport/import.go`](https://github.com/goplus/llcppg/blob/d62a300b00d567ce2737ab085cef18c06d43f7d7/cmd/llimport/import.go)
+- License: Apache-2.0; the upstream license is retained beside the snapshot.
+
+`apps/external/llcppg/cmd/llimport/import.go` is copied verbatim. The isolated
+benchmark module retains its upstream module path and pins the only imported
+external dependency, `github.com/goplus/gogen v1.23.5`. Its Go directive uses
+the shared benchmark baseline, Go 1.26.2, instead of upstream's Go 1.27.0;
+other llcppg commands and their dependencies are outside this snapshot.
+
+This measures the original command and its Go package importer/type-system
+dependencies. Importing ordinary packages invokes an external `go` command,
+which WASI cannot spawn. A successful WASM build or usage-message smoke test
+is not a claim that ordinary package importing works in WASI. Go, TinyGo,
+and all four LLGo modes are required; any failed build fails the run.

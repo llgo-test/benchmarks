@@ -1,21 +1,29 @@
 # Go, TinyGo, and LLGo WASM application-size CI
 
-This benchmark builds ten runnable `wasip1/wasm` command-line applications with
+This benchmark builds eleven command-line applications for `wasip1/wasm` with
 the native Go compiler, TinyGo, and LLGo, then compares the final `.wasm` file
 sizes. These are application workloads rather than single-package probes. The
 suite covers image convolution, JSON processing, SHA-256, a streaming Base64
 codec, multi-hash checksums, recursive computation, regular-expression and
-wildcard filters, an HTML path report, and Unicode-aware text statistics.
+wildcard filters, an HTML path report, Unicode-aware text statistics, and Go
+package import/type metadata processing.
 
 Four commands are verbatim snapshots of upstream WASI applications: Fibonacci
 from [`mattn/wasi-benchmark`](https://github.com/mattn/wasi-benchmark), plus
 convolution, JSON, and SHA-256 from
 [`universonic/go-rust-wasm-bench`](https://github.com/universonic/go-rust-wasm-bench).
-Their fixed revisions and licenses are recorded in
-[`THIRD_PARTY.md`](THIRD_PARTY.md). The other six commands are purpose-built
-fixtures maintained in this repository. Those commands have standard-stream
+The fifth upstream snapshot is `goplus/llcppg/cmd/llimport`. Fixed revisions and
+licenses are recorded in [`THIRD_PARTY.md`](THIRD_PARTY.md). The other six
+commands are purpose-built fixtures maintained in this repository. Those
+commands have standard-stream
 I/O, argument/error handling, separate implementation packages, and functional
 tests.
+
+The pinned `goplus/llcppg/cmd/llimport` command adds Go package import and type
+metadata processing to the size comparison. Go, TinyGo, and all four LLGo
+builds are required. The original command spawns `go` to import ordinary
+packages, so these are WASM **size** results, not full WASI functionality claims.
+See [source provenance and module adaptation](THIRD_PARTY.md#llimport).
 
 All three application builds resolve the same `GO_VERSION` from
 `ci/llgo-size/llgo-version.env`; the newer toolchain needed to build the LLGo

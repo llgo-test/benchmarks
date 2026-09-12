@@ -6,6 +6,7 @@ fibonacci	fibonacci	fibonacci	mattn/wasi-benchmark	recursive computation	Parse a
 grep	grep	grep	llgo-test/benchmarks	text search	Filter input lines with a regular expression	required
 glob	glob	glob	llgo-test/benchmarks	text search	Filter input lines with a wildcard pattern	required
 json-roundtrip	json-wasi	external/go-rust-wasm-bench/go/cmd/json-wasi	universonic/go-rust-wasm-bench	structured data	Decode, filter, sort, and encode JSON records	required
+llimport	llimport	external/llcppg/cmd/llimport	goplus/llcppg	Go package importer	Load Go export data and print exported declarations	required
 path-report	path-report	path-report	llgo-test/benchmarks	report generator	Normalize input paths and render an escaped HTML report	required
 sha256	sha-wasi	external/go-rust-wasm-bench/go/cmd/sha-wasi	universonic/go-rust-wasm-bench	cryptographic hash	Calculate and format a SHA-256 digest	required
 word-count	word-count	word-count	llgo-test/benchmarks	text analysis	Count bytes, lines, words, and UTF-8 runes from standard input	required
