@@ -1,24 +1,31 @@
-# Third-party WASM applications
+# External WASM applications
 
-## fibonacci
+No external application source or module metadata is archived in this repository.
+The executable manifest is [`apps.tsv`](apps.tsv): it records repository URLs,
+full commit SHAs, and upstream entries. Tests download those revisions into a
+separate temporary source directory; source checkouts are not published as results.
 
-- Project: [mattn/wasi-benchmark](https://github.com/mattn/wasi-benchmark)
-- Revision: [`c7d73b7b1e03b352791f91ed207c6b9c79559453`](https://github.com/mattn/wasi-benchmark/commit/c7d73b7b1e03b352791f91ed207c6b9c79559453)
-- Source: [`main.go`](https://github.com/mattn/wasi-benchmark/blob/c7d73b7b1e03b352791f91ed207c6b9c79559453/main.go)
-- License: MIT, as declared by the upstream README; a standard MIT license notice is included beside the source snapshot.
+| Applications | Repository | Fixed commit | Upstream entry |
+| --- | --- | --- | --- |
+| Fibonacci | [mattn/wasi-benchmark](https://github.com/mattn/wasi-benchmark) | `c7d73b7b1e03b352791f91ed207c6b9c79559453` | `main.go` |
+| Convolution | [universonic/go-rust-wasm-bench](https://github.com/universonic/go-rust-wasm-bench) | `6d1b98c971d6206c313a6d1233d9f2687c50febe` | `go/cmd/conv-wasi` |
+| JSON | same repository | same commit | `go/cmd/json-wasi` |
+| SHA-256 | same repository | same commit | `go/cmd/sha-wasi` |
+| llimport | [goplus/llcppg](https://github.com/goplus/llcppg) | `d62a300b00d567ce2737ab085cef18c06d43f7d7` | `cmd/llimport` |
 
-`apps/fibonacci/main.go` is a verbatim snapshot of the source above. Keeping
-the revision and license in the repository makes the benchmark reproducible
-without downloading mutable source during CI.
+Builds use the original entry and module graph. The Git checkout is verified
+against the fixed commit, including when reused, and must stay clean after each
+compiler invocation. No entry wrappers, generated modules, dependency pruning,
+or Go-directive downgrades are applied. Upstream license files remain in their
+original repositories and downloaded checkouts.
 
-## convolution, json-roundtrip, and sha256
+Fibonacci has no upstream `go.mod`; its `main.go` is passed directly to each
+compiler. The convolution, JSON, and SHA-256 commands share one downloaded
+checkout and use its root module.
 
-- Project: [universonic/go-rust-wasm-bench](https://github.com/universonic/go-rust-wasm-bench)
-- Revision: [`6d1b98c971d6206c313a6d1233d9f2687c50febe`](https://github.com/universonic/go-rust-wasm-bench/commit/6d1b98c971d6206c313a6d1233d9f2687c50febe)
-- Sources: [`go/conv`](https://github.com/universonic/go-rust-wasm-bench/tree/6d1b98c971d6206c313a6d1233d9f2687c50febe/go/conv), [`go/jsonrt`](https://github.com/universonic/go-rust-wasm-bench/tree/6d1b98c971d6206c313a6d1233d9f2687c50febe/go/jsonrt), [`go/sha`](https://github.com/universonic/go-rust-wasm-bench/tree/6d1b98c971d6206c313a6d1233d9f2687c50febe/go/sha), and their `go/cmd/*-wasi` entry points
-- License: MIT; the upstream license is retained in the snapshot root.
-
-`apps/external/go-rust-wasm-bench` is a verbatim, minimal snapshot containing
-the upstream Go module metadata, three shared implementations, and three WASI
-command entry points. Browser, Rust, harness, and generated-result directories
-are outside this Go/TinyGo/LLGo size comparison and are not copied.
+llimport retains its original Go 1.27.0 module and dependencies. Its TinyGo
+build is optional because TinyGo 0.41.1 rejects Go 1.27. A failed attempt is
+reported as missing with its log, while Go and the four LLGo builds are required.
+Ordinary package importing invokes the external `go` command, unavailable in
+WASI; size results and limited usage/`unsafe` smoke checks do not imply complete
+WASI functionality.

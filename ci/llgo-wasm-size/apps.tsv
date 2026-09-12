@@ -1,11 +1,12 @@
-id	command	source	provenance	kind	description	tinygo
-base64	base64	base64	llgo-test/benchmarks	streaming codec	Encode or decode standard input as Base64	required
-checksum	checksum	checksum	llgo-test/benchmarks	streaming checksum	Calculate CRC-32 and FNV-1a digests from standard input	required
-convolution	conv-wasi	external/go-rust-wasm-bench/go/cmd/conv-wasi	universonic/go-rust-wasm-bench	image processing	Apply a Gaussian convolution kernel to RGBA input	required
-fibonacci	fibonacci	fibonacci	mattn/wasi-benchmark	recursive computation	Parse an integer argument and calculate Fibonacci recursively	required
-grep	grep	grep	llgo-test/benchmarks	text search	Filter input lines with a regular expression	required
-glob	glob	glob	llgo-test/benchmarks	text search	Filter input lines with a wildcard pattern	required
-json-roundtrip	json-wasi	external/go-rust-wasm-bench/go/cmd/json-wasi	universonic/go-rust-wasm-bench	structured data	Decode, filter, sort, and encode JSON records	required
-path-report	path-report	path-report	llgo-test/benchmarks	report generator	Normalize input paths and render an escaped HTML report	required
-sha256	sha-wasi	external/go-rust-wasm-bench/go/cmd/sha-wasi	universonic/go-rust-wasm-bench	cryptographic hash	Calculate and format a SHA-256 digest	required
-word-count	word-count	word-count	llgo-test/benchmarks	text analysis	Count bytes, lines, words, and UTF-8 runes from standard input	required
+id	command	source	provenance	kind	description	tinygo	repository	revision	go_version
+base64	base64	base64	llgo-test/benchmarks	streaming codec	Encode or decode standard input as Base64	required	-	-	default
+checksum	checksum	checksum	llgo-test/benchmarks	streaming checksum	Calculate CRC-32 and FNV-1a digests from standard input	required	-	-	default
+convolution	conv-wasi	go/cmd/conv-wasi	universonic/go-rust-wasm-bench	image processing	Apply a Gaussian convolution kernel to RGBA input	required	https://github.com/universonic/go-rust-wasm-bench.git	6d1b98c971d6206c313a6d1233d9f2687c50febe	default
+fibonacci	fibonacci	main.go	mattn/wasi-benchmark	recursive computation	Parse an integer argument and calculate Fibonacci recursively	required	https://github.com/mattn/wasi-benchmark.git	c7d73b7b1e03b352791f91ed207c6b9c79559453	default
+grep	grep	grep	llgo-test/benchmarks	text search	Filter input lines with a regular expression	required	-	-	default
+glob	glob	glob	llgo-test/benchmarks	text search	Filter input lines with a wildcard pattern	required	-	-	default
+json-roundtrip	json-wasi	go/cmd/json-wasi	universonic/go-rust-wasm-bench	structured data	Decode, filter, sort, and encode JSON records	required	https://github.com/universonic/go-rust-wasm-bench.git	6d1b98c971d6206c313a6d1233d9f2687c50febe	default
+llimport	llimport	cmd/llimport	goplus/llcppg	Go package importer	Load Go export data and print exported declarations	optional	https://github.com/goplus/llcppg.git	d62a300b00d567ce2737ab085cef18c06d43f7d7	1.27.0
+path-report	path-report	path-report	llgo-test/benchmarks	report generator	Normalize input paths and render an escaped HTML report	required	-	-	default
+sha256	sha-wasi	go/cmd/sha-wasi	universonic/go-rust-wasm-bench	cryptographic hash	Calculate and format a SHA-256 digest	required	https://github.com/universonic/go-rust-wasm-bench.git	6d1b98c971d6206c313a6d1233d9f2687c50febe	default
+word-count	word-count	word-count	llgo-test/benchmarks	text analysis	Count bytes, lines, words, and UTF-8 runes from standard input	required	-	-	default
