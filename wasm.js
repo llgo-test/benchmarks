@@ -203,7 +203,11 @@ function wasmCellHtml(benchmark, compiler) {
   const value = wasmValue(benchmark, compiler);
   const toolchain = compiler === wasmBaseline && benchmark && benchmark.goVersion
     ? '<span class="secondary-value">Go toolchain ' + wasmEscape(benchmark.goVersion) + '</span>' : '';
-  if (!Number.isFinite(value)) return '<td class="matrix-cell missing">—' + toolchain + '</td>';
+  if (!Number.isFinite(value)) {
+    const build = benchmark && benchmark.builds && benchmark.builds[compiler];
+    const failure = build && build.status === "failed" ? '<span class="secondary-value">Build failed</span>' : '';
+    return '<td class="matrix-cell missing">—' + failure + toolchain + '</td>';
+  }
   const rank = wasmRank(benchmark, compiler);
   const baselineValue = wasmValue(benchmark, wasmBaseline);
   const delta = compiler === wasmBaseline ? 0 : wasmPercentDelta(value, baselineValue);
