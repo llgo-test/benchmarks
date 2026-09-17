@@ -7,30 +7,41 @@ pages_dir="$2"
 site_dir="$3"
 main_history="${4:-}"
 wasm_results_dir="${5:-}"
-if [[ -z "$results_dir" || -z "$pages_dir" || -z "$site_dir" ]]; then
+if [[ -z "$pages_dir" || -z "$site_dir" || ( -z "$results_dir" && -z "$wasm_results_dir" ) ]]; then
   echo "usage: publish.sh RESULTS_DIR PAGES_DIR SITE_DIR [LLGO_MAIN_HISTORY] [WASM_RESULTS_DIR]" >&2
   exit 2
 fi
 
-result_json="$results_dir/results.json"
-if [[ ! -s "$result_json" ]]; then
-  echo "missing structured result: $result_json" >&2
-  exit 1
-fi
-
-mkdir -p "$pages_dir/data/runs"
-for legacy in "$pages_dir"/data/runs/*.json; do
-  [[ -f "$legacy" ]] || continue
-  legacy_key="$(basename "$legacy" .json)"
-  legacy_dir="$pages_dir/data/runs/$legacy_key"
-  mkdir -p "$legacy_dir"
-  mv "$legacy" "$legacy_dir/results.json"
+mkdir -p "$pages_dir"
+# Result jobs can finish after a newer site revision has been published. Seed
+# new Pages branches without rolling existing static assets back.
+for file in index.html wasm-tinygo.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
+  if [[ ! -e "$pages_dir/$file" ]]; then
+    cp "$site_dir/$file" "$pages_dir/$file"
+  fi
 done
+rm -f "$pages_dir/.nojekyll"
 
-# Consolidate historical runs under the LLGo commit that produced them. This
-# keeps reruns of the same commit as one comparable history entry instead of
-# creating a new entry for every Actions run number.
-python3 - "$pages_dir/data/runs" <<'PY'
+publish_native() {
+  result_json="$results_dir/results.json"
+  if [[ ! -s "$result_json" ]]; then
+    echo "missing structured result: $result_json" >&2
+    exit 1
+  fi
+
+  mkdir -p "$pages_dir/data/runs"
+  for legacy in "$pages_dir"/data/runs/*.json; do
+    [[ -f "$legacy" ]] || continue
+    legacy_key="$(basename "$legacy" .json)"
+    legacy_dir="$pages_dir/data/runs/$legacy_key"
+    mkdir -p "$legacy_dir"
+    mv "$legacy" "$legacy_dir/results.json"
+  done
+
+  # Consolidate historical runs under the LLGo commit that produced them. This
+  # keeps reruns of the same commit as one comparable history entry instead of
+  # creating a new entry for every Actions run number.
+  python3 - "$pages_dir/data/runs" <<'PY'
 import json
 import os
 import re
@@ -66,17 +77,7 @@ for source in sorted(os.listdir(runs_dir)):
             continue
     os.rename(source_dir, target_dir)
 PY
-# Result jobs can finish long after a newer site revision has been published.
-# Seed a brand-new Pages branch, but leave existing static assets to the
-# dedicated Pages workflow so an old result job cannot roll the UI back.
-for file in index.html wasm-tinygo.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
-  if [[ ! -e "$pages_dir/$file" ]]; then
-    cp "$site_dir/$file" "$pages_dir/$file"
-  fi
-done
-rm -f "$pages_dir/.nojekyll"
-
-run_key=$(python3 - "$result_json" <<'PY'
+  run_key=$(python3 - "$result_json" <<'PY'
 import json
 import re
 import sys
@@ -88,24 +89,29 @@ if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", key):
     raise SystemExit("invalid run key: " + repr(key))
 print(key)
 PY
-)
+  )
 
-run_dir="$pages_dir/data/runs/$run_key"
-mkdir -p "$run_dir/raw"
-cp "$result_json" "$run_dir/results.json"
-cp "$results_dir/summary.md" "$run_dir/summary.md"
-cp "$results_dir/total-bytes.tsv" "$run_dir/total-bytes.tsv"
-cp "$results_dir/timing-summary.md" "$run_dir/timing-summary.md"
-cp "$results_dir/build-times.tsv" "$run_dir/build-times.tsv"
-cp "$results_dir/download-timings.log" "$run_dir/download-timings.log"
-if compgen -G "$results_dir/raw/*.benchsize" > /dev/null; then
-  cp "$results_dir/raw/"*.benchsize "$run_dir/raw/"
-fi
-if compgen -G "$results_dir/raw/*.build" > /dev/null; then
-  cp "$results_dir/raw/"*.build "$run_dir/raw/"
-fi
+  run_dir="$pages_dir/data/runs/$run_key"
+  rm -rf "$run_dir/raw"
+  mkdir -p "$run_dir/raw"
+  cp "$result_json" "$run_dir/results.json"
+  cp "$results_dir/summary.md" "$run_dir/summary.md"
+  cp "$results_dir/total-bytes.tsv" "$run_dir/total-bytes.tsv"
+  cp "$results_dir/timing-summary.md" "$run_dir/timing-summary.md"
+  cp "$results_dir/build-times.tsv" "$run_dir/build-times.tsv"
+  cp "$results_dir/download-timings.log" "$run_dir/download-timings.log"
+  rm -f "$run_dir/build.log"
+  if [[ -f "$results_dir/build.log" ]]; then
+    cp "$results_dir/build.log" "$run_dir/build.log"
+  fi
+  if compgen -G "$results_dir/raw/*.benchsize" > /dev/null; then
+    cp "$results_dir/raw/"*.benchsize "$run_dir/raw/"
+  fi
+  if compgen -G "$results_dir/raw/*.build" > /dev/null; then
+    cp "$results_dir/raw/"*.build "$run_dir/raw/"
+  fi
 
-python3 - "$pages_dir/data" <<'PY'
+  python3 - "$pages_dir/data" <<'PY'
 import glob
 import json
 import os
@@ -168,11 +174,17 @@ with open(runs_index_path, "w", encoding="utf-8") as f:
     json.dump(index, f, indent=2)
     f.write("\n")
 PY
-enrich_args=("$pages_dir/data/index.json")
-if [[ -n "$main_history" && -s "$main_history" ]]; then
-  enrich_args+=(--main-history "$main_history")
+  enrich_args=("$pages_dir/data/index.json")
+  if [[ -n "$main_history" && -s "$main_history" ]]; then
+    enrich_args+=(--main-history "$main_history")
+  fi
+  python3 "$script_dir/enrich_pull_requests.py" "${enrich_args[@]}"
+}
+
+run_key=""
+if [[ -n "$results_dir" ]]; then
+  publish_native
 fi
-python3 "$script_dir/enrich_pull_requests.py" "${enrich_args[@]}"
 
 wasm_run_key=""
 if [[ -n "$wasm_results_dir" ]]; then
@@ -185,8 +197,10 @@ git -C "$pages_dir" add .
 if git -C "$pages_dir" diff --cached --quiet; then
   echo "Pages history is already up to date"
 else
-  if [[ -n "$wasm_run_key" ]]; then
+  if [[ -n "$wasm_run_key" && -n "$run_key" ]]; then
     git -C "$pages_dir" commit -m "ci: publish LLGo Linux and WASM size run $run_key"
+  elif [[ -n "$wasm_run_key" ]]; then
+    git -C "$pages_dir" commit -m "ci: publish LLGo WASM size run $wasm_run_key"
   else
     git -C "$pages_dir" commit -m "ci: publish LLGo binary-size run $run_key"
   fi

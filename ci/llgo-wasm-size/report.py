@@ -136,9 +136,9 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             value, status = result["bytes"], result["status"]
             if status == "success" and type(value) is int and value > 0:
                 continue
-            if config == "TinyGo" and app["tinygo"] == "optional" and status == "failed" and value is None:
+            if status == "failed" and value is None:
                 continue
-            raise ValueError(f"invalid or failed required build: {app['id']}/{config}")
+            raise ValueError(f"invalid build result: {app['id']}/{config}")
         benchmarks.append({
             "id": app["id"],
             "command": app["command"],
@@ -226,7 +226,17 @@ def write_summary(document: dict, path: Path) -> None:
         lines.append(f"- {LABELS[config]}: `{environment + ' ' if environment else ''}{shlex.join(PROTOCOL[config])}`")
     lines += ["", "LLGo uses Emscripten wasm-opt for Asyncify and exception translation;",
               "TinyGo uses its separately pinned Binaryen release.",
-              "Optional TinyGo failures are shown as —; logs are included in the CI artifact.", ""]
+              "Failed builds are shown as — and excluded from comparisons; logs are included in the CI artifact.", ""]
+    failures = [(app, config) for app in document["benchmarks"] for config in CONFIGS
+                if app["builds"][config]["status"] == "failed"]
+    if failures:
+        lines += ["## Failed builds", "", "| Application | Configuration | Policy | Log |",
+                  "| --- | --- | --- | --- |"]
+        for app, config in failures:
+            policy = "optional" if config == "TinyGo" and app["tinygo"] == "optional" else "required"
+            log = app["builds"][config]["log"]
+            lines.append(f"| {app['id']} | {config} | {policy} | [{log}]({log}) |")
+        lines.append("")
     lines += ["| Application | Go toolchain | Source repository | Commit | Entry |",
               "| --- | --- | --- | --- | --- |"]
     for app in document["benchmarks"]:
@@ -245,8 +255,8 @@ def write_summary(document: dict, path: Path) -> None:
             reference = row["values"][baseline]
             for config in LLGO_CONFIGS:
                 value = row["values"][config]
-                delta = f"{(value / reference - 1) * 100:+.1f}%" if reference else "—"
-                lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value} | {delta} |")
+                delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
+                lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
         lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8")
 

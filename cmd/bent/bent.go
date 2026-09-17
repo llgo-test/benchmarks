@@ -887,7 +887,7 @@ results will also appear in 'bench'.
 		}
 
 		compileOne := func(config *Configuration, bench *Benchmark, count int) {
-			if config.Disabled || bench.IsDisabled() {
+			if config.isDisabledFor(bench) {
 				return
 			}
 			if failure := config.compileOne(bench, dirs.wd, count, R > 0); failure != "" {
@@ -964,6 +964,13 @@ results will also appear in 'bench'.
 		}
 
 		if buildOnly {
+			if len(getAndBuildFailures) > 0 {
+				fmt.Println("Get and build failures:")
+				for _, failure := range getAndBuildFailures {
+					fmt.Println(failure)
+				}
+				os.Exit(1)
+			}
 			return
 		}
 
@@ -1139,7 +1146,7 @@ benchmarks_loop:
 
 			for k := range todo.Benchmarks {
 				b := &todo.Benchmarks[k]
-				if b.IsDisabled() || !b.buildsTestBinary() {
+				if c.isDisabledFor(b) || !b.buildsTestBinary() {
 					continue
 				}
 
@@ -1209,7 +1216,7 @@ func (r *Run) String() string {
 // builds a main package, return with empty output and no change (0) to the
 // return code.
 func benchOne(c *Configuration, b *Benchmark, i int, moreArgs []string) (s string, rc int) {
-	if c.Disabled || b.IsDisabled() || !b.buildsTestBinary() {
+	if c.isDisabledFor(b) || !b.buildsTestBinary() {
 		return
 	}
 

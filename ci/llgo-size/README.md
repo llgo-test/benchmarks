@@ -28,9 +28,13 @@ the standard library but cannot reuse module dependencies or target packages
 compiled by an earlier pair. Native Go and LLGo follow the same cache policy;
 the workflow also disables setup-go's cross-run build-cache restore. LLGo's
 package-cache fingerprint still separates the LTO and plugin configurations.
-The required suite set explicitly includes `dustin_humanize`'s `BenchmarkParseBigBytes`; the
-report fails instead of silently publishing a partial result if any required
-suite is absent.
+The required suite set explicitly includes `dustin_humanize`'s `BenchmarkParseBigBytes`.
+The report includes every configured case even when its Go baseline or all its
+builds are missing. Missing measurements are `null`, displayed as gaps, and
+excluded from comparisons. It writes partial results before returning failure.
+Bent limits compile failures to the affected configuration and suite, allowing
+other configurations and cases to continue; `-build-only` returns failure after
+completing the remaining builds if any dependency acquisition or measured build failed.
 
 `llgo-version.env` supplies the default pinned LLGo, Go, LLVM, and TinyGo
 versions for branch and manual runs. The workflow also runs when Bent itself changes, so its
@@ -107,11 +111,16 @@ remain checked without rebuilding LLGo or the five LLGo binary-size variants.
 Published history is keyed by the full LLGo commit, so rerunning one commit
 updates its existing entry instead of adding another build-round entry.
 
-The same full benchmark job also runs the applications under `ci/llgo-wasm-size` and
-publishes their compact results in the same Pages commit. See that directory's
-README for the per-application shared-toolchain protocol and the explicit LLVM 22 compatibility
-flag. Full WASM binaries and compiler logs remain in the workflow artifact;
-Pages stores only JSON, TSV, and Markdown results.
+The same full benchmark job also runs the applications under `ci/llgo-wasm-size`.
+WASM and native build failures do not prevent the other family from running.
+The job uploads logs and partial results and publishes whichever families have
+structured reports, then reports failures using the original step outcomes.
+Pages deployment depends on successful publication, so a failed benchmark cell
+does not prevent the other results from becoming visible. Setup and result
+validation errors remain errors; failures are never converted to zero-byte data.
+See that directory's README for the per-application shared-toolchain protocol
+and the explicit LLVM 22 compatibility flag. Full WASM binaries remain in the workflow artifacts; Pages stores compact
+JSON, TSV, and Markdown results together with diagnostic logs.
 
 ### First-time repository setup
 

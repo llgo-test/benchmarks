@@ -156,7 +156,7 @@ class NullableResultsTest(unittest.TestCase):
         for value in document["comparisons"]["TinyGo"].values():
             self.assertEqual(value, {"ratio": None, "samples": 0})
 
-    def test_reject_missing_or_failed_required_configuration(self):
+    def test_required_failures_are_reported_but_missing_configurations_are_rejected(self):
         app = self.manifest[1]
         for mode in report.CONFIGS:
             for missing in (False, True):
@@ -166,8 +166,17 @@ class NullableResultsTest(unittest.TestCase):
                         del values[mode]
                     else:
                         values[mode] = {"bytes": None, "status": "failed"}
-                    with self.assertRaises(ValueError):
-                        report.build_document([app], {app["id"]: values})
+                    if missing:
+                        with self.assertRaises(ValueError):
+                            report.build_document([app], {app["id"]: values})
+                    else:
+                        document = report.build_document([app], {app["id"]: values})
+                        self.assertIsNone(document["benchmarks"][0]["values"][mode])
+                        with tempfile.TemporaryDirectory() as temp:
+                            output = Path(temp) / "summary.md"
+                            report.write_summary(document, output)
+                            self.assertIn("failed", output.read_text().lower())
+                            self.assertNotIn("None", output.read_text())
 
     def test_invalid_status_sizes_and_duplicate_rows(self):
         for rows in ("base64\tGo\t0\tsuccess\n", "base64\tGo\tnull\tsuccess\n",
@@ -181,7 +190,7 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132"):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False):
         script = root / "script"
         script.mkdir()
         for name in ("run.sh", "report.py", "prepare_sources.py"):
@@ -193,6 +202,10 @@ class RunnerTest(unittest.TestCase):
             writer = csv.DictWriter(stream, fieldnames=app, delimiter="\t")
             writer.writeheader()
             writer.writerow(app)
+            if two_apps:
+                second = {**app, "id": "second", "source": "second", "command": "second"}
+                (script / "apps" / "second").mkdir()
+                writer.writerow(second)
         bin_dir = root / "bin"
         bin_dir.mkdir()
         # The fake compilers exercise shell orchestration, output verification,
@@ -212,7 +225,7 @@ if name == "llgo":
 with open(os.environ["CALLS"], "a") as f:
     f.write(json.dumps({"config": config, "args": sys.argv[1:], "wasmopt": os.environ.get("WASMOPT"), "gowork": os.environ.get("GOWORK"), "ccflags": os.environ.get("CCFLAGS"), "ldflags": os.environ.get("LDFLAGS")}) + "\\n")
 output = Path(sys.argv[sys.argv.index("-o")+1])
-if config == os.environ["FAIL_CONFIG"]:
+if config == os.environ["FAIL_CONFIG"] and Path.cwd().name == "base64":
     output.write_bytes(b"invalid")
     print("compiler failure evidence")
     raise SystemExit(0 if os.environ["INVALID_WASM"] == "1" else 9)
@@ -271,9 +284,16 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
         for config in report.CONFIGS:
             for invalid in (False, True):
                 with self.subTest(config=config, invalid=invalid), tempfile.TemporaryDirectory() as temp:
-                    completed, output = self.run_fixture(Path(temp), "required", config, invalid)
+                    root = Path(temp)
+                    completed, output = self.run_fixture(root, "required", config, invalid, two_apps=True)
                     self.assertNotEqual(completed.returncode, 0)
-                    self.assertFalse((output / "results.json").exists())
+                    document = json.loads((output / "results.json").read_text())
+                    self.assertEqual(len(document["benchmarks"]), 2)
+                    self.assertEqual(document["benchmarks"][0]["builds"][config]["status"], "failed")
+                    self.assertTrue(all(value > 0 for value in document["benchmarks"][1]["values"].values()))
+                    calls = (root / "calls.jsonl").read_text().splitlines()
+                    self.assertEqual(len(calls), 2 * len(report.CONFIGS))
+                    self.assertFalse((output / "raw" / config / "base64.wasm").exists())
                     self.assertIn(f"{config}\tnull\tfailed", (output / "sizes.tsv").read_text())
 
     def test_shadowed_binaryen_is_rejected_before_building(self):
@@ -294,6 +314,51 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
 
 
 class ArchiveCompatibilityTest(unittest.TestCase):
+    def test_publish_partial_results_with_either_family_unavailable(self):
+        for mode in ("both", "native", "wasm"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                remote, pages, native, wasm = [root / name for name in ("remote.git", "pages", "native", "wasm")]
+                subprocess.run(["git", "init", "--bare", str(remote)], check=True, capture_output=True)
+                subprocess.run(["git", "clone", str(remote), str(pages)], check=True, capture_output=True)
+                native.mkdir()
+                native_doc = {"run": {"id": "partial-run"}, "benchmarks": [
+                    {"name": "Toml", "values": {"Go": None, "LLGoNoLTO": 123}}]}
+                (native / "results.json").write_text(json.dumps(native_doc))
+                for name in ("summary.md", "total-bytes.tsv", "timing-summary.md", "build-times.tsv", "download-timings.log", "build.log"):
+                    (native / name).write_text("partial result\n")
+                (native / "raw").mkdir()
+                (native / "raw/current.benchsize").write_text("BenchmarkToml 1 123 total-bytes\n")
+                wasm.mkdir()
+                app = report.read_manifest(HERE / "apps.tsv")[0]
+                values = results(100, 50, 20)
+                values["LLGoDeadcodeDrop"] = {"bytes": None, "status": "failed"}
+                with mock.patch.dict(os.environ, {}, clear=True):
+                    document = report.build_document([app], {app["id"]: values})
+                document["run"]["id"] = "partial-run"
+                (wasm / "results.json").write_text(json.dumps(document))
+                report.write_summary(document, wasm / "summary.md")
+                (wasm / "sizes.tsv").write_text("app\tconfig\tbytes\tstatus\nbase64\tLLGoDeadcodeDrop\tnull\tfailed\n")
+                (wasm / "logs").mkdir()
+                (wasm / "logs/base64.LLGoDeadcodeDrop.log").write_text("compiler failure evidence\n")
+                command = ["bash", str(HERE.parent / "llgo-size/publish.sh"),
+                           str(native) if mode != "wasm" else "", str(pages),
+                           str(HERE.parent / "llgo-size/site"), "", str(wasm) if mode != "native" else ""]
+                completed = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(completed.returncode, 0, completed.stderr)
+                if mode != "native":
+                    archived = pages / "data/wasm/runs/partial-run"
+                    self.assertEqual(json.loads((archived / "results.json").read_text())["benchmarks"][0]["builds"]["LLGoDeadcodeDrop"]["status"], "failed")
+                    self.assertIn("failure evidence", (archived / "logs/base64.LLGoDeadcodeDrop.log").read_text())
+                if mode != "wasm":
+                    archived = pages / "data/runs/partial-run"
+                    self.assertIsNone(json.loads((archived / "results.json").read_text())["benchmarks"][0]["values"]["Go"])
+                    (native / "raw/current.benchsize").unlink()
+                    repeated = subprocess.run(command, capture_output=True, text=True)
+                    self.assertEqual(repeated.returncode, 0, repeated.stderr)
+                    self.assertFalse((archived / "raw/current.benchsize").exists())
+                self.assertTrue((pages / "index.html").exists())
+
     def test_mixed_schema_history_preserves_old_bytes_and_nullable_results(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

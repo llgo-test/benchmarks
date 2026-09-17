@@ -262,10 +262,10 @@ function latestRun() {
 
 function measureValue(benchmark, config, measure) {
   if (!benchmark) return NaN;
-  if (measure === "size") return Number(benchmark.values && benchmark.values[config]);
   const timing = benchmark.buildTimes && benchmark.buildTimes[config];
-  if (measure === "wall") return Number(timing && timing.wallNs);
-  return Number(timing && timing.cpuNs);
+  const value = measure === "size" ? benchmark.values && benchmark.values[config]
+    : timing && (measure === "wall" ? timing.wallNs : timing.cpuNs);
+  return value == null ? NaN : Number(value);
 }
 
 function formatMeasure(value, measure) {

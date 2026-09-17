@@ -6,7 +6,7 @@ const { test } = require('node:test');
 
 const site = path.join(__dirname, '../llgo-size/site');
 const source = fs.readFileSync(path.join(site, 'wasm.js'), 'utf8');
-function page(baseline) {
+function page(baseline, code = source) {
   const elements = new Map();
   const context = vm.createContext({
     document: {
@@ -21,9 +21,26 @@ function page(baseline) {
     },
     fetch: async () => ({status: 404}),
   });
-  vm.runInContext(source, context);
+  vm.runInContext(code, context);
   return { run: code => vm.runInContext(code, context), context, elements };
 }
+
+test('failed WASM cells retain failure status and never rank as zero', () => {
+  const p = page('Go');
+  p.run('row = {values:{Go:100,LLGoNoLTO:null}, builds:{LLGoNoLTO:{status:"failed"}}}');
+  assert.match(p.run('wasmCellHtml(row, "LLGoNoLTO")'), /Build failed/);
+  assert.equal(p.run('wasmRank(row, "LLGoNoLTO")'), null);
+});
+
+test('native null measurements are gaps, including a missing Go baseline', () => {
+  const p = page('Go', fs.readFileSync(path.join(site, 'app.js'), 'utf8'));
+  p.run('row = {values:{Go:null,LLGoNoLTO:50},buildTimes:{Go:{cpuNs:null,wallNs:null}}}');
+  for (const measure of ['size', 'wall', 'cpu']) {
+    assert.ok(Number.isNaN(p.run(`measureValue(row, "Go", "${measure}")`)));
+    assert.equal(p.run(`rankFor(row, "Go", "${measure}")`), null);
+  }
+  assert.equal(p.run('measureValue(row, "LLGoNoLTO", "size")'), 50);
+});
 
 for (const baseline of ['Go', 'TinyGo']) {
   test(`${baseline}: independent baseline, legacy values, nulls and ranks`, () => {
