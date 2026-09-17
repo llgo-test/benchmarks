@@ -43,8 +43,20 @@ type Configuration struct {
 	RunWrapper    []string // (Outermost) Command and args to precede the runnable test binary; may fail in the sandbox.
 	Disabled      bool     // True if this configuration is temporarily disabled
 	benchWriter   *os.File
-	rootCopy      string // The contents of GOROOT are copied here to isolate compilation benchmarking.
-	cacheSeed     string // Standard-library-only cache seed, when BuildCache is "stdlib".
+	rootCopy      string          // The contents of GOROOT are copied here to isolate compilation benchmarking.
+	cacheSeed     string          // Standard-library-only cache seed, when BuildCache is "stdlib".
+	failedSuites  map[string]bool // Build failures affect only this configuration.
+}
+
+func (c *Configuration) isDisabledFor(b *Benchmark) bool {
+	return c.Disabled || b.IsDisabled() || c.failedSuites[b.Suite]
+}
+
+func (c *Configuration) disableSuite(b *Benchmark) {
+	if c.failedSuites == nil {
+		c.failedSuites = make(map[string]bool)
+	}
+	c.failedSuites[b.Suite] = true
 }
 
 var dirs *directories // constant across all configurations, useful in other contexts.
@@ -207,8 +219,8 @@ func (config *Configuration) compileOne(bench *Benchmark, cwd string, count int,
 	cacheDir, cacheCleanup, err := config.isolatedBuildCache()
 	if err != nil {
 		s := fmt.Sprintf("Could not prepare isolated build cache for %s/%s: %v", bench.Suite, config.Name, err)
-		fmt.Println(s + " DISABLING benchmark " + bench.Name)
-		bench.Disabled = true
+		fmt.Println(s + " DISABLING build " + bench.Name + "/" + config.Name)
+		config.disableSuite(bench)
 		return s + "(" + bench.Name + ")\n"
 	}
 	defer cacheCleanup()
@@ -263,8 +275,8 @@ func (config *Configuration) compileOne(bench *Benchmark, cwd string, count int,
 		default:
 			s = fmt.Sprintf("There was an error running %q, output = %s, error = %v", buildCommand, output, e)
 		}
-		fmt.Println(s + "DISABLING benchmark " + bench.Name)
-		bench.Disabled = true // if it won't compile, it won't run, either.
+		fmt.Println(s + " DISABLING build " + bench.Name + "/" + config.Name)
+		config.disableSuite(bench) // Other configurations can still build and run.
 		return s + "(" + bench.Name + ")\n"
 	}
 

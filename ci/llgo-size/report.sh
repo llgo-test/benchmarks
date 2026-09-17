@@ -15,15 +15,6 @@ configs=(
   LLGoFullLTOGlobalDCE
   LLGoFullLTOGlobalDCEPlugin
 )
-expected_benchmarks=(
-  Toml
-  Aws_restjson
-  Dustin_humanize
-  K8s_workqueue
-  Uber_zap
-  Gorm_schema
-  Etcdctl
-)
 
 summary="$result_dir/summary.md"
 tsv="$result_dir/total-bytes.tsv"
@@ -34,6 +25,7 @@ timing_summary="$result_dir/timing-summary.md"
 mkdir -p "$raw_dir"
 
 printf '%s\n' '# LLGo binary-size CI' > "$summary"
+# shellcheck disable=SC2016 # Literal Markdown code span.
 printf '%s\n\n' 'All values are ELF file sizes in bytes, collected by Bent `benchsize`.' >> "$summary"
 printf 'benchmark' > "$tsv"
 for config in "${configs[@]}"; do
@@ -51,24 +43,30 @@ for config in "${configs[@]}"; do
 done
 printf '\n' >> "$summary"
 
-if ! find "$bench_dir" -maxdepth 1 -type f -name '*.Go.benchsize' -print -quit | grep -q .; then
-  echo "missing Go benchsize output in $bench_dir" >&2
+if [[ ! -d "$bench_dir" ]]; then
+  echo "missing Bent output directory: $bench_dir" >&2
   exit 1
 fi
 
-mapfile -t benchmarks < <(find "$bench_dir" -maxdepth 1 -type f -name '*.Go.benchsize' -exec \
-  awk '$4 == "total-bytes" { name=$1; sub(/^Benchmark/, "", name); print name }' {} + | sort -u)
-if ((${#benchmarks[@]} == 0)); then
-  echo "no total-bytes benchmark results found in $bench_dir" >&2
-  exit 1
-fi
-for expected in "${expected_benchmarks[@]}"; do
-  if [[ ! " ${benchmarks[*]} " =~ " ${expected} " ]]; then
-    echo "missing required binary-size benchmark: $expected" >&2
-    exit 1
-  fi
-done
-for benchmark in "${benchmarks[@]}"; do
+# Include configured cases even if no compiler succeeded, and collect results
+# from every configuration so a failed Go baseline cannot hide other results.
+python3 - "$bench_dir" "$script_dir/../../cmd/bent/configs/benchmarks-llgo-size.toml" > "$result_dir/benchmarks.txt" <<'PY'
+from pathlib import Path
+import sys
+import tomllib
+
+with open(sys.argv[2], "rb") as source:
+    cases = tomllib.load(source)["Benchmarks"]
+names = {case["Name"][0].upper() + case["Name"][1:] for case in cases if not case.get("Disabled", False)}
+for path in Path(sys.argv[1]).glob("*.benchsize"):
+    for line in path.read_text().splitlines():
+        fields = line.split()
+        if len(fields) >= 4 and fields[0].startswith("Benchmark") and fields[3] == "total-bytes":
+            names.add(fields[0][len("Benchmark"):])
+print("\n".join(sorted(names)))
+PY
+missing=0
+while IFS= read -r benchmark; do
   printf '%s' "$benchmark" >> "$tsv"
   printf '| %s |' "$benchmark" >> "$summary"
   for config in "${configs[@]}"; do
@@ -77,14 +75,22 @@ for benchmark in "${benchmarks[@]}"; do
     value=${value%%$'\n'*}
     if [[ -z "$value" ]]; then
       echo "missing total-bytes result for $benchmark ($config)" >&2
-      exit 1
+      missing=$((missing + 1))
+      value=null
     fi
     printf '\t%s' "$value" >> "$tsv"
-    printf ' %s |' "$value" >> "$summary"
+    if [[ "$value" == null ]]; then
+      printf ' — |' >> "$summary"
+    else
+      printf ' %s |' "$value" >> "$summary"
+    fi
   done
   printf '\n' >> "$tsv"
   printf '\n' >> "$summary"
-done
+done < "$result_dir/benchmarks.txt"
+if ((missing > 0)); then
+  printf '\n%d results are missing; see the CI build log. Missing values are excluded from comparisons.\n' "$missing" >> "$summary"
+fi
 
 
 find "$bench_dir" -maxdepth 1 -type f -name '*.benchsize' -exec cp -f {} "$raw_dir/" \;
@@ -93,6 +99,9 @@ find "$bench_dir" -maxdepth 1 -type f -name '*.build' -exec cp -f {} "$raw_dir/"
 : > "$result_dir/download-timings.log"
 if [[ -s "$run_dir/download-timings.log" ]]; then
   cp "$run_dir/download-timings.log" "$result_dir/download-timings.log"
+fi
+if [[ -f "$run_dir/build.log" ]]; then
+  cp "$run_dir/build.log" "$result_dir/build.log"
 fi
 
 python3 "$script_dir/timing-report.py" "$bench_dir" "$build_tsv" "$timing_summary"
@@ -135,7 +144,8 @@ with open(tsv, newline="", encoding="utf-8") as f:
     for row in csv.DictReader(f, delimiter="\t"):
         benchmarks.append({
             "name": row["benchmark"],
-            "values": {name: int(row[name]) for name in configs},
+            "values": {name: None if row[name] == "null" else int(row[name]) for name in configs},
+            "builds": {name: {"status": "missing" if row[name] == "null" else "success"} for name in configs},
             "buildTimes": build_times.get(row["benchmark"], {}),
         })
 
@@ -202,3 +212,6 @@ PY
 cat "$summary"
 printf "\n"
 cat "$timing_summary"
+if ((missing > 0)); then
+  exit 1
+fi

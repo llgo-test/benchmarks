@@ -75,7 +75,11 @@ No LTO pass plugin is used for WASM.
 TinyGo-compatible applications remain required. Optional builds are still
 attempted: compiler failure or invalid WASM output leaves a `null` value,
 `failed` build status, and a compiler log. Go and all LLGo configurations are
-required; any required failure fails the job. Invalid or stale output files
+required. A failed build does not stop later configurations or applications.
+After all builds, the runner writes the complete report and returns failure
+if any required build failed. CI preserves artifacts, runs the native Bent
+matrix, and publishes available results before reporting the overall failure.
+Optional TinyGo failures do not fail the job. Invalid or stale output files
 are never measured. `sizes.tsv` has one row per application/configuration with
 `app`, `config`, `bytes`, and `status` columns.
 

@@ -13,6 +13,7 @@ import (
 	"path"
 	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -21,6 +22,26 @@ var dir string
 // TestMain implemented to allow (1) alternate use as bent command itself if BENT_TEST_IS_CMD_BENT is in environment,
 // and (2) to create and remove a temporary directory for test initialization.
 func TestMain(m *testing.M) {
+	if os.Getenv("BENT_TEST_IS_COMPILER") != "" {
+		log, err := os.OpenFile(os.Getenv("BENT_TEST_COMPILER_LOG"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600)
+		if err != nil {
+			panic(err)
+		}
+		pair := os.Getenv("BENT_BENCH") + "/" + os.Getenv("BENT_CONFIG")
+		fmt.Fprintln(log, pair)
+		log.Close()
+		if pair == "first/broken" {
+			os.Exit(9)
+		}
+		for i, arg := range os.Args {
+			if arg == "-o" {
+				if err := os.WriteFile(os.Args[i+1], []byte("test binary"), 0o700); err != nil {
+					panic(err)
+				}
+			}
+		}
+		os.Exit(0)
+	}
 	if os.Getenv("BENT_TEST_IS_CMD_BENT") != "" {
 		main()
 		os.Exit(0)
@@ -170,6 +191,86 @@ func TestCompileOneBuildsMainPackage(t *testing.T) {
 	}
 	if _, err := os.Stat(path.Join(workspace, "testbin", "hello_Main")); err != nil {
 		t.Fatalf("main binary was not created: %v", err)
+	}
+}
+
+func TestBuildFailureIsLimitedToConfigurationAndSuite(t *testing.T) {
+	oldDirs, oldDefaultEnv := dirs, defaultEnv
+	t.Cleanup(func() { dirs, defaultEnv = oldDirs, oldDefaultEnv })
+	workspace := t.TempDir()
+	dirs = &directories{wd: workspace, testBinDir: "testbin"}
+	defaultEnv = os.Environ()
+	failed := Configuration{Name: "broken", Compiler: path.Join(workspace, "missing-compiler")}
+	good := Configuration{Name: "good"}
+	benchmark := Benchmark{Name: "first", Suite: "shared", Repo: ".", buildDir: workspace, NotSandboxed: true}
+	if failure := failed.compileOne(&benchmark, workspace, 0, false); failure == "" {
+		t.Fatal("missing compiler unexpectedly succeeded")
+	}
+	if benchmark.IsDisabled() || good.isDisabledFor(&benchmark) {
+		t.Fatal("one compiler failure disabled the benchmark for other configurations")
+	}
+	alias := Benchmark{Name: "second", Suite: "shared"}
+	if !failed.isDisabledFor(&alias) {
+		t.Fatal("other benchmarks sharing the failed binary must not run it")
+	}
+	other := Benchmark{Name: "other", Suite: "other"}
+	if failed.isDisabledFor(&other) {
+		t.Fatal("failure disabled unrelated suites")
+	}
+	if output, rc := benchOne(&failed, &alias, 0, nil); output != "" || rc != 0 {
+		t.Fatalf("failed binary was run: %q, %d", output, rc)
+	}
+}
+
+func TestBuildOnlyContinuesMatrixBeforeReturningFailure(t *testing.T) {
+	workspace := t.TempDir()
+	run := func(args ...string) ([]byte, error) {
+		cmd := bentCmd(t, args...)
+		cmd.Dir = workspace
+		cmd.Env = append(cmd.Env, "PWD="+workspace, "BENT_TEST_COMPILER_LOG="+path.Join(workspace, "calls"))
+		return cmd.CombinedOutput()
+	}
+	if output, err := run("-I"); err != nil {
+		t.Fatalf("initialize: %v\n%s", err, output)
+	}
+	exe, err := os.Executable()
+	if err != nil {
+		t.Fatal(err)
+	}
+	var benchmarks, configurations strings.Builder
+	for _, name := range []string{"first", "second"} {
+		fmt.Fprintf(&benchmarks, "[[Benchmarks]]\nName = %q\nRepo = \".\"\nStandalone = true\nNotSandboxed = true\n", name)
+		buildDir := path.Join(workspace, "build", name)
+		if err := os.MkdirAll(buildDir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path.Join(buildDir, "go.mod"), []byte("module example.com/"+name+"\n\ngo 1.25\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, name := range []string{"broken", "good"} {
+		fmt.Fprintf(&configurations, "[[Configurations]]\nName = %q\nCompiler = %q\nGcEnv = [\"BENT_TEST_IS_COMPILER=1\"]\n", name, exe)
+	}
+	for name, data := range map[string]string{"cases.toml": benchmarks.String(), "compilers.toml": configurations.String()} {
+		if err := os.WriteFile(path.Join(workspace, name), []byte(data), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	output, err := run("-X", "-S=0", "-build-only", "-B=cases.toml", "-C=compilers.toml")
+	if exit, ok := err.(*exec.ExitError); !ok || exit.ExitCode() != 1 {
+		t.Fatalf("build-only failure = %v, want exit 1\n%s", err, output)
+	}
+	calls, err := os.ReadFile(path.Join(workspace, "calls"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(strings.Fields(string(calls))) != 4 {
+		t.Fatalf("matrix did not complete: %s\n%s", calls, output)
+	}
+	for _, pair := range []string{"first/broken", "first/good", "second/broken", "second/good"} {
+		if !strings.Contains(string(calls), pair+"\n") {
+			t.Errorf("missing build %s: %s", pair, calls)
+		}
 	}
 }
 

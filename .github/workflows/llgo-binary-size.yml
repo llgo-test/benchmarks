@@ -191,6 +191,8 @@ jobs:
       !(github.event_name == 'push' && github.actor == 'github-actions[bot]' &&
         startsWith(github.event.head_commit.message, 'ci: pin LLGo '))
     needs: pr-scope
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
     permissions:
       contents: write
     runs-on: ubuntu-24.04
@@ -262,8 +264,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
+          python3 -m unittest discover -s ci/llgo-size -p 'test_*.py' -v
+          go test ./cmd/bent
           node --test ci/llgo-wasm-size/test_wasm_site.cjs
-          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/publish.sh ci/llgo-size/publish-site.sh
+          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh ci/llgo-size/publish-site.sh
 
       - name: Install LLVM and CMake dependencies
         run: |
@@ -369,6 +373,8 @@ jobs:
             cmake --build "$LLGO_ROOT/ltoplugin/build" --parallel 2 --verbose
 
       - name: Compare Go, TinyGo, and LLGo WASM application sizes
+        id: wasm
+        continue-on-error: true
         env:
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
@@ -382,10 +388,17 @@ jobs:
           export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
           export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
-          ci/llgo-wasm-size/run.sh .ci/wasm-run
-          cat .ci/wasm-run/summary.md >> "$GITHUB_STEP_SUMMARY"
+          status=0
+          ci/llgo-wasm-size/run.sh .ci/wasm-run || status=$?
+          if [[ -f .ci/wasm-run/summary.md ]]; then
+            cat .ci/wasm-run/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
 
       - name: Upload WASM binary-size results
+        id: wasm_artifact
+        if: ${{ !cancelled() && steps.wasm.outcome != 'skipped' }}
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: go-tinygo-llgo-wasm-size
@@ -393,6 +406,8 @@ jobs:
           if-no-files-found: error
 
       - name: Build six binary-size configurations with Bent
+        id: bent
+        continue-on-error: true
         env:
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_LTO_PLUGIN: ${{ github.workspace }}/.ci/llgo/ltoplugin/build/LLGOLTOPlugin.so
@@ -430,23 +445,53 @@ jobs:
               "$GITHUB_WORKSPACE/.ci/bent" -v -report-build-time -build-only \
                 -B=benchmarks-llgo-size.toml \
                 -C=configurations-llgo-size.toml
-          )
+          ) 2>&1 | tee .ci/bent-run/build.log
+
+      - name: Generate binary-size report
+        id: native_report
+        if: ${{ !cancelled() && steps.bent.outcome != 'skipped' }}
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          source ci/llgo-size/timing.sh
           time_command "Generate binary-size report" \
             bash -c "set -o pipefail; ci/llgo-size/report.sh .ci/bent-run | tee -a \"$GITHUB_STEP_SUMMARY\""
       - name: Upload binary-size results
+        id: native_artifact
+        if: ${{ !cancelled() && steps.bent.outcome != 'skipped' }}
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: llgo-binary-size
-          path: .ci/bent-run/results
+          path: |
+            .ci/bent-run/results
+            .ci/bent-run/bench
+            .ci/bent-run/build.log
+            .ci/bent-run/download-timings.log
           if-no-files-found: error
 
       - name: Publish binary-size history to Pages
-        if: github.ref == 'refs/heads/main'
+        id: publish
+        if: >-
+          !cancelled() && github.ref == 'refs/heads/main' &&
+          (steps.wasm.outcome != 'skipped' || steps.bent.outcome != 'skipped')
         env:
           PAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          native_results=""
+          wasm_results=""
+          if [[ -s .ci/bent-run/results/results.json ]]; then
+            native_results=.ci/bent-run/results
+          fi
+          if [[ -s .ci/wasm-run/results.json ]]; then
+            wasm_results=.ci/wasm-run
+          fi
+          if [[ -z "$native_results" && -z "$wasm_results" ]]; then
+            echo "No structured benchmark results are available to publish" >&2
+            exit 1
+          fi
           published=false
           for attempt in 1 2 3 4; do
             pages_dir="$GITHUB_WORKSPACE/.ci/pages-$attempt"
@@ -454,11 +499,11 @@ jobs:
               "$pages_dir" \
               "https://x-access-token:${PAGES_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             if ci/llgo-size/publish.sh \
-                .ci/bent-run/results \
+                "$native_results" \
                 "$pages_dir" \
                 ci/llgo-size/site \
                 .ci/llgo-main-history.txt \
-                .ci/wasm-run; then
+                "$wasm_results"; then
               published=true
               break
             fi
@@ -469,10 +514,28 @@ jobs:
             echo "failed to publish binary-size history after 4 attempts" >&2
             exit 1
           fi
+          echo 'published=true' >> "$GITHUB_OUTPUT"
+
+      - name: Report benchmark failures after preserving results
+        if: ${{ !cancelled() }}
+        env:
+          STEP_RESULTS: ${{ toJSON(steps) }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          failures = [name for name, result in json.loads(os.environ["STEP_RESULTS"]).items()
+                      if result.get("outcome") == "failure"]
+          if failures:
+              print("Failed benchmark stages: " + ", ".join(failures), file=sys.stderr)
+              sys.exit(1)
+          PY
   deploy-pages:
     if: >-
-      always() && github.ref == 'refs/heads/main' &&
-      github.event_name != 'pull_request' && needs.binary-size.result == 'success'
+      !cancelled() && github.ref == 'refs/heads/main' &&
+      github.event_name != 'pull_request' && needs.binary-size.outputs.published == 'true'
     needs: binary-size
     runs-on: ubuntu-24.04
     permissions:
@@ -531,8 +594,10 @@ jobs:
           set -euo pipefail
           source ci/llgo-size/llgo-version.env
           python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
+          python3 -m unittest discover -s ci/llgo-size -p 'test_*.py' -v
+          go test ./cmd/bent
           node --test ci/llgo-wasm-size/test_wasm_site.cjs
-          shellcheck ci/llgo-wasm-size/run.sh
+          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh
           (cd ci/llgo-wasm-size/apps && GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...)
           export GO_VERSION
           python3 ci/llgo-wasm-size/prepare_sources.py ci/llgo-wasm-size/apps.tsv \

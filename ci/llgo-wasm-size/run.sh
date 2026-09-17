@@ -80,6 +80,7 @@ PY
 python3 "$script_dir/prepare_sources.py" "$manifest" "$apps_dir" \
   "$output_dir/../wasm-sources" "$output_dir/sources.tsv"
 
+required_failures=0
 while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolchain source_revision; do
   while IFS=$'\t' read -r -a config_fields; do
     config="${config_fields[0]}"
@@ -121,7 +122,8 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
       if [[ "$config" == TinyGo && "$tinygo_policy" == optional ]]; then
         echo "[wasm-size] optional TinyGo build failed: $app_id (see $log)" >&2
       else
-        exit 1
+        required_failures=$((required_failures + 1))
+        echo "[wasm-size] required build failed: $app_id/$config (continuing; see $log)" >&2
       fi
     fi
   done < "$output_dir/configs.tsv"
@@ -129,3 +131,7 @@ done < "$output_dir/sources.tsv"
 
 python3 "$script_dir/report.py" "$manifest" "$sizes" "$output_dir"
 cat "$output_dir/summary.md"
+if ((required_failures > 0)); then
+  echo "[wasm-size] $required_failures required builds failed; all results and logs were retained" >&2
+  exit 1
+fi
