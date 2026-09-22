@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+
+import math
+import os
+import signal
+import subprocess
+import sys
+
+
+def positive_seconds(name: str, default: str) -> float:
+    raw = os.environ.get(name, default)
+    try:
+        value = float(raw)
+    except ValueError:
+        print(f"{name} must be a positive number, got {raw!r}", file=sys.stderr)
+        raise SystemExit(2)
+    if not math.isfinite(value) or value <= 0:
+        print(f"{name} must be a positive number, got {raw!r}", file=sys.stderr)
+        raise SystemExit(2)
+    return value
+
+
+def terminate_process_group(process: subprocess.Popen[bytes], grace: float) -> None:
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        return
+    try:
+        process.wait(timeout=grace)
+        return
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        return
+    process.wait()
+
+
+def main() -> int:
+    compiler = os.environ.get("LLGO_REAL_BIN", "")
+    if not compiler:
+        print("llgo-build-timeout requires LLGO_REAL_BIN", file=sys.stderr)
+        return 2
+
+    timeout = positive_seconds("LLGO_BUILD_TIMEOUT_SECONDS", "1200")
+    grace = positive_seconds("LLGO_BUILD_KILL_GRACE_SECONDS", "30")
+    try:
+        process = subprocess.Popen([compiler, *sys.argv[1:]], start_new_session=True)
+    except OSError as error:
+        print(f"could not start LLGo compiler {compiler!r}: {error}", file=sys.stderr)
+        return 127
+
+    try:
+        return_code = process.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        benchmark = os.environ.get("BENT_BENCH", "unknown")
+        configuration = os.environ.get("BENT_CONFIG", "unknown")
+        print(
+            f"LLGo build timed out after {timeout:g}s "
+            f"(benchmark={benchmark}, configuration={configuration}); terminating process group",
+            file=sys.stderr,
+        )
+        terminate_process_group(process, grace)
+        return 124
+
+    if return_code < 0:
+        return 128 - return_code
+    return return_code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
