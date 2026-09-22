@@ -409,7 +409,12 @@ jobs:
         id: bent
         continue-on-error: true
         env:
-          LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
+          # Bound each LLGo benchmark/configuration independently so one stuck
+          # compiler process cannot consume the six-hour job timeout.
+          LLGO_BIN: ${{ github.workspace }}/ci/llgo-size/bin/llgo-build-timeout
+          LLGO_REAL_BIN: ${{ github.workspace }}/.ci/llgo/llgo
+          LLGO_BUILD_TIMEOUT_SECONDS: 1200
+          LLGO_BUILD_KILL_GRACE_SECONDS: 30
           LLGO_LTO_PLUGIN: ${{ github.workspace }}/.ci/llgo/ltoplugin/build/LLGOLTOPlugin.so
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |
