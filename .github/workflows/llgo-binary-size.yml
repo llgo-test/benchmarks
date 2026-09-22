@@ -196,7 +196,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 360
     concurrency:
       # Different LLGo revisions never share a pending slot. Duplicate
       # notifications for the same revision may be coalesced safely because
