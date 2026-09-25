@@ -195,7 +195,11 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "metric": "total-bytes",
         "protocol": {
             **PROTOCOL,
-            "LLGoPostLink": ["Emscripten wasm-opt", "Asyncify and standardized exception translation"],
+            "LLGoPostLink": ["Emscripten wasm-opt", "Upstream target-specific post-link processing"],
+            "LLGoPostLinkByTarget": {
+                "wasip1": "LLGo pre-Asyncify optimization, Asyncify and standardized exception translation",
+                "js": "Upstream Emscripten driver; its Binaryen optimization level is not overridden by this benchmark",
+            },
             "sameGoToolchain": len({app["goVersion"] for app in benchmarks}) == 1,
             "sameGoToolchainPerApplication": True,
             "modulePolicy": "GOFLAGS=-mod=readonly -p=1, GO111MODULE=on, GOWORK=off; no module rewrites",
@@ -234,7 +238,7 @@ def write_summary(document: dict, path: Path) -> None:
     for config in CONFIGS:
         environment = " ".join(f"{key}={value!r}" for key, value in ENVIRONMENT.get(config, {}).items())
         lines.append(f"- {LABELS[config]}: `{environment + ' ' if environment else ''}{shlex.join(PROTOCOL[config])}`")
-    lines += ["", "LLGo uses Emscripten wasm-opt for Asyncify and exception translation;",
+    lines += ["", "LLGo uses target-specific upstream Emscripten/Binaryen processing; see the recorded protocol.",
               "TinyGo uses its separately pinned Binaryen release.",
               "Failed builds are shown as — and excluded from comparisons; logs are included in the CI artifact.", ""]
     failures = [(app, config) for app in document["benchmarks"] for config in CONFIGS

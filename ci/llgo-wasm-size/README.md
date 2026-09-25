@@ -64,7 +64,10 @@ also use `-a`, because ambient clang flags are not part of LLGo's package cache
 fingerprint. This deliberately rebuilds packages instead of measuring potentially
 stale archives. Compilation and linking must both use LLVM 22 (including
 `wasm-ld`). `--lto-O2` matches LLGo's size-optimization linker setting on Linux;
-LLVM and Binaryen still optimize each application at `-Oz`.
+WASI requests `-Oz` for LLVM and Binaryen. JS keeps the LLGo `-Oz` flag but
+uses the upstream Emscripten driver for post-link processing. At LLGo
+`4dbedca26aaa`, the observed JS Binaryen invocation uses `-O2` with Asyncify;
+this benchmark does not override that driver-selected level.
 Put the pinned Binaryen's `bin` directory before TinyGo's `bin` on `PATH`:
 the Linux TinyGo release bundles an older `wasm-opt`. The runner verifies the
 resolved Binaryen version so this cannot silently change the baseline.
@@ -109,9 +112,11 @@ attempted but optional because 0.41.1 does not support Go 1.27.
 This row uses **GOOS=js GOARCH=wasm**. Existing applications retain WASI.
 All four LLGo configurations still use **-Oz** with the flags above; no -Os
 measurements are substituted. Local qualification on LLGo main `4dbedca26aaa`
-used the default **-Os**: build and `--version` succeeded. That establishes a
-JS build/startup baseline, not success of this entire -Oz matrix. Actual TS
-file compilation in the JS host remains unvalidated. The separate local WASI
+passed the no-LTO `-a -Oz` build in 781 seconds, producing a 96,005,826-byte
+WASM artifact; `--version` returned `Version 7.1.0-dev` with exit code 0.
+This validates one configuration, not the entire matrix. The earlier default
+**-Os** build also passed startup, but its measurement is not used here. Actual
+TS file compilation in the JS host remains unvalidated. The separate local WASI
 artifact built and started but panicked during TS compilation; those runtime
 results must not be attributed to the JS host or presented as functional success.
 
