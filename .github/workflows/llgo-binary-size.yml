@@ -305,6 +305,11 @@ jobs:
         with:
           version: "4.0.21"
 
+      - name: Install Node for the upstream JS host runners
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.19.0"
+
       - name: Install pinned TinyGo
         run: |
           set -euo pipefail
@@ -376,6 +381,10 @@ jobs:
         id: wasm
         continue-on-error: true
         env:
+          GOMAXPROCS: "2"
+          BINARYEN_CORES: "2"
+          WASM_BUILD_TIMEOUT_SECONDS: "1200"
+          WASM_CHECK_TIMEOUT_SECONDS: "120"
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |
@@ -608,10 +617,10 @@ jobs:
           python3 ci/llgo-wasm-size/prepare_sources.py ci/llgo-wasm-size/apps.tsv \
             ci/llgo-wasm-size/apps .ci/wasm-sources .ci/wasm-source-plan.tsv
           mkdir -p .ci/wasm-go-validation
-          while IFS=$'\t' read -r app_id _command source_dir target _tinygo app_toolchain _revision; do
+          while IFS=$'\t' read -r app_id _command source_dir target _tinygo app_toolchain _revision app_goos; do
             (
               cd "$source_dir"
-              GOWORK=off GOFLAGS=-mod=readonly GO111MODULE=on GOTOOLCHAIN="$app_toolchain" GOOS=wasip1 GOARCH=wasm \
+              GOWORK=off GOFLAGS=-mod=readonly GO111MODULE=on GOTOOLCHAIN="$app_toolchain" GOOS="$app_goos" GOARCH=wasm \
                 go build -o "$GITHUB_WORKSPACE/.ci/wasm-go-validation/$app_id.wasm" "$target"
             )
           done < .ci/wasm-source-plan.tsv

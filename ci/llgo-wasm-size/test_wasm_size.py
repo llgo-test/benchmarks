@@ -190,13 +190,15 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False, startup_failure=False):
         script = root / "script"
         script.mkdir()
-        for name in ("run.sh", "report.py", "prepare_sources.py"):
+        for name in ("run.sh", "report.py", "prepare_sources.py", "run_command.py", "validate_js.py"):
             shutil.copy2(HERE / name, script / name)
         app = report.read_manifest(HERE / "apps.tsv")[0]
         app["tinygo"] = policy
+        if js:
+            app.update(id="tsc-js", command="tsc", goos="js")
         (script / "apps" / app["source"]).mkdir(parents=True)
         with (script / "apps.tsv").open("w") as stream:
             writer = csv.DictWriter(stream, fieldnames=app, delimiter="\t")
@@ -211,9 +213,12 @@ class RunnerTest(unittest.TestCase):
         # The fake compilers exercise shell orchestration, output verification,
         # failure policy, and argv boundaries without requiring toolchains in PR CI.
         program = '''#!PYTHON
-import json, os, sys
+import json, os, sys, time
 from pathlib import Path
 name = Path(sys.argv[0]).name
+if name == "node":
+    print("Version fixture")
+    raise SystemExit(3 if len(sys.argv) > 2 and os.environ.get("STARTUP_FAILURE") == "1" else 0)
 if "-o" not in sys.argv:
     print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
     raise SystemExit(0)
@@ -223,22 +228,29 @@ if name == "llgo":
     if "-lto=full" in sys.argv:
         config = "LLGoFullLTONoGlobalDCE" if "-globaldce=false" in sys.argv else "LLGoFullLTOGlobalDCE"
 with open(os.environ["CALLS"], "a") as f:
-    f.write(json.dumps({"config": config, "args": sys.argv[1:], "wasmopt": os.environ.get("WASMOPT"), "gowork": os.environ.get("GOWORK"), "ccflags": os.environ.get("CCFLAGS"), "ldflags": os.environ.get("LDFLAGS")}) + "\\n")
+    f.write(json.dumps({"config": config, "args": sys.argv[1:], "wasmopt": os.environ.get("WASMOPT"), "gowork": os.environ.get("GOWORK"), "ccflags": os.environ.get("CCFLAGS"), "ldflags": os.environ.get("LDFLAGS"), "goos": os.environ.get("GOOS"), "goflags": os.environ.get("GOFLAGS")}) + "\\n")
 output = Path(sys.argv[sys.argv.index("-o")+1])
 if config == os.environ["FAIL_CONFIG"] and Path.cwd().name == "base64":
+    if os.environ.get("TIMEOUT_BUILD") == "1": time.sleep(10)
     output.write_bytes(b"invalid")
     print("compiler failure evidence")
     raise SystemExit(0 if os.environ["INVALID_WASM"] == "1" else 9)
+if output.suffix == ".mjs":
+    output.write_text("export default function() {}")
+    output = output.with_suffix(".wasm")
 output.write_bytes(b"\\0asm" + b"x" * 20)
 '''.replace("PYTHON", sys.executable)
-        for name in ("go", "tinygo", "llgo", "clang++", "wasm-ld", "wasm-opt", "llgo-wasm-opt"):
+        for name in ("go", "tinygo", "llgo", "clang++", "wasm-ld", "wasm-opt", "llgo-wasm-opt", "node"):
             path = bin_dir / name
             path.write_text(program)
             path.chmod(0o755)
         env = {**os.environ, "PATH": str(bin_dir) + os.pathsep + os.environ["PATH"],
                "LLGO_BIN": str(bin_dir / "llgo"), "GO_VERSION": "1.26.2",
                "TINYGO_VERSION": "0.41.1", "BINARYEN_VERSION": "132", "LLVM_VERSION": "22",
-               "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"),
+               "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"), "LLGO_ROOT": str(root),
+               "NODE_BIN": str(bin_dir / "node"), "TIMEOUT_BUILD": "1" if timeout else "0",
+               "WASM_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
+               "STARTUP_FAILURE": "1" if startup_failure else "0",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
                "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
         output = root / "output"
@@ -251,6 +263,46 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
         completed = subprocess.run(["bash", str(script / "run.sh"), str(output)], env=env,
                                    capture_output=True, text=True)
         return completed, output
+
+    def test_js_glue_target_and_separate_startup_results(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            completed, output = self.run_fixture(root, js=True)
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            document = json.loads((output / "results.json").read_text())
+            app = document["benchmarks"][0]
+            self.assertEqual(app["target"], {"goos": "js", "goarch": "wasm"})
+            self.assertEqual(app["values"]["LLGoNoLTO"], 24)
+            self.assertEqual(app["validation"]["LLGoNoLTO"]["startup"]["status"], "success")
+            self.assertEqual(app["validation"]["LLGoNoLTO"]["functional"]["status"], "not_run")
+            calls = [json.loads(line) for line in (root / "calls.jsonl").read_text().splitlines()]
+            for call in calls:
+                self.assertEqual(call["goos"], "js")
+                self.assertIn("-p=1", call["goflags"])
+                if call["config"].startswith("LLGo"):
+                    self.assertIn("-Oz", call["args"])
+                    self.assertTrue(call["args"][call["args"].index("-o")+1].endswith(".mjs"))
+
+    def test_startup_failure_keeps_successful_build_size(self):
+        with tempfile.TemporaryDirectory() as temp:
+            completed, output = self.run_fixture(Path(temp), js=True, startup_failure=True)
+            self.assertNotEqual(completed.returncode, 0)
+            app = json.loads((output / "results.json").read_text())["benchmarks"][0]
+            self.assertEqual(app["values"]["LLGoNoLTO"], 24)
+            self.assertEqual(app["builds"]["LLGoNoLTO"]["status"], "success")
+            self.assertEqual(app["validation"]["LLGoNoLTO"]["startup"]["status"], "failed")
+            self.assertEqual(app["validation"]["LLGoNoLTO"]["functional"]["status"], "not_run")
+
+    def test_timeout_is_not_failure_or_zero_and_later_cells_run(self):
+        with tempfile.TemporaryDirectory() as temp:
+            completed, output = self.run_fixture(Path(temp), failure="LLGoNoLTO", timeout=True)
+            self.assertNotEqual(completed.returncode, 0)
+            app = json.loads((output / "results.json").read_text())["benchmarks"][0]
+            self.assertEqual(app["builds"]["LLGoNoLTO"]["status"], "timeout")
+            self.assertEqual(app["builds"]["LLGoNoLTO"]["commandExitCode"], 124)
+            self.assertIsNone(app["values"]["LLGoNoLTO"])
+            self.assertEqual(app["builds"]["LLGoFullLTOGlobalDCE"]["status"], "success")
+            self.assertIn("timeout", (output / "summary.md").read_text())
 
     def test_six_builds_and_recorded_flags_match_actual_argv(self):
         with tempfile.TemporaryDirectory() as temp:

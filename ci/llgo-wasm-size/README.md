@@ -1,12 +1,12 @@
 # Go, TinyGo, and LLGo WASM application-size CI
 
-This benchmark builds eleven command-line applications for `wasip1/wasm` with
+This benchmark builds twelve command-line applications for `wasip1/wasm` or `js/wasm` with
 the native Go compiler, TinyGo, and LLGo, then compares the final `.wasm` file
 sizes. These are application workloads rather than single-package probes. The
 suite covers image convolution, JSON processing, SHA-256, a streaming Base64
 codec, multi-hash checksums, recursive computation, regular-expression and
 wildcard filters, an HTML path report, Unicode-aware text statistics, and Go
-package import/type metadata processing.
+package import/type metadata processing, and the TypeScript Go compiler.
 
 External applications are **not stored in this repository**. `apps.tsv` records
 an HTTPS repository URL, a full commit SHA, and the upstream command directory
@@ -22,7 +22,7 @@ original modules and command-package paths.
 
 All compilers use the same Go toolchain **for a given application**. The default
 is `GO_VERSION` from `ci/llgo-size/llgo-version.env`; an explicit `go_version` in
-`apps.tsv` handles an upstream module that requires a newer release. Each
+`apps.tsv` handles an upstream module that requires a newer release. The `goos` column selects the host per application (old manifests default to `wasip1`). Each
 result records the application's Go version, repository, commit, and entry.
 The Go toolchain is fixed through `GOTOOLCHAIN`, and `GOFLAGS=-mod=readonly`
 prevents automatic module edits. The runner disables ambient Go workspaces and
@@ -97,3 +97,39 @@ frontend behavior tests with `node --test ci/llgo-wasm-size/test_wasm_site.cjs`,
 and `shellcheck ci/llgo-wasm-size/run.sh`. The fake compiler tests exercise
 required/optional failures and WASM headers; they do not substitute for the
 real six-configuration matrix.
+
+## TypeScript tsc (JS host)
+
+`tsc-js` downloads microsoft/TypeScript at
+`c975de5011fb7dfb32a491cf3fcf02d4f811f50e` and builds its original
+`tsc/cmd/tsc`, from the original nested `tsc` module with Go 1.27.0.
+No upstream files, module directives, or entry points are replaced. TinyGo is
+attempted but optional because 0.41.1 does not support Go 1.27.
+
+This row uses **GOOS=js GOARCH=wasm**. Existing applications retain WASI.
+All four LLGo configurations still use **-Oz** with the flags above; no -Os
+measurements are substituted. Local qualification on LLGo main `4dbedca26aaa`
+used the default **-Os**: build and `--version` succeeded. That establishes a
+JS build/startup baseline, not success of this entire -Oz matrix. Actual TS
+file compilation in the JS host remains unvalidated. The separate local WASI
+artifact built and started but panicked during TS compilation; those runtime
+results must not be attributed to the JS host or presented as functional success.
+
+For LLGo's JS target the original entry generates `.mjs` plus `.wasm`. Size
+measurements count only the final `.wasm`; the CI artifact retains both files.
+Startup uses Node 24.19.0. Go's JS host uses its upstream `wasm_exec_node.js`, and LLGo's startup check
+uses its upstream `targets/emscripten-runner.mjs --browser-only`. `results.json`
+and the page distinguish build status, version/startup status, and the explicit
+`not_run` functional check. A runtime failure does not erase a successful build
+size, but does make the task fail. This is a size comparison, not a claim that
+tsc can compile projects correctly in a browser.
+
+Builds run serially in the existing job (there is no parallel configuration
+matrix). `GOFLAGS=-mod=readonly -p=1`, `GOMAXPROCS=2`, and `BINARYEN_CORES=2`
+limit concurrency. They do not guarantee that a single optimization task will
+fit in runner RAM. Each compiler invocation has a 1200-second process-group
+timeout (`WASM_BUILD_TIMEOUT_SECONDS`); startup has a separate 120-second
+limit (`WASM_CHECK_TIMEOUT_SECONDS`). Successful, failed, and timed-out builds
+remain distinct. Missing sizes are null, later configurations still run, logs
+and exit codes are archived, and required failures/timeouts fail the task after
+the partial report is written. The existing workflow publishes partial reports.

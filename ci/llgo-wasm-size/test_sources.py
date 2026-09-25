@@ -51,7 +51,7 @@ class ExternalSourcesTest(unittest.TestCase):
                 writer.writeheader(); writer.writerow(app)
             with mock.patch.object(prepare_sources, 'checkout', return_value=upstream), mock.patch.dict(os.environ, {'GO_VERSION': '1.26.2'}):
                 plan = prepare_sources.prepare(manifest, root / 'local', root / 'cache')
-                self.assertEqual(plan[0][2:], [str(upstream), './cmd', 'optional', 'go1.27.0', revision])
+                self.assertEqual(plan[0][2:], [str(upstream), './cmd', 'optional', 'go1.27.0', revision, 'wasip1'])
                 sizes = {config: {'bytes': None if config == 'TinyGo' else 100, 'status': 'failed' if config == 'TinyGo' else 'success'} for config in report.CONFIGS}
                 document = report.build_document([app], {'example': sizes})
                 local = {**app, 'id': 'local', 'go_version': 'default', 'repository': '-', 'revision': '-'}
@@ -71,6 +71,23 @@ class ExternalSourcesTest(unittest.TestCase):
                 writer.writeheader(); writer.writerow(app)
             with mock.patch.object(prepare_sources, 'checkout', return_value=upstream), self.assertRaisesRegex(ValueError, 'invalid application entry'):
                 prepare_sources.prepare(manifest, root / 'local', root / 'cache')
+
+    def test_nested_module_uses_original_nearest_go_mod(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            module = root / 'tsc'
+            entry = module / 'cmd/tsc'
+            entry.mkdir(parents=True)
+            (root / 'go.mod').write_text('module example.com/root\n')
+            original = 'module example.com/root/tsc\n\ngo 1.27.0\n'
+            (module / 'go.mod').write_text(original)
+            app = dict(id='tsc-js', command='tsc', source='tsc/cmd/tsc',
+                       repository='https://github.com/example/root.git', revision='a'*40,
+                       tinygo='optional', go_version='1.27.0', goos='js')
+            with mock.patch.object(prepare_sources, 'read_manifest', return_value=[app]), mock.patch.object(prepare_sources, 'checkout', return_value=root):
+                plan = prepare_sources.prepare(root / 'manifest', root / 'local', root / 'cache')
+            self.assertEqual(plan[0][2:], [str(module), './cmd/tsc', 'optional', 'go1.27.0', 'a'*40, 'js'])
+            self.assertEqual((module / 'go.mod').read_text(), original)
 
     def test_manifest_requires_immutable_ref_and_contained_entry(self):
         base = report.read_manifest(Path(__file__).with_name('apps.tsv'))[-1]

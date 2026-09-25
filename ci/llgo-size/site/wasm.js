@@ -205,16 +205,20 @@ function wasmCellHtml(benchmark, compiler) {
     ? '<span class="secondary-value">Go toolchain ' + wasmEscape(benchmark.goVersion) + '</span>' : '';
   if (!Number.isFinite(value)) {
     const build = benchmark && benchmark.builds && benchmark.builds[compiler];
-    const failure = build && build.status === "failed" ? '<span class="secondary-value">Build failed</span>' : '';
+    const failure = build && ["failed", "timeout"].includes(build.status) ? '<span class="secondary-value">' + (build.status === "timeout" ? "Build timed out" : "Build failed") + "</span>" : "";
     return '<td class="matrix-cell missing">—' + failure + toolchain + '</td>';
   }
+  const checks = benchmark && benchmark.validation && benchmark.validation[compiler];
+  const statusLabel = status => ({success: "passed", failed: "failed", timeout: "timed out", not_run: "not checked"}[status] || status);
+  const validation = checks ? '<span class="secondary-value">Startup: ' + wasmEscape(statusLabel(checks.startup.status)) +
+    ' · TS compilation: ' + wasmEscape(statusLabel(checks.functional.status)) + '</span>' : '';
   const rank = wasmRank(benchmark, compiler);
   const baselineValue = wasmValue(benchmark, wasmBaseline);
   const delta = compiler === wasmBaseline ? 0 : wasmPercentDelta(value, baselineValue);
   const context = compiler === wasmBaseline
     ? '<span class="comparison-context flat">' + wasmBaseline + ' reference</span>'
     : '<span class="comparison-context ' + wasmDeltaClass(delta) + '">' + wasmPercent(delta) + " vs " + wasmBaseline + "</span>";
-  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + toolchain + "</td>";
+  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + toolchain + validation + "</td>";
 }
 
 async function wasmRenderTable() {
@@ -227,7 +231,7 @@ async function wasmRenderTable() {
   wasmState.applications.forEach(function (application) {
     wasmCompilers.forEach(function (compiler, compilerIndex) {
       const name = compilerIndex === 0 ? '<span class="benchmark-name">' + wasmEscape(application.command) + "</span>" : "";
-      const source = compilerIndex === 0 ? '<span class="wasm-source-name">' + wasmEscape(application.provenance || application.kind || "") + "</span>" : "";
+      const source = compilerIndex === 0 ? '<span class="wasm-source-name">' + wasmEscape((application.provenance || application.kind || "") + " · " + ((application.target || {}).goos || "wasip1") + "/wasm") + "</span>" : "";
       const configClass = compilerIndex === 0 ? "config-name" : "config-name config-continuation";
       const label = '<th class="matrix-label-cell" aria-label="' + wasmEscape(application.command + " · " + wasmLabels[compiler]) + '">' + name + '<span class="' + configClass + '">' + wasmEscape(wasmLabels[compiler]) + "</span>" + source + "</th>";
       const cells = maps.map(function (map) { return wasmCellHtml(map.get(application.id), compiler); }).join("");
@@ -336,7 +340,7 @@ async function wasmRenderEnvironment() {
   wasmDom.runner.textContent = wasmNormalizeRunner(run);
   wasmDom.toolchains.textContent = "Go default " + (run.goVersion || latest.goVersion || "—") + " · TinyGo " + (run.tinygoVersion || latest.tinygoVersion || "—") + " · LLVM " + (run.llvmVersion || latest.llvmVersion || "—");
   wasmDom.llgo.textContent = wasmCommitLabel(latest) + " · " + (run.llgoRepository || latest.llgoRepository || "unknown");
-  wasmDom.protocol.textContent = "wasip1/wasm · final .wasm bytes";
+  wasmDom.protocol.textContent = "Per-application WASM host · final .wasm bytes (JS glue excluded)";
   const rawPath = "data/" + latest.path;
   wasmSetLink(wasmDom.workflow, wasmSafeUrl(run.workflowUrl || latest.workflowUrl));
   wasmSetLink(wasmDom.raw, rawPath);

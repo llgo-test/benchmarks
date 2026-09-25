@@ -100,3 +100,16 @@ test('application toolchain metadata stays with its historical cell', () => {
   const tiny = page('TinyGo');
   assert.match(tiny.run('wasmCellHtml({goVersion:"1.27.0",values:{TinyGo:null}}, "TinyGo")'), /Go toolchain 1\.27\.0/);
 });
+
+
+test('timeouts and runtime checks remain distinct from build size', () => {
+  const p = page('Go');
+  p.run('row = {values:{Go:100,LLGoNoLTO:null}, builds:{LLGoNoLTO:{status:"timeout"}}}');
+  assert.match(p.run('wasmCellHtml(row, "LLGoNoLTO")'), /Build timed out/);
+  assert.equal(p.run('wasmRank(row, "LLGoNoLTO")'), null);
+  p.run('row.values.LLGoNoLTO = 80; row.validation = {LLGoNoLTO:{startup:{status:"failed"},functional:{status:"not_run"}}}');
+  const cell = p.run('wasmCellHtml(row, "LLGoNoLTO")');
+  assert.match(cell, /80 B/);
+  assert.match(cell, /Startup: failed/);
+  assert.match(cell, /TS compilation: not checked/);
+});

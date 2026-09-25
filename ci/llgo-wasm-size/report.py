@@ -45,10 +45,13 @@ def read_manifest(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as source:
         rows = list(csv.DictReader(source, delimiter="\t"))
     expected = {"id", "command", "source", "provenance", "kind", "description", "tinygo", "repository", "revision", "go_version"}
-    if not rows or set(rows[0]) != expected:
+    if not rows or set(rows[0]) not in (expected, expected | {"goos"}):
         raise ValueError(f"{path}: expected columns {sorted(expected)}")
     seen: set[str] = set()
     for row in rows:
+        row.setdefault("goos", "wasip1")
+        if row["goos"] not in {"wasip1", "js"}:
+            raise ValueError(f"{path}: unsupported WASM host")
         app_id = row["id"]
         if not APP_ID.fullmatch(app_id) or app_id in seen:
             raise ValueError(f"{path}: invalid or duplicate app id {app_id!r}")
@@ -82,7 +85,7 @@ def read_sizes(path: Path) -> dict[str, dict]:
         if config not in CONFIGS or config in results:
             raise ValueError(f"{path}: unknown or duplicate config {config!r} for {app_id!r}")
         value = None if row["bytes"] == "null" else int(row["bytes"])
-        if status not in {"success", "failed"} or (status == "success") != (value is not None):
+        if status not in {"success", "failed", "timeout"} or (status == "success") != (value is not None):
             raise ValueError(f"{path}: inconsistent status/size for {app_id!r}/{config}")
         if value is not None and value <= 0:
             raise ValueError(f"{path}: non-positive size for {app_id!r}/{config}")
@@ -136,7 +139,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             value, status = result["bytes"], result["status"]
             if status == "success" and type(value) is int and value > 0:
                 continue
-            if status == "failed" and value is None:
+            if status in {"failed", "timeout"} and value is None:
                 continue
             raise ValueError(f"invalid build result: {app['id']}/{config}")
         benchmarks.append({
@@ -147,6 +150,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "kind": app["kind"],
             "description": app["description"],
             "tinygo": app["tinygo"],
+            "target": {"goos": app.get("goos", "wasip1"), "goarch": "wasm"},
             "repository": app.get("repository", "-"),
             "revision": app.get("revision", "-"),
             "goVersion": os.environ.get("GO_VERSION", "") if app.get("go_version", "default") == "default" else app["go_version"],
@@ -184,7 +188,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "schemaVersion": 2,
         "format": "wasm-file-size",
         "run": run,
-        "target": {"goos": "wasip1", "goarch": "wasm"},
+        "target": {"goos": "wasip1" if all(app.get("goos", "wasip1") == "wasip1" for app in manifest) else "per-application", "goarch": "wasm"},
         "configs": CONFIGS,
         "configLabels": LABELS,
         "comparisons": comparisons(benchmarks),
@@ -194,14 +198,20 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "LLGoPostLink": ["Emscripten wasm-opt", "Asyncify and standardized exception translation"],
             "sameGoToolchain": len({app["goVersion"] for app in benchmarks}) == 1,
             "sameGoToolchainPerApplication": True,
-            "modulePolicy": "GOFLAGS=-mod=readonly, GO111MODULE=on, GOWORK=off; no module rewrites",
+            "modulePolicy": "GOFLAGS=-mod=readonly -p=1, GO111MODULE=on, GOWORK=off; no module rewrites",
             "sourcePolicy": "Download pinned upstream commits and build original entries with unchanged modules",
             "environment": {config: {"CCFLAGS": "", "LDFLAGS": "", "CFLAGS": "", **ENVIRONMENT.get(config, {})}
                             for config in CONFIGS},
+            "resources": {"parallelBuilds": 1, "GOMAXPROCS": os.environ.get("GOMAXPROCS", "2"),
+                          "BINARYEN_CORES": os.environ.get("BINARYEN_CORES", "2"),
+                          "GOFLAGS": "-mod=readonly -p=1",
+                          "buildTimeoutSeconds": float(os.environ.get("WASM_BUILD_TIMEOUT_SECONDS", "1200"))},
+            "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
             "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
         },
         "toolVersions": {
             "Go": os.environ.get("GO_ACTUAL_VERSION", ""),
+            "Node": os.environ.get("NODE_ACTUAL_VERSION", ""),
             "TinyGo": os.environ.get("TINYGO_ACTUAL_VERSION", ""),
             "LLGo": os.environ.get("LLGO_ACTUAL_VERSION", ""),
             "Clang": os.environ.get("CLANG_ACTUAL_VERSION", ""),
@@ -219,7 +229,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
 
 
 def write_summary(document: dict, path: Path) -> None:
-    lines = ["# WASM binary size", "", "`wasip1/wasm`; smaller is better.",
+    lines = ["# WASM binary size", "", "Per-application WASM host (wasip1 or js); smaller is better. JS glue is excluded.",
              "Each application uses the same pinned Go toolchain across compilers; per-application versions are recorded below.", ""]
     for config in CONFIGS:
         environment = " ".join(f"{key}={value!r}" for key, value in ENVIRONMENT.get(config, {}).items())
@@ -228,19 +238,19 @@ def write_summary(document: dict, path: Path) -> None:
               "TinyGo uses its separately pinned Binaryen release.",
               "Failed builds are shown as — and excluded from comparisons; logs are included in the CI artifact.", ""]
     failures = [(app, config) for app in document["benchmarks"] for config in CONFIGS
-                if app["builds"][config]["status"] == "failed"]
+                if app["builds"][config]["status"] != "success"]
     if failures:
-        lines += ["## Failed builds", "", "| Application | Configuration | Policy | Log |",
-                  "| --- | --- | --- | --- |"]
+        lines += ["## Failed builds", "", "| Application | Configuration | Policy | Status | Log |",
+                  "| --- | --- | --- | --- | --- |"]
         for app, config in failures:
             policy = "optional" if config == "TinyGo" and app["tinygo"] == "optional" else "required"
             log = app["builds"][config]["log"]
-            lines.append(f"| {app['id']} | {config} | {policy} | [{log}]({log}) |")
+            lines.append(f"| {app['id']} | {config} | {policy} | {app['builds'][config]['status']} | [{log}]({log}) |")
         lines.append("")
-    lines += ["| Application | Go toolchain | Source repository | Commit | Entry |",
-              "| --- | --- | --- | --- | --- |"]
+    lines += ["| Application | Target | Go toolchain | Source repository | Commit | Entry |",
+              "| --- | --- | --- | --- | --- | --- |"]
     for app in document["benchmarks"]:
-        lines.append(f"| {app['id']} | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
+        lines.append(f"| {app['id']} | {app['target']['goos']}/wasm | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
     lines.append("")
     for baseline in ("Go", "TinyGo"):
         lines += [f"## WASM binary size (vs. {baseline})", "",
@@ -258,6 +268,14 @@ def write_summary(document: dict, path: Path) -> None:
                 delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
                 lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
         lines.append("")
+    for app in document["benchmarks"]:
+        if "validation" not in app:
+            continue
+        lines += ["", f"## {app['id']} runtime checks", "", "Build size, startup, and functional correctness are separate results.",
+                  "", "| Configuration | Startup | Actual TS compilation |", "| --- | --- | --- |"]
+        for config, checks in app["validation"].items():
+            lines.append(f"| {config} | {checks['startup']['status']} | {checks['functional']['status']} |")
+        lines.append("Actual TypeScript compilation under the JS host remains unvalidated. WASI functional failures from local tests do not establish JS behavior.")
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -280,6 +298,21 @@ def main(argv: list[str]) -> int:
     except (OSError, ValueError) as error:
         print(error, file=sys.stderr)
         return 1
+    for app in document["benchmarks"]:
+        for config in CONFIGS:
+            metadata = output_dir / "logs" / f"{app['id']}.{config}.log.json"
+            if metadata.exists():
+                command = json.loads(metadata.read_text())
+                app["builds"][config].update(commandExitCode=command["exitCode"], seconds=command["seconds"])
+        if app["id"] != "tsc-js":
+            continue
+        app["validation"] = {}
+        for config in CONFIGS:
+            checks = output_dir / "logs" / f"{app['id']}.{config}.checks.json"
+            app["validation"][config] = json.loads(checks.read_text()) if checks.exists() else {
+                "startup": {"status": "not_run", "reason": "No completed startup check"},
+                "functional": {"status": "not_run", "reason": "Actual TypeScript compilation in the JS host has not been validated"},
+            }
     with (output_dir / "results.json").open("w", encoding="utf-8") as destination:
         json.dump(document, destination, indent=2)
         destination.write("\n")
