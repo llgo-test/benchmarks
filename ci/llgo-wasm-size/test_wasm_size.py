@@ -218,9 +218,6 @@ class RunnerTest(unittest.TestCase):
 import json, os, sys, time
 from pathlib import Path
 name = Path(sys.argv[0]).name
-if name == "node":
-    print("Version fixture")
-    raise SystemExit(0)
 if "-o" not in sys.argv:
     print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
     raise SystemExit(0)
@@ -242,7 +239,7 @@ if output.suffix == ".mjs":
     output = output.with_suffix(".wasm")
 output.write_bytes(b"\\0asm" + b"x" * 20)
 '''.replace("PYTHON", sys.executable)
-        for name in ("go", "tinygo", "llgo", "clang++", "wasm-ld", "wasm-opt", "llgo-wasm-opt", "node"):
+        for name in ("go", "tinygo", "llgo", "clang++", "wasm-ld", "wasm-opt", "llgo-wasm-opt"):
             path = bin_dir / name
             path.write_text(program)
             path.chmod(0o755)
@@ -250,7 +247,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "LLGO_BIN": str(bin_dir / "llgo"), "GO_VERSION": "1.26.2",
                "TINYGO_VERSION": "0.41.1", "BINARYEN_VERSION": "132", "LLVM_VERSION": "22",
                "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"), "LLGO_ROOT": str(root),
-               "NODE_BIN": str(bin_dir / "node"), "TIMEOUT_BUILD": "1" if timeout else "0",
+               "TIMEOUT_BUILD": "1" if timeout else "0",
                "WASM_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
                "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}

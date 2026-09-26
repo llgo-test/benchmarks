@@ -50,8 +50,6 @@ TINYGO_WASM_OPT_ACTUAL_VERSION="$($wasm_opt_bin --version | head -n 1)"
 LLGO_WASM_OPT_ACTUAL_VERSION="$($llgo_wasm_opt_bin --version | head -n 1)"
 export GO_ACTUAL_VERSION TINYGO_ACTUAL_VERSION LLGO_ACTUAL_VERSION CLANG_ACTUAL_VERSION
 export TINYGO_WASM_OPT_ACTUAL_VERSION LLGO_WASM_OPT_ACTUAL_VERSION
-NODE_ACTUAL_VERSION="$("${NODE_BIN:-node}" --version)"
-export NODE_ACTUAL_VERSION
 export WASM_LD_ACTUAL_VERSION
 # Bitcode requires a matching compiler/linker pair; a native-only build can
 # accidentally hide an older wasm-ld elsewhere on PATH.
@@ -105,7 +103,7 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
       build_output="${binary%.wasm}.mjs"
     fi
     # A retry must never measure an artifact left by an earlier successful run.
-    rm -f "$binary" "$build_output" "$log.json" "$output_dir/logs/$app_id.$config.checks.json" "$output_dir/logs/$app_id.$config.version.log"
+    rm -f "$binary" "$build_output" "$log.json"
     echo "[wasm-size] building $app_id ($command) with $config"
     build_status=success
     status=0
@@ -117,7 +115,6 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
     ) || status=$?
     if ((status == 0)) && verify_wasm "$binary" >>"$log" 2>&1; then
       bytes="$(wc -c < "$binary" | tr -d ' ')"
-
     else
       build_status=failed
       if ((status == 124)); then build_status=timeout; fi

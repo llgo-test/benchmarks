@@ -305,11 +305,6 @@ jobs:
         with:
           version: "4.0.21"
 
-      - name: Install pinned Node for Emscripten
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24.19.0"
-
       - name: Install pinned TinyGo
         run: |
           set -euo pipefail

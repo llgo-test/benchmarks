@@ -217,7 +217,6 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         },
         "toolVersions": {
             "Go": os.environ.get("GO_ACTUAL_VERSION", ""),
-            "Node": os.environ.get("NODE_ACTUAL_VERSION", ""),
             "TinyGo": os.environ.get("TINYGO_ACTUAL_VERSION", ""),
             "LLGo": os.environ.get("LLGO_ACTUAL_VERSION", ""),
             "Clang": os.environ.get("CLANG_ACTUAL_VERSION", ""),
