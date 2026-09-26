@@ -33,6 +33,25 @@ fi
 go_toolchain="go${GO_VERSION#go}"
 apps_dir="$script_dir/apps"
 manifest="$script_dir/apps.tsv"
+# Filter only the execution manifest; keep one shared source of application metadata.
+if [[ -n "${WASM_SUITE:-}" ]]; then
+  python3 - "$manifest" "$output_dir/apps.tsv" "$WASM_SUITE" <<'PYFILTER'
+import csv
+import sys
+source, destination, suite = sys.argv[1:]
+if suite not in {"standard", "tsgo"}:
+    raise SystemExit(f"unknown WASM suite: {suite}")
+with open(source) as stream:
+    reader = csv.DictReader(stream, delimiter="\t")
+    rows = [row for row in reader if (row["id"] == "tsgo") == (suite == "tsgo")]
+    fields = reader.fieldnames
+with open(destination, "w") as stream:
+    writer = csv.DictWriter(stream, fieldnames=fields, delimiter="\t", lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows)
+PYFILTER
+  manifest="$output_dir/apps.tsv"
+fi
 raw_dir="$output_dir/raw"
 mkdir -p "$raw_dir" "$output_dir/logs"
 rm -f "$output_dir/results.json" "$output_dir/summary.md"

@@ -185,6 +185,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "runnerImage": os.environ.get("ImageOS", ""),
     }
     return {
+        "suite": os.environ.get("WASM_SUITE", "all"),
         "schemaVersion": 2,
         "format": "wasm-file-size",
         "run": run,

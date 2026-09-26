@@ -54,6 +54,32 @@ class WasmSizeTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing=.*grep"):
             report.build_document(manifest, {"base64": results(900, 100, 80)})
 
+    def test_independent_suites_merge_in_either_order_and_replace_only_owned_rows(self):
+        for order in (("standard", "tsgo"), ("tsgo", "standard")):
+            with self.subTest(order=order), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                apps = report.read_manifest(HERE / "apps.tsv")
+                for index, suite in enumerate((*order, order[0])):
+                    app = next(row for row in apps if (row["id"] == "tsgo") == (suite == "tsgo"))
+                    directory = root / str(index)
+                    directory.mkdir()
+                    with mock.patch.dict(os.environ, {"WASM_SUITE": suite, "LLGO_COMMIT": "a" * 40}):
+                        document = report.build_document([app], {app["id"]: results(100 + index, 50, 20)})
+                    (directory / "results.json").write_text(json.dumps(document))
+                    report.write_summary(document, directory / "summary.md")
+                    (directory / "sizes.tsv").write_text("app\tconfig\tbytes\tstatus\n")
+                    (directory / "logs").mkdir()
+                    (directory / "logs" / (app["id"] + ".Go.log")).write_text(str(index))
+                    archive.archive(directory, root / "pages")
+                published = root / "pages/data/wasm/runs" / ("a" * 40)
+                merged = json.loads((published / "results.json").read_text())
+                rows = {row["id"]: row for row in merged["benchmarks"]}
+                self.assertEqual(set(rows), {"base64", "tsgo"})
+                self.assertEqual(rows["tsgo" if order[0] == "tsgo" else "base64"]["values"]["Go"], 102)
+                self.assertEqual(len((published / "sizes.tsv").read_text().splitlines()), 13)
+                self.assertEqual(len(list((published / "logs").iterdir())), 2)
+                self.assertEqual(set(merged["comparisonsByTarget"]), {"js", "wasip1"})
+
     def test_archive_keys_history_by_llgo_commit(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -192,7 +218,7 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False, suite=""):
         script = root / "script"
         script.mkdir()
         for name in ("run.sh", "report.py", "prepare_sources.py"):
@@ -250,7 +276,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "LLGO_BIN": str(bin_dir / "llgo"), "GO_VERSION": "1.26.2",
                "TINYGO_VERSION": "0.41.1", "BINARYEN_VERSION": "132", "LLVM_VERSION": "22",
                "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"), "LLGO_ROOT": str(root),
-               "TIMEOUT_BUILD": "1" if timeout else "0",
+               "TIMEOUT_BUILD": "1" if timeout else "0", "WASM_SUITE": suite,
                "LLGO_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
                "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
@@ -264,6 +290,15 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
         completed = subprocess.run(["bash", str(script / "run.sh"), str(output)], env=env,
                                    capture_output=True, text=True)
         return completed, output
+
+    def test_execution_suites_are_disjoint(self):
+        for suite, expected in (("standard", "second"), ("tsgo", "tsgo")):
+            with self.subTest(suite=suite), tempfile.TemporaryDirectory() as temp:
+                completed, output = self.run_fixture(Path(temp), js=True, two_apps=True, suite=suite)
+                self.assertEqual(completed.returncode, 0, completed.stderr)
+                document = json.loads((output / "results.json").read_text())
+                self.assertEqual([row["id"] for row in document["benchmarks"]], [expected])
+                self.assertEqual(document["suite"], suite)
 
     def test_js_suite_matches_wasi_sources_plus_tsgo(self):
         rows = report.read_manifest(HERE / "apps.tsv")
