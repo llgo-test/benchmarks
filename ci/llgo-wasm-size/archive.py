@@ -39,15 +39,41 @@ def archive(run_dir: Path, pages_dir: Path) -> str:
     data_dir = pages_dir / "data" / "wasm"
     published_dir = data_dir / "runs" / key
     published_dir.mkdir(parents=True, exist_ok=True)
-    for source in required:
-        shutil.copy2(source, published_dir / source.name)
+    suite = document.get("suite", "all")
+    previous = published_dir / "results.json"
+    if suite in {"standard", "tsgo"} and previous.exists():
+        stored = json.loads(previous.read_text())
+        # Each independent runner replaces only its own rows, in either order.
+        retained = [row for row in stored["benchmarks"]
+                    if (row["id"] == "tsgo") != (suite == "tsgo")]
+        document["benchmarks"] = sorted(retained + document["benchmarks"], key=lambda row: row["id"])
+        from report import comparisons, write_summary
+        rows = document["benchmarks"]
+        document["protocol"]["sameGoToolchain"] = len({row["goVersion"] for row in rows}) == 1
+        document["comparisons"] = comparisons(rows)
+        document["comparisonsByTarget"] = {
+            target: comparisons([row for row in rows if row.get("target", {}).get("goos", "wasip1") == target])
+            for target in {row.get("target", {}).get("goos", "wasip1") for row in rows}
+        }
+        document["target"] = {"goos": "per-application", "goarch": "wasm"}
+        previous.write_text(json.dumps(document, indent=2) + "\n")
+        write_summary(document, published_dir / "summary.md")
+        lines = ["app\tconfig\tbytes\tstatus\n"]
+        for row in rows:
+            for config in document["configs"]:
+                value = row["values"][config]
+                lines.append(f"{row['id']}\t{config}\t{value if value is not None else 'null'}\t{row['builds'][config]['status']}\n")
+        (published_dir / "sizes.tsv").write_text("".join(lines))
+    else:
+        for source in required:
+            shutil.copy2(source, published_dir / source.name)
     # Keep build-status log references usable from the archived JSON as well
     # as from the full CI artifact. Older schema-v1 runs may have no logs.
     logs = published_dir / "logs"
-    if logs.exists():
+    if logs.exists() and suite not in {"standard", "tsgo"}:
         shutil.rmtree(logs)
     if (run_dir / "logs").is_dir():
-        shutil.copytree(run_dir / "logs", logs)
+        shutil.copytree(run_dir / "logs", logs, dirs_exist_ok=True)
 
     runs = []
     for result_path_string in glob.glob(str(data_dir / "runs" / "*" / "results.json")):

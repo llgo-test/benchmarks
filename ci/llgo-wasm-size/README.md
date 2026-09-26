@@ -131,3 +131,15 @@ timeout via the existing `ci/llgo-size/bin/llgo-build-timeout` wrapper
 remain distinct. Missing sizes are null, later configurations still run, logs
 and exit codes are archived, and required failures/timeouts fail the task after
 the partial report is written. The existing workflow publishes partial reports.
+
+### Isolated tsgo runner
+
+The `standard` suite builds the other 22 WASI/JS applications and all existing
+Linux benchmarks. The `tsgo` suite builds only tsgo's six WASM configurations
+on a separate runner. Both call the same reusable workflow, with independent
+artifact upload, publication, and Pages deployment; neither waits for the
+other. `WASM_SUITE` selects rows from the shared manifest. Publication replaces
+only that suite's rows for the LLGo revision, preserving the other suite's
+results regardless of completion order. A lost tsgo runner cannot prevent the
+standard suite from publishing. No size or failure is fabricated when a runner
+is lost before it produces a report.
