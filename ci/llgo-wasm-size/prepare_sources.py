@@ -48,16 +48,18 @@ def prepare(manifest: Path, local: Path, cache: Path) -> list[list[str]]:
         if not entry.is_relative_to(root) or not entry.exists():
             raise ValueError(f"invalid application entry: {app['id']}: {entry}")
         if external:
-            # Build from the upstream root, preserving its module and entry path.
-            target = "./" + app["source"]
-            cwd = root
+            # Resolve the original enclosing module, including nested modules.
+            cwd = entry if entry.is_dir() else entry.parent
+            while cwd != root and not (cwd / "go.mod").is_file():
+                cwd = cwd.parent
+            target = "./" + entry.relative_to(cwd).as_posix()
             revision = app["revision"]
         else:
             if not entry.is_dir():
                 raise ValueError(f"local application must be a directory: {entry}")
             cwd, target, revision = entry, ".", "-"
         version = os.environ["GO_VERSION"] if app["go_version"] == "default" else app["go_version"]
-        plan.append([app["id"], app["command"], str(cwd), target, app["tinygo"], "go" + version.removeprefix("go"), revision])
+        plan.append([app["id"], app["command"], str(cwd), target, app["tinygo"], "go" + version.removeprefix("go"), revision, app["goos"]])
     return plan
 
 

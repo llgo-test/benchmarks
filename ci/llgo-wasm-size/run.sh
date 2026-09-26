@@ -16,6 +16,9 @@ output_dir="$(cd -- "$output_dir" && pwd)"
 # The benchmark applications are self-contained modules. Do not let a caller's
 # ambient workspace change their dependency graph or LLGo runtime resolution.
 export GOWORK=off
+# Builds are serial; these bound package/optimizer concurrency, not peak RAM.
+export GOMAXPROCS="${GOMAXPROCS:-2}" BINARYEN_CORES="${BINARYEN_CORES:-2}"
+export LLGO_BUILD_TIMEOUT_SECONDS="${LLGO_BUILD_TIMEOUT_SECONDS:-1200}"
 
 tinygo_bin="$(command -v tinygo)"
 go_bin="$(command -v go)"
@@ -81,7 +84,7 @@ python3 "$script_dir/prepare_sources.py" "$manifest" "$apps_dir" \
   "$output_dir/../wasm-sources" "$output_dir/sources.tsv"
 
 required_failures=0
-while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolchain source_revision; do
+while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolchain source_revision app_goos; do
   while IFS=$'\t' read -r -a config_fields; do
     config="${config_fields[0]}"
     config_env=("${config_fields[@]:1:2}")
@@ -95,20 +98,29 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
     mkdir -p "$raw_dir/$config"
     binary="$raw_dir/$config/$app_id.wasm"
     log="$output_dir/logs/$app_id.$config.log"
+    build_output="$binary"
+    if [[ "$app_goos" == js && "$config" == LLGo* ]]; then
+      build_output="${binary%.wasm}.mjs"
+    fi
     # A retry must never measure an artifact left by an earlier successful run.
-    rm -f "$binary"
+    rm -f "$binary" "$build_output"
     echo "[wasm-size] building $app_id ($command) with $config"
     build_status=success
-    if (
+    status=0
+    (
       cd "$source_dir" &&
-      env "${config_env[@]}" CFLAGS= WASMOPT="$postlink" GOTOOLCHAIN="$app_toolchain" GOFLAGS=-mod=readonly GO111MODULE=on GOOS=wasip1 GOARCH=wasm \
-        "$compiler" "${flags[@]}" -o "$binary" "$target" && verify_wasm "$binary"
-    ) >"$log" 2>&1; then
+      env "${config_env[@]}" CFLAGS= WASMOPT="$postlink" GOTOOLCHAIN="$app_toolchain" GOFLAGS='-mod=readonly -p=1' GO111MODULE=on GOOS="$app_goos" GOARCH=wasm \
+        LLGO_REAL_BIN="$compiler" BENT_BENCH="$app_id" BENT_CONFIG="$config" \
+        python3 "$script_dir/../llgo-size/bin/llgo-build-timeout" "${flags[@]}" -o "$build_output" "$target"
+    ) >"$log" 2>&1 || status=$?
+    printf 'Compiler exit status: %s\n' "$status" >>"$log"
+    if ((status == 0)) && verify_wasm "$binary" >>"$log" 2>&1; then
       bytes="$(wc -c < "$binary" | tr -d ' ')"
     else
       build_status=failed
+      if ((status == 124)); then build_status=timeout; fi
       bytes=null
-      rm -f "$binary"
+      rm -f "$binary" "$build_output"
       tail -n 80 "$log" >&2
     fi
     if [[ "$source_revision" != - ]]; then
@@ -118,7 +130,7 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
       fi
     fi
     printf '%s\t%s\t%s\t%s\n' "$app_id" "$config" "$bytes" "$build_status" >> "$sizes"
-    if [[ "$build_status" == failed ]]; then
+    if [[ "$build_status" != success ]]; then
       if [[ "$config" == TinyGo && "$tinygo_policy" == optional ]]; then
         echo "[wasm-size] optional TinyGo build failed: $app_id (see $log)" >&2
       else

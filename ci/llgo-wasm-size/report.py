@@ -45,10 +45,13 @@ def read_manifest(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as source:
         rows = list(csv.DictReader(source, delimiter="\t"))
     expected = {"id", "command", "source", "provenance", "kind", "description", "tinygo", "repository", "revision", "go_version"}
-    if not rows or set(rows[0]) != expected:
+    if not rows or set(rows[0]) not in (expected, expected | {"goos"}):
         raise ValueError(f"{path}: expected columns {sorted(expected)}")
     seen: set[str] = set()
     for row in rows:
+        row.setdefault("goos", "wasip1")
+        if row["goos"] not in {"wasip1", "js"}:
+            raise ValueError(f"{path}: unsupported WASM host")
         app_id = row["id"]
         if not APP_ID.fullmatch(app_id) or app_id in seen:
             raise ValueError(f"{path}: invalid or duplicate app id {app_id!r}")
@@ -82,7 +85,7 @@ def read_sizes(path: Path) -> dict[str, dict]:
         if config not in CONFIGS or config in results:
             raise ValueError(f"{path}: unknown or duplicate config {config!r} for {app_id!r}")
         value = None if row["bytes"] == "null" else int(row["bytes"])
-        if status not in {"success", "failed"} or (status == "success") != (value is not None):
+        if status not in {"success", "failed", "timeout"} or (status == "success") != (value is not None):
             raise ValueError(f"{path}: inconsistent status/size for {app_id!r}/{config}")
         if value is not None and value <= 0:
             raise ValueError(f"{path}: non-positive size for {app_id!r}/{config}")
@@ -136,7 +139,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             value, status = result["bytes"], result["status"]
             if status == "success" and type(value) is int and value > 0:
                 continue
-            if status == "failed" and value is None:
+            if status in {"failed", "timeout"} and value is None:
                 continue
             raise ValueError(f"invalid build result: {app['id']}/{config}")
         benchmarks.append({
@@ -147,6 +150,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "kind": app["kind"],
             "description": app["description"],
             "tinygo": app["tinygo"],
+            "target": {"goos": app.get("goos", "wasip1"), "goarch": "wasm"},
             "repository": app.get("repository", "-"),
             "revision": app.get("revision", "-"),
             "goVersion": os.environ.get("GO_VERSION", "") if app.get("go_version", "default") == "default" else app["go_version"],
@@ -184,20 +188,31 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "schemaVersion": 2,
         "format": "wasm-file-size",
         "run": run,
-        "target": {"goos": "wasip1", "goarch": "wasm"},
+        "target": {"goos": "wasip1" if all(app.get("goos", "wasip1") == "wasip1" for app in manifest) else "per-application", "goarch": "wasm"},
         "configs": CONFIGS,
         "configLabels": LABELS,
         "comparisons": comparisons(benchmarks),
+        "comparisonsByTarget": {target: comparisons([row for row in benchmarks if row["target"]["goos"] == target])
+                                for target in sorted({row["target"]["goos"] for row in benchmarks})},
         "metric": "total-bytes",
         "protocol": {
             **PROTOCOL,
-            "LLGoPostLink": ["Emscripten wasm-opt", "Asyncify and standardized exception translation"],
+            "LLGoPostLink": ["Emscripten wasm-opt", "Upstream target-specific post-link processing"],
+            "LLGoPostLinkByTarget": {
+                "wasip1": "LLGo pre-Asyncify optimization, Asyncify and standardized exception translation",
+                "js": "Upstream Emscripten driver; its Binaryen optimization level is not overridden by this benchmark",
+            },
             "sameGoToolchain": len({app["goVersion"] for app in benchmarks}) == 1,
             "sameGoToolchainPerApplication": True,
-            "modulePolicy": "GOFLAGS=-mod=readonly, GO111MODULE=on, GOWORK=off; no module rewrites",
+            "modulePolicy": "GOFLAGS=-mod=readonly -p=1, GO111MODULE=on, GOWORK=off; no module rewrites",
             "sourcePolicy": "Download pinned upstream commits and build original entries with unchanged modules",
             "environment": {config: {"CCFLAGS": "", "LDFLAGS": "", "CFLAGS": "", **ENVIRONMENT.get(config, {})}
                             for config in CONFIGS},
+            "resources": {"parallelBuilds": 1, "GOMAXPROCS": os.environ.get("GOMAXPROCS", "2"),
+                          "BINARYEN_CORES": os.environ.get("BINARYEN_CORES", "2"),
+                          "GOFLAGS": "-mod=readonly -p=1",
+                          "buildTimeoutSeconds": float(os.environ.get("LLGO_BUILD_TIMEOUT_SECONDS", "1200"))},
+            "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
             "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
         },
         "toolVersions": {
@@ -219,45 +234,48 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
 
 
 def write_summary(document: dict, path: Path) -> None:
-    lines = ["# WASM binary size", "", "`wasip1/wasm`; smaller is better.",
+    lines = ["# WASM binary size", "", "Per-application WASM host (wasip1 or js); smaller is better. JS glue is excluded.",
              "Each application uses the same pinned Go toolchain across compilers; per-application versions are recorded below.", ""]
     for config in CONFIGS:
         environment = " ".join(f"{key}={value!r}" for key, value in ENVIRONMENT.get(config, {}).items())
         lines.append(f"- {LABELS[config]}: `{environment + ' ' if environment else ''}{shlex.join(PROTOCOL[config])}`")
-    lines += ["", "LLGo uses Emscripten wasm-opt for Asyncify and exception translation;",
+    lines += ["", "LLGo uses target-specific upstream Emscripten/Binaryen processing; see the recorded protocol.",
               "TinyGo uses its separately pinned Binaryen release.",
               "Failed builds are shown as — and excluded from comparisons; logs are included in the CI artifact.", ""]
     failures = [(app, config) for app in document["benchmarks"] for config in CONFIGS
-                if app["builds"][config]["status"] == "failed"]
+                if app["builds"][config]["status"] != "success"]
     if failures:
-        lines += ["## Failed builds", "", "| Application | Configuration | Policy | Log |",
-                  "| --- | --- | --- | --- |"]
+        lines += ["## Failed builds", "", "| Application | Configuration | Policy | Status | Log |",
+                  "| --- | --- | --- | --- | --- |"]
         for app, config in failures:
             policy = "optional" if config == "TinyGo" and app["tinygo"] == "optional" else "required"
             log = app["builds"][config]["log"]
-            lines.append(f"| {app['id']} | {config} | {policy} | [{log}]({log}) |")
+            lines.append(f"| {app['id']} | {config} | {policy} | {app['builds'][config]['status']} | [{log}]({log}) |")
         lines.append("")
-    lines += ["| Application | Go toolchain | Source repository | Commit | Entry |",
-              "| --- | --- | --- | --- | --- |"]
+    lines += ["| Application | Target | Go toolchain | Source repository | Commit | Entry |",
+              "| --- | --- | --- | --- | --- | --- |"]
     for app in document["benchmarks"]:
-        lines.append(f"| {app['id']} | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
+        lines.append(f"| {app['id']} | {app['target']['goos']}/wasm | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
     lines.append("")
-    for baseline in ("Go", "TinyGo"):
-        lines += [f"## WASM binary size (vs. {baseline})", "",
-                  "| LLGo mode | Geometric mean / baseline | Valid samples |",
-                  "| --- | ---: | ---: |"]
-        for config, result in document["comparisons"][baseline].items():
-            ratio = f"{result['ratio']:.3f}x" if result["ratio"] is not None else "—"
-            lines.append(f"| {LABELS[config]} | {ratio} | {result['samples']} |")
-        lines += ["", f"| Application | {baseline} bytes | LLGo mode | LLGo bytes | vs. {baseline} |",
-                  "| --- | ---: | --- | ---: | ---: |"]
-        for row in document["benchmarks"]:
-            reference = row["values"][baseline]
-            for config in LLGO_CONFIGS:
-                value = row["values"][config]
-                delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
-                lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
-        lines.append("")
+    for target, target_comparisons in document["comparisonsByTarget"].items():
+        for baseline in ("Go", "TinyGo"):
+            lines += [f"## {target}/wasm binary size (vs. {baseline})", "",
+                      "| LLGo mode | Geometric mean / baseline | Valid samples |",
+                      "| --- | ---: | ---: |"]
+            for config, result in target_comparisons[baseline].items():
+                ratio = f"{result['ratio']:.3f}x" if result["ratio"] is not None else "—"
+                lines.append(f"| {LABELS[config]} | {ratio} | {result['samples']} |")
+            lines += ["", f"| Application | {baseline} bytes | LLGo mode | LLGo bytes | vs. {baseline} |",
+                      "| --- | ---: | --- | ---: | ---: |"]
+            for row in document["benchmarks"]:
+                if row["target"]["goos"] != target:
+                    continue
+                reference = row["values"][baseline]
+                for config in LLGO_CONFIGS:
+                    value = row["values"][config]
+                    delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
+                    lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
+            lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8")
 
 

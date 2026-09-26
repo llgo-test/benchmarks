@@ -6,11 +6,11 @@ const { test } = require('node:test');
 
 const site = path.join(__dirname, '../llgo-size/site');
 const source = fs.readFileSync(path.join(site, 'wasm.js'), 'utf8');
-function page(baseline, code = source) {
+function page(baseline, code = source, target = "wasip1") {
   const elements = new Map();
   const context = vm.createContext({
     document: {
-      body: { dataset: { wasmBaseline: baseline } },
+      body: { dataset: { wasmBaseline: baseline, wasmTarget: target } },
       querySelector(selector) {
         if (!elements.has(selector)) elements.set(selector, {
           addEventListener() {}, classList: { add() {}, remove() {} }, style: {},
@@ -82,11 +82,13 @@ for (const baseline of ['Go', 'TinyGo']) {
   });
 }
 
-test('all pages have two WASM links and correct active navigation', () => {
-  for (const file of ['index.html','wasm-tinygo.html','linux.html','performance.html','compatibility.html']) {
+test('all pages have four WASM links and correct active navigation', () => {
+  for (const file of ['index.html','wasm-tinygo.html','js-wasm.html','js-wasm-tinygo.html','linux.html','performance.html','compatibility.html']) {
     const html = fs.readFileSync(path.join(site, file), 'utf8');
-    assert.match(html, /href="index.html"[^>]*>WASM binary size \(vs\. Go\)/);
-    assert.match(html, /href="wasm-tinygo.html"[^>]*>WASM binary size \(vs\. TinyGo\)/);
+    assert.match(html, /href="index.html"[^>]*>WASI binary size \(vs\. Go\)/);
+    assert.match(html, /href="wasm-tinygo.html"[^>]*>WASI binary size \(vs\. TinyGo\)/);
+    assert.match(html, /href="js-wasm.html"/);
+    assert.match(html, /href="js-wasm-tinygo.html"/);
     assert.equal((html.match(/aria-current="page"/g) || []).length, 1);
   }
 });
@@ -100,3 +102,25 @@ test('application toolchain metadata stays with its historical cell', () => {
   const tiny = page('TinyGo');
   assert.match(tiny.run('wasmCellHtml({goVersion:"1.27.0",values:{TinyGo:null}}, "TinyGo")'), /Go toolchain 1\.27\.0/);
 });
+
+
+test('timeouts and runtime checks remain distinct from build size', () => {
+  const p = page('Go');
+  p.run('row = {values:{Go:100,LLGoNoLTO:null}, builds:{LLGoNoLTO:{status:"timeout"}}}');
+  assert.match(p.run('wasmCellHtml(row, "LLGoNoLTO")'), /Build timed out/);
+  assert.equal(p.run('wasmRank(row, "LLGoNoLTO")'), null);
+  p.run('row.values.LLGoNoLTO = 80; row.validation = {LLGoNoLTO:{startup:{status:"failed"},functional:{status:"not_run"}}}');
+  const cell = p.run('wasmCellHtml(row, "LLGoNoLTO")');
+  assert.match(cell, /80 B/);
+  assert.doesNotMatch(cell, /Startup:/);
+  assert.doesNotMatch(cell, /TS compilation:/);
+});
+
+for (const target of ['wasip1', 'js']) {
+  test(`${target}: target isolation includes legacy WASI history`, () => {
+    const p = page('Go', source, target);
+    p.run('data = {benchmarks:[{id:"old",values:{Go:100,LLGoNoLTO:50}}, {id:"wasi",target:{goos:"wasip1"},values:{Go:200,LLGoNoLTO:100}}, {id:"tsgo",target:{goos:"js"},values:{Go:300,LLGoNoLTO:400}}]}');
+    assert.equal(p.run('JSON.stringify(wasmTargetRows(data).map(row => row.id))'), target === 'js' ? '["tsgo"]' : '["old","wasi"]');
+    assert.equal(p.run('wasmBenchmarkMap(data).has("tsgo")'), target === 'js');
+  });
+}

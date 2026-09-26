@@ -1,12 +1,12 @@
 # Go, TinyGo, and LLGo WASM application-size CI
 
-This benchmark builds eleven command-line applications for `wasip1/wasm` with
+This benchmark builds twelve command-line applications for `wasip1/wasm` or `js/wasm` with
 the native Go compiler, TinyGo, and LLGo, then compares the final `.wasm` file
 sizes. These are application workloads rather than single-package probes. The
 suite covers image convolution, JSON processing, SHA-256, a streaming Base64
 codec, multi-hash checksums, recursive computation, regular-expression and
 wildcard filters, an HTML path report, Unicode-aware text statistics, and Go
-package import/type metadata processing.
+package import/type metadata processing, and the TypeScript Go compiler.
 
 External applications are **not stored in this repository**. `apps.tsv` records
 an HTTPS repository URL, a full commit SHA, and the upstream command directory
@@ -22,7 +22,7 @@ original modules and command-package paths.
 
 All compilers use the same Go toolchain **for a given application**. The default
 is `GO_VERSION` from `ci/llgo-size/llgo-version.env`; an explicit `go_version` in
-`apps.tsv` handles an upstream module that requires a newer release. Each
+`apps.tsv` handles an upstream module that requires a newer release. The `goos` column selects the host per application (old manifests default to `wasip1`). Each
 result records the application's Go version, repository, commit, and entry.
 The Go toolchain is fixed through `GOTOOLCHAIN`, and `GOFLAGS=-mod=readonly`
 prevents automatic module edits. The runner disables ambient Go workspaces and
@@ -64,7 +64,10 @@ also use `-a`, because ambient clang flags are not part of LLGo's package cache
 fingerprint. This deliberately rebuilds packages instead of measuring potentially
 stale archives. Compilation and linking must both use LLVM 22 (including
 `wasm-ld`). `--lto-O2` matches LLGo's size-optimization linker setting on Linux;
-LLVM and Binaryen still optimize each application at `-Oz`.
+WASI requests `-Oz` for LLVM and Binaryen. JS keeps the LLGo `-Oz` flag but
+uses the upstream Emscripten driver for post-link processing. At LLGo
+`4dbedca26aaa`, the observed JS Binaryen invocation uses `-O2` with Asyncify;
+this benchmark does not override that driver-selected level.
 Put the pinned Binaryen's `bin` directory before TinyGo's `bin` on `PATH`:
 the Linux TinyGo release bundles an older `wasm-opt`. The runner verifies the
 resolved Binaryen version so this cannot silently change the baseline.
@@ -97,3 +100,34 @@ frontend behavior tests with `node --test ci/llgo-wasm-size/test_wasm_site.cjs`,
 and `shellcheck ci/llgo-wasm-size/run.sh`. The fake compiler tests exercise
 required/optional failures and WASM headers; they do not substitute for the
 real six-configuration matrix.
+
+## WASI and JS/WASM views
+
+The existing WASI views compare Go and TinyGo against four LLGo modes.
+The two JS/WASM views (`js-wasm.html` and `js-wasm-tinygo.html`) use the
+same applications, source revisions, entries, and compiler configurations,
+plus `tsgo`. Each page filters tables, trends, and geometric means by target;
+historical rows without target metadata remain WASI-only.
+
+`tsgo` downloads microsoft/TypeScript at
+`c975de5011fb7dfb32a491cf3fcf02d4f811f50e` and builds the original
+`tsc/cmd/tsc` entry in its unchanged nested module with Go 1.27.0.
+It follows the same build-size measurement and presentation as every other
+application, with no application-specific runtime checks. TinyGo is optional,
+as for llimport, because 0.41.1 does not support Go 1.27.
+
+All four LLGo configurations retain `-Oz`. Local no-LTO qualification on
+LLGo `4dbedca26aaa` produced a 96,005,826-byte JS/WASM artifact in 781 seconds.
+This does not establish success of the other configurations or runtime
+correctness. For JS targets, LLGo emits `.mjs` plus `.wasm`; measurements
+count only the final `.wasm`, with both retained in the CI artifact.
+
+Builds run serially in the existing job (there is no parallel configuration
+matrix). `GOFLAGS=-mod=readonly -p=1`, `GOMAXPROCS=2`, and `BINARYEN_CORES=2`
+limit concurrency. They do not guarantee that a single optimization task will
+fit in runner RAM. Each compiler invocation has a 1200-second process-group
+timeout via the existing `ci/llgo-size/bin/llgo-build-timeout` wrapper
+(`LLGO_BUILD_TIMEOUT_SECONDS`), shared with the native size task. Successful, failed, and timed-out builds
+remain distinct. Missing sizes are null, later configurations still run, logs
+and exit codes are archived, and required failures/timeouts fail the task after
+the partial report is written. The existing workflow publishes partial reports.
