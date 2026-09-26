@@ -16,7 +16,7 @@ CASES = ["Toml", "Aws_restjson", "Dustin_humanize", "K8s_workqueue", "Uber_zap",
 
 class NativeReportTest(unittest.TestCase):
     def test_workflow_restores_failure_after_publishing(self):
-        workflow = (HERE.parent.parent / ".github/workflows/llgo-binary-size.yml").read_text()
+        workflow = (HERE.parent.parent / ".github/workflows/llgo-binary-size-suite.yml").read_text()
         marker = "      - name: Report benchmark failures after preserving results"
         self.assertLess(workflow.index("        id: publish"), workflow.index(marker))
         step = workflow.split(marker, 1)[1].split("  deploy-pages:", 1)[0]
