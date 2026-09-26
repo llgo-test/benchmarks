@@ -101,40 +101,32 @@ and `shellcheck ci/llgo-wasm-size/run.sh`. The fake compiler tests exercise
 required/optional failures and WASM headers; they do not substitute for the
 real six-configuration matrix.
 
-## TypeScript tsc (JS host)
+## WASI and JS/WASM views
 
-`tsc-js` downloads microsoft/TypeScript at
-`c975de5011fb7dfb32a491cf3fcf02d4f811f50e` and builds its original
-`tsc/cmd/tsc`, from the original nested `tsc` module with Go 1.27.0.
-No upstream files, module directives, or entry points are replaced. TinyGo is
-attempted but optional because 0.41.1 does not support Go 1.27.
+The existing WASI views compare Go and TinyGo against four LLGo modes.
+The two JS/WASM views (`js-wasm.html` and `js-wasm-tinygo.html`) use the
+same applications, source revisions, entries, and compiler configurations,
+plus `tsgo`. Each page filters tables, trends, and geometric means by target;
+historical rows without target metadata remain WASI-only.
 
-This row uses **GOOS=js GOARCH=wasm**. Existing applications retain WASI.
-All four LLGo configurations still use **-Oz** with the flags above; no -Os
-measurements are substituted. Local qualification on LLGo main `4dbedca26aaa`
-passed the no-LTO `-a -Oz` build in 781 seconds, producing a 96,005,826-byte
-WASM artifact; `--version` returned `Version 7.1.0-dev` with exit code 0.
-This validates one configuration, not the entire matrix. The earlier default
-**-Os** build also passed startup, but its measurement is not used here. Actual
-TS file compilation in the JS host remains unvalidated. The separate local WASI
-artifact built and started but panicked during TS compilation; those runtime
-results must not be attributed to the JS host or presented as functional success.
+`tsgo` downloads microsoft/TypeScript at
+`c975de5011fb7dfb32a491cf3fcf02d4f811f50e` and builds the original
+`tsc/cmd/tsc` entry in its unchanged nested module with Go 1.27.0.
+It follows the same build-size measurement and presentation as every other
+application, with no application-specific runtime checks. TinyGo is optional,
+as for llimport, because 0.41.1 does not support Go 1.27.
 
-For LLGo's JS target the original entry generates `.mjs` plus `.wasm`. Size
-measurements count only the final `.wasm`; the CI artifact retains both files.
-Startup uses Node 24.19.0. Go's JS host uses its upstream `wasm_exec_node.js`, and LLGo's startup check
-uses its upstream `targets/emscripten-runner.mjs --browser-only`. `results.json`
-and the page distinguish build status, version/startup status, and the explicit
-`not_run` functional check. A runtime failure does not erase a successful build
-size, but does make the task fail. This is a size comparison, not a claim that
-tsc can compile projects correctly in a browser.
+All four LLGo configurations retain `-Oz`. Local no-LTO qualification on
+LLGo `4dbedca26aaa` produced a 96,005,826-byte JS/WASM artifact in 781 seconds.
+This does not establish success of the other configurations or runtime
+correctness. For JS targets, LLGo emits `.mjs` plus `.wasm`; measurements
+count only the final `.wasm`, with both retained in the CI artifact.
 
 Builds run serially in the existing job (there is no parallel configuration
 matrix). `GOFLAGS=-mod=readonly -p=1`, `GOMAXPROCS=2`, and `BINARYEN_CORES=2`
 limit concurrency. They do not guarantee that a single optimization task will
 fit in runner RAM. Each compiler invocation has a 1200-second process-group
-timeout (`WASM_BUILD_TIMEOUT_SECONDS`); startup has a separate 120-second
-limit (`WASM_CHECK_TIMEOUT_SECONDS`). Successful, failed, and timed-out builds
+timeout (`WASM_BUILD_TIMEOUT_SECONDS`). Successful, failed, and timed-out builds
 remain distinct. Missing sizes are null, later configurations still run, logs
 and exit codes are archived, and required failures/timeouts fail the task after
 the partial report is written. The existing workflow publishes partial reports.

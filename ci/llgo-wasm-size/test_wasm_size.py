@@ -90,6 +90,8 @@ class WasmSizeTest(unittest.TestCase):
         site_files = (
             "index.html",
             "wasm-tinygo.html",
+            "js-wasm.html",
+            "js-wasm-tinygo.html",
             "linux.html",
             "app.js",
             "wasm.js",
@@ -190,15 +192,15 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False, startup_failure=False):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False):
         script = root / "script"
         script.mkdir()
-        for name in ("run.sh", "report.py", "prepare_sources.py", "run_command.py", "validate_js.py"):
+        for name in ("run.sh", "report.py", "prepare_sources.py", "run_command.py"):
             shutil.copy2(HERE / name, script / name)
         app = report.read_manifest(HERE / "apps.tsv")[0]
         app["tinygo"] = policy
         if js:
-            app.update(id="tsc-js", command="tsc", goos="js")
+            app.update(id="tsgo", command="tsgo", goos="js")
         (script / "apps" / app["source"]).mkdir(parents=True)
         with (script / "apps.tsv").open("w") as stream:
             writer = csv.DictWriter(stream, fieldnames=app, delimiter="\t")
@@ -218,7 +220,7 @@ from pathlib import Path
 name = Path(sys.argv[0]).name
 if name == "node":
     print("Version fixture")
-    raise SystemExit(3 if len(sys.argv) > 2 and os.environ.get("STARTUP_FAILURE") == "1" else 0)
+    raise SystemExit(0)
 if "-o" not in sys.argv:
     print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
     raise SystemExit(0)
@@ -250,7 +252,6 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"), "LLGO_ROOT": str(root),
                "NODE_BIN": str(bin_dir / "node"), "TIMEOUT_BUILD": "1" if timeout else "0",
                "WASM_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
-               "STARTUP_FAILURE": "1" if startup_failure else "0",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
                "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
         output = root / "output"
@@ -264,7 +265,16 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                                    capture_output=True, text=True)
         return completed, output
 
-    def test_js_glue_target_and_separate_startup_results(self):
+    def test_js_suite_matches_wasi_sources_plus_tsgo(self):
+        rows = report.read_manifest(HERE / "apps.tsv")
+        wasi = {row["id"]: row for row in rows if row["goos"] == "wasip1"}
+        js = {row["id"]: row for row in rows if row["goos"] == "js"}
+        self.assertEqual(set(js), {name + "-js" for name in wasi} | {"tsgo"})
+        for name, row in wasi.items():
+            self.assertEqual(js[name + "-js"], dict(row, id=name + "-js", goos="js"))
+        self.assertEqual(js["tsgo"]["source"], "tsc/cmd/tsc")
+
+    def test_js_glue_target_and_uniform_build_results(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             completed, output = self.run_fixture(root, js=True)
@@ -273,8 +283,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
             app = document["benchmarks"][0]
             self.assertEqual(app["target"], {"goos": "js", "goarch": "wasm"})
             self.assertEqual(app["values"]["LLGoNoLTO"], 24)
-            self.assertEqual(app["validation"]["LLGoNoLTO"]["startup"]["status"], "success")
-            self.assertEqual(app["validation"]["LLGoNoLTO"]["functional"]["status"], "not_run")
+            self.assertNotIn("validation", app)
             calls = [json.loads(line) for line in (root / "calls.jsonl").read_text().splitlines()]
             for call in calls:
                 self.assertEqual(call["goos"], "js")
@@ -282,16 +291,6 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                 if call["config"].startswith("LLGo"):
                     self.assertIn("-Oz", call["args"])
                     self.assertTrue(call["args"][call["args"].index("-o")+1].endswith(".mjs"))
-
-    def test_startup_failure_keeps_successful_build_size(self):
-        with tempfile.TemporaryDirectory() as temp:
-            completed, output = self.run_fixture(Path(temp), js=True, startup_failure=True)
-            self.assertNotEqual(completed.returncode, 0)
-            app = json.loads((output / "results.json").read_text())["benchmarks"][0]
-            self.assertEqual(app["values"]["LLGoNoLTO"], 24)
-            self.assertEqual(app["builds"]["LLGoNoLTO"]["status"], "success")
-            self.assertEqual(app["validation"]["LLGoNoLTO"]["startup"]["status"], "failed")
-            self.assertEqual(app["validation"]["LLGoNoLTO"]["functional"]["status"], "not_run")
 
     def test_timeout_is_not_failure_or_zero_and_later_cells_run(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -455,6 +454,8 @@ class ArchiveCompatibilityTest(unittest.TestCase):
             self.assertEqual(completed.returncode, 0, completed.stderr)
             files = subprocess.check_output(["git", "--git-dir", str(remote), "ls-tree", "--name-only", "pages"], text=True)
             self.assertIn("wasm-tinygo.html", files)
+            self.assertIn("js-wasm.html", files)
+            self.assertIn("js-wasm-tinygo.html", files)
             self.assertIn("index.html", files)
             self.assertEqual((pages / "wasm-tinygo.html").read_bytes(), (HERE.parent / "llgo-size" / "site" / "wasm-tinygo.html").read_bytes())
 

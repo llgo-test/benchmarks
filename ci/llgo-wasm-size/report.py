@@ -192,6 +192,8 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "configs": CONFIGS,
         "configLabels": LABELS,
         "comparisons": comparisons(benchmarks),
+        "comparisonsByTarget": {target: comparisons([row for row in benchmarks if row["target"]["goos"] == target])
+                                for target in sorted({row["target"]["goos"] for row in benchmarks})},
         "metric": "total-bytes",
         "protocol": {
             **PROTOCOL,
@@ -256,30 +258,25 @@ def write_summary(document: dict, path: Path) -> None:
     for app in document["benchmarks"]:
         lines.append(f"| {app['id']} | {app['target']['goos']}/wasm | {app['goVersion']} | {app['repository']} | {app['revision']} | {app['source']} |")
     lines.append("")
-    for baseline in ("Go", "TinyGo"):
-        lines += [f"## WASM binary size (vs. {baseline})", "",
-                  "| LLGo mode | Geometric mean / baseline | Valid samples |",
-                  "| --- | ---: | ---: |"]
-        for config, result in document["comparisons"][baseline].items():
-            ratio = f"{result['ratio']:.3f}x" if result["ratio"] is not None else "—"
-            lines.append(f"| {LABELS[config]} | {ratio} | {result['samples']} |")
-        lines += ["", f"| Application | {baseline} bytes | LLGo mode | LLGo bytes | vs. {baseline} |",
-                  "| --- | ---: | --- | ---: | ---: |"]
-        for row in document["benchmarks"]:
-            reference = row["values"][baseline]
-            for config in LLGO_CONFIGS:
-                value = row["values"][config]
-                delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
-                lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
-        lines.append("")
-    for app in document["benchmarks"]:
-        if "validation" not in app:
-            continue
-        lines += ["", f"## {app['id']} runtime checks", "", "Build size, startup, and functional correctness are separate results.",
-                  "", "| Configuration | Startup | Actual TS compilation |", "| --- | --- | --- |"]
-        for config, checks in app["validation"].items():
-            lines.append(f"| {config} | {checks['startup']['status']} | {checks['functional']['status']} |")
-        lines.append("Actual TypeScript compilation under the JS host remains unvalidated. WASI functional failures from local tests do not establish JS behavior.")
+    for target, target_comparisons in document["comparisonsByTarget"].items():
+        for baseline in ("Go", "TinyGo"):
+            lines += [f"## {target}/wasm binary size (vs. {baseline})", "",
+                      "| LLGo mode | Geometric mean / baseline | Valid samples |",
+                      "| --- | ---: | ---: |"]
+            for config, result in target_comparisons[baseline].items():
+                ratio = f"{result['ratio']:.3f}x" if result["ratio"] is not None else "—"
+                lines.append(f"| {LABELS[config]} | {ratio} | {result['samples']} |")
+            lines += ["", f"| Application | {baseline} bytes | LLGo mode | LLGo bytes | vs. {baseline} |",
+                      "| --- | ---: | --- | ---: | ---: |"]
+            for row in document["benchmarks"]:
+                if row["target"]["goos"] != target:
+                    continue
+                reference = row["values"][baseline]
+                for config in LLGO_CONFIGS:
+                    value = row["values"][config]
+                    delta = f"{(value / reference - 1) * 100:+.1f}%" if value and reference else "—"
+                    lines.append(f"| `{row['command']}` | {reference or '—'} | {LABELS[config]} | {value or '—'} | {delta} |")
+            lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -308,15 +305,6 @@ def main(argv: list[str]) -> int:
             if metadata.exists():
                 command = json.loads(metadata.read_text())
                 app["builds"][config].update(commandExitCode=command["exitCode"], seconds=command["seconds"])
-        if app["id"] != "tsc-js":
-            continue
-        app["validation"] = {}
-        for config in CONFIGS:
-            checks = output_dir / "logs" / f"{app['id']}.{config}.checks.json"
-            app["validation"][config] = json.loads(checks.read_text()) if checks.exists() else {
-                "startup": {"status": "not_run", "reason": "No completed startup check"},
-                "functional": {"status": "not_run", "reason": "Actual TypeScript compilation in the JS host has not been validated"},
-            }
     with (output_dir / "results.json").open("w", encoding="utf-8") as destination:
         json.dump(document, destination, indent=2)
         destination.write("\n")

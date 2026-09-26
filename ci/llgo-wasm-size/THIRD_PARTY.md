@@ -11,7 +11,7 @@ separate temporary source directory; source checkouts are not published as resul
 | Convolution | [universonic/go-rust-wasm-bench](https://github.com/universonic/go-rust-wasm-bench) | `6d1b98c971d6206c313a6d1233d9f2687c50febe` | `go/cmd/conv-wasi` |
 | JSON | same repository | same commit | `go/cmd/json-wasi` |
 | SHA-256 | same repository | same commit | `go/cmd/sha-wasi` |
-| TypeScript tsc (js/wasm) | [microsoft/TypeScript](https://github.com/microsoft/TypeScript) | `c975de5011fb7dfb32a491cf3fcf02d4f811f50e` | `tsc/cmd/tsc` (nested `tsc` module) |
+| TypeScript tsgo (js/wasm) | [microsoft/TypeScript](https://github.com/microsoft/TypeScript) | `c975de5011fb7dfb32a491cf3fcf02d4f811f50e` | `tsc/cmd/tsc` (nested `tsc` module) |
 | llimport | [goplus/llcppg](https://github.com/goplus/llcppg) | `d62a300b00d567ce2737ab085cef18c06d43f7d7` | `cmd/llimport` |
 
 Builds use the original entry and module graph. The Git checkout is verified

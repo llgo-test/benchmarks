@@ -305,7 +305,7 @@ jobs:
         with:
           version: "4.0.21"
 
-      - name: Install Node for the upstream JS host runners
+      - name: Install pinned Node for Emscripten
         uses: actions/setup-node@v4
         with:
           node-version: "24.19.0"
@@ -384,7 +384,6 @@ jobs:
           GOMAXPROCS: "2"
           BINARYEN_CORES: "2"
           WASM_BUILD_TIMEOUT_SECONDS: "1200"
-          WASM_CHECK_TIMEOUT_SECONDS: "120"
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |

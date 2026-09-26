@@ -15,7 +15,7 @@ fi
 mkdir -p "$pages_dir"
 # Result jobs can finish after a newer site revision has been published. Seed
 # new Pages branches without rolling existing static assets back.
-for file in index.html wasm-tinygo.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
+for file in index.html wasm-tinygo.html js-wasm.html js-wasm-tinygo.html linux.html app.js wasm.js performance.html performance.js compatibility.html compatibility.js style.css _config.yml; do
   if [[ ! -e "$pages_dir/$file" ]]; then
     cp "$site_dir/$file" "$pages_dir/$file"
   fi

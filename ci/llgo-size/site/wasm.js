@@ -1,3 +1,7 @@
+const wasmTarget = document.body.dataset.wasmTarget === "js" ? "js" : "wasip1";
+function wasmTargetRows(data) {
+  return ((data && data.benchmarks) || []).filter(row => ((row.target || {}).goos || "wasip1") === wasmTarget);
+}
 const wasmBaseline = document.body.dataset.wasmBaseline === "TinyGo" ? "TinyGo" : "Go";
 const wasmModes = ["LLGoNoLTO", "LLGoDeadcodeDrop", "LLGoFullLTONoGlobalDCE", "LLGoFullLTOGlobalDCE"];
 const wasmCompilers = [wasmBaseline, ...wasmModes];
@@ -128,7 +132,7 @@ async function wasmLoadRun(run) {
 }
 
 function wasmBenchmarkMap(documentData) {
-  return new Map(((documentData && documentData.benchmarks) || []).map(function (benchmark) {
+  return new Map(wasmTargetRows(documentData).map(function (benchmark) {
     return [benchmark.id || benchmark.command, benchmark];
   }));
 }
@@ -208,17 +212,13 @@ function wasmCellHtml(benchmark, compiler) {
     const failure = build && ["failed", "timeout"].includes(build.status) ? '<span class="secondary-value">' + (build.status === "timeout" ? "Build timed out" : "Build failed") + "</span>" : "";
     return '<td class="matrix-cell missing">—' + failure + toolchain + '</td>';
   }
-  const checks = benchmark && benchmark.validation && benchmark.validation[compiler];
-  const statusLabel = status => ({success: "passed", failed: "failed", timeout: "timed out", not_run: "not checked"}[status] || status);
-  const validation = checks ? '<span class="secondary-value">Startup: ' + wasmEscape(statusLabel(checks.startup.status)) +
-    ' · TS compilation: ' + wasmEscape(statusLabel(checks.functional.status)) + '</span>' : '';
   const rank = wasmRank(benchmark, compiler);
   const baselineValue = wasmValue(benchmark, wasmBaseline);
   const delta = compiler === wasmBaseline ? 0 : wasmPercentDelta(value, baselineValue);
   const context = compiler === wasmBaseline
     ? '<span class="comparison-context flat">' + wasmBaseline + ' reference</span>'
     : '<span class="comparison-context ' + wasmDeltaClass(delta) + '">' + wasmPercent(delta) + " vs " + wasmBaseline + "</span>";
-  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + toolchain + validation + "</td>";
+  return '<td class="matrix-cell ' + (rank ? rank.tone : '') + '"><span class="rank-number">' + (rank ? '#' + rank.rank + (rank.ties > 1 ? '=' : '') : '—') + "</span><strong>" + wasmFormatBytes(value) + '</strong><span class="secondary-value">' + value.toLocaleString() + " B</span>" + context + toolchain + "</td>";
 }
 
 async function wasmRenderTable() {
@@ -331,7 +331,7 @@ async function wasmRenderEnvironment() {
   const documentData = await wasmLoadRun(latest);
   const run = documentData.run || {};
   wasmDom.geomean.innerHTML = '<span>Latest revision · geometric mean vs ' + wasmBaseline + '</span>' + wasmModes.map(function (mode) {
-    const ratios = (documentData.benchmarks || []).map(function (row) {
+    const ratios = wasmTargetRows(documentData).map(function (row) {
       return wasmValue(row, mode) / wasmValue(row, wasmBaseline);
     }).filter(function (value) { return Number.isFinite(value) && value > 0; });
     const ratio = ratios.length ? Math.exp(ratios.reduce(function (sum, value) { return sum + Math.log(value); }, 0) / ratios.length) : NaN;
@@ -340,7 +340,7 @@ async function wasmRenderEnvironment() {
   wasmDom.runner.textContent = wasmNormalizeRunner(run);
   wasmDom.toolchains.textContent = "Go default " + (run.goVersion || latest.goVersion || "—") + " · TinyGo " + (run.tinygoVersion || latest.tinygoVersion || "—") + " · LLVM " + (run.llvmVersion || latest.llvmVersion || "—");
   wasmDom.llgo.textContent = wasmCommitLabel(latest) + " · " + (run.llgoRepository || latest.llgoRepository || "unknown");
-  wasmDom.protocol.textContent = "Per-application WASM host · final .wasm bytes (JS glue excluded)";
+  wasmDom.protocol.textContent = wasmTarget + "/wasm · final .wasm bytes" + (wasmTarget === "js" ? " (JS glue excluded)" : "");
   const rawPath = "data/" + latest.path;
   wasmSetLink(wasmDom.workflow, wasmSafeUrl(run.workflowUrl || latest.workflowUrl));
   wasmSetLink(wasmDom.raw, rawPath);
@@ -374,7 +374,7 @@ async function wasmInitialize() {
       return;
     }
     const latest = await wasmLoadRun(wasmState.index.runs[0]);
-    wasmState.applications = latest.benchmarks || [];
+    wasmState.applications = wasmTargetRows(latest);
     wasmState.activeApplication = wasmState.applications.length ? wasmState.applications[0].id : "";
     wasmDom.applicationSelect.innerHTML = wasmState.applications.map(function (application) {
       return '<option value="' + wasmEscape(application.id) + '">' + wasmEscape(application.command + " · " + application.kind) + "</option>";

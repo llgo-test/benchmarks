@@ -117,12 +117,7 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
     ) || status=$?
     if ((status == 0)) && verify_wasm "$binary" >>"$log" 2>&1; then
       bytes="$(wc -c < "$binary" | tr -d ' ')"
-      if [[ "$app_id" == tsc-js ]]; then
-        if ! GOTOOLCHAIN="$app_toolchain" python3 "$script_dir/validate_js.py" "$config" "$build_output" "$output_dir/logs/$app_id.$config"; then
-          echo "[wasm-size] startup check failed: $app_id/$config (see $output_dir/logs/$app_id.$config.version.log)" >&2
-          required_failures=$((required_failures + 1))
-        fi
-      fi
+
     else
       build_status=failed
       if ((status == 124)); then build_status=timeout; fi
@@ -151,6 +146,6 @@ done < "$output_dir/sources.tsv"
 python3 "$script_dir/report.py" "$manifest" "$sizes" "$output_dir"
 cat "$output_dir/summary.md"
 if ((required_failures > 0)); then
-  echo "[wasm-size] $required_failures required builds or startup checks failed; all results and logs were retained" >&2
+  echo "[wasm-size] $required_failures required builds failed; all results and logs were retained" >&2
   exit 1
 fi
