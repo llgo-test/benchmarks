@@ -126,7 +126,8 @@ Builds run serially in the existing job (there is no parallel configuration
 matrix). `GOFLAGS=-mod=readonly -p=1`, `GOMAXPROCS=2`, and `BINARYEN_CORES=2`
 limit concurrency. They do not guarantee that a single optimization task will
 fit in runner RAM. Each compiler invocation has a 1200-second process-group
-timeout (`WASM_BUILD_TIMEOUT_SECONDS`). Successful, failed, and timed-out builds
+timeout via the existing `ci/llgo-size/bin/llgo-build-timeout` wrapper
+(`LLGO_BUILD_TIMEOUT_SECONDS`), shared with the native size task. Successful, failed, and timed-out builds
 remain distinct. Missing sizes are null, later configurations still run, logs
 and exit codes are archived, and required failures/timeouts fail the task after
 the partial report is written. The existing workflow publishes partial reports.

@@ -378,7 +378,7 @@ jobs:
         env:
           GOMAXPROCS: "2"
           BINARYEN_CORES: "2"
-          WASM_BUILD_TIMEOUT_SECONDS: "1200"
+          LLGO_BUILD_TIMEOUT_SECONDS: "1200"
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |

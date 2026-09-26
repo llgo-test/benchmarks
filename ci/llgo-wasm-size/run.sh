@@ -18,7 +18,7 @@ output_dir="$(cd -- "$output_dir" && pwd)"
 export GOWORK=off
 # Builds are serial; these bound package/optimizer concurrency, not peak RAM.
 export GOMAXPROCS="${GOMAXPROCS:-2}" BINARYEN_CORES="${BINARYEN_CORES:-2}"
-export WASM_BUILD_TIMEOUT_SECONDS="${WASM_BUILD_TIMEOUT_SECONDS:-1200}"
+export LLGO_BUILD_TIMEOUT_SECONDS="${LLGO_BUILD_TIMEOUT_SECONDS:-1200}"
 
 tinygo_bin="$(command -v tinygo)"
 go_bin="$(command -v go)"
@@ -103,16 +103,17 @@ while IFS=$'\t' read -r app_id command source_dir target tinygo_policy app_toolc
       build_output="${binary%.wasm}.mjs"
     fi
     # A retry must never measure an artifact left by an earlier successful run.
-    rm -f "$binary" "$build_output" "$log.json"
+    rm -f "$binary" "$build_output"
     echo "[wasm-size] building $app_id ($command) with $config"
     build_status=success
     status=0
     (
       cd "$source_dir" &&
       env "${config_env[@]}" CFLAGS= WASMOPT="$postlink" GOTOOLCHAIN="$app_toolchain" GOFLAGS='-mod=readonly -p=1' GO111MODULE=on GOOS="$app_goos" GOARCH=wasm \
-        python3 "$script_dir/run_command.py" "$WASM_BUILD_TIMEOUT_SECONDS" "$log" "$log.json" \
-        "$compiler" "${flags[@]}" -o "$build_output" "$target"
-    ) || status=$?
+        LLGO_REAL_BIN="$compiler" BENT_BENCH="$app_id" BENT_CONFIG="$config" \
+        python3 "$script_dir/../llgo-size/bin/llgo-build-timeout" "${flags[@]}" -o "$build_output" "$target"
+    ) >"$log" 2>&1 || status=$?
+    printf 'Compiler exit status: %s\n' "$status" >>"$log"
     if ((status == 0)) && verify_wasm "$binary" >>"$log" 2>&1; then
       bytes="$(wc -c < "$binary" | tr -d ' ')"
     else

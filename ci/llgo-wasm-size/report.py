@@ -211,7 +211,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "resources": {"parallelBuilds": 1, "GOMAXPROCS": os.environ.get("GOMAXPROCS", "2"),
                           "BINARYEN_CORES": os.environ.get("BINARYEN_CORES", "2"),
                           "GOFLAGS": "-mod=readonly -p=1",
-                          "buildTimeoutSeconds": float(os.environ.get("WASM_BUILD_TIMEOUT_SECONDS", "1200"))},
+                          "buildTimeoutSeconds": float(os.environ.get("LLGO_BUILD_TIMEOUT_SECONDS", "1200"))},
             "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
             "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
         },
@@ -298,12 +298,6 @@ def main(argv: list[str]) -> int:
     except (OSError, ValueError) as error:
         print(error, file=sys.stderr)
         return 1
-    for app in document["benchmarks"]:
-        for config in CONFIGS:
-            metadata = output_dir / "logs" / f"{app['id']}.{config}.log.json"
-            if metadata.exists():
-                command = json.loads(metadata.read_text())
-                app["builds"][config].update(commandExitCode=command["exitCode"], seconds=command["seconds"])
     with (output_dir / "results.json").open("w", encoding="utf-8") as destination:
         json.dump(document, destination, indent=2)
         destination.write("\n")

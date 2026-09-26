@@ -195,8 +195,11 @@ class RunnerTest(unittest.TestCase):
     def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False):
         script = root / "script"
         script.mkdir()
-        for name in ("run.sh", "report.py", "prepare_sources.py", "run_command.py"):
+        for name in ("run.sh", "report.py", "prepare_sources.py"):
             shutil.copy2(HERE / name, script / name)
+        wrapper_dir = root / "llgo-size" / "bin"
+        wrapper_dir.mkdir(parents=True)
+        shutil.copy2(HERE.parent / "llgo-size" / "bin" / "llgo-build-timeout", wrapper_dir)
         app = report.read_manifest(HERE / "apps.tsv")[0]
         app["tinygo"] = policy
         if js:
@@ -248,7 +251,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "TINYGO_VERSION": "0.41.1", "BINARYEN_VERSION": "132", "LLVM_VERSION": "22",
                "LLGO_WASMOPT": str(bin_dir / "llgo-wasm-opt"), "LLGO_ROOT": str(root),
                "TIMEOUT_BUILD": "1" if timeout else "0",
-               "WASM_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
+               "LLGO_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
                "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
         output = root / "output"
@@ -295,7 +298,7 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
             self.assertNotEqual(completed.returncode, 0)
             app = json.loads((output / "results.json").read_text())["benchmarks"][0]
             self.assertEqual(app["builds"]["LLGoNoLTO"]["status"], "timeout")
-            self.assertEqual(app["builds"]["LLGoNoLTO"]["commandExitCode"], 124)
+            self.assertIn("Compiler exit status: 124", (output / "logs" / "base64.LLGoNoLTO.log").read_text())
             self.assertIsNone(app["values"]["LLGoNoLTO"])
             self.assertEqual(app["builds"]["LLGoFullLTOGlobalDCE"]["status"], "success")
             self.assertIn("timeout", (output / "summary.md").read_text())
