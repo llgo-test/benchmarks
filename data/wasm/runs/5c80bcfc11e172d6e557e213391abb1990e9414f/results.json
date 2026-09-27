@@ -1,0 +1,283 @@
+{
+  "suite": "tsgo",
+  "schemaVersion": 2,
+  "format": "wasm-file-size",
+  "run": {
+    "id": "36318008610",
+    "attempt": 1,
+    "number": 490,
+    "createdAt": "2026-09-27T12:14:18.426950Z",
+    "repository": "llgo-test/benchmarks",
+    "sourceCommit": "20dc6d08cacfdc7cf2c84e1db3b62d61bc58d612",
+    "ref": "main",
+    "llgoRepository": "xgo-dev/llgo",
+    "llgoCommit": "5c80bcfc11e172d6e557e213391abb1990e9414f",
+    "llgoMainIndex": 1707,
+    "llgoCommittedAt": "2026-09-27T20:08:10+08:00",
+    "llgoBuildGoVersion": "1.27.0",
+    "goVersion": "1.26.2",
+    "llvmVersion": "22",
+    "tinygoVersion": "0.41.1",
+    "binaryenVersion": "132",
+    "event": "repository_dispatch",
+    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/36318008610",
+    "runnerOS": "Linux",
+    "runnerArch": "X64",
+    "runnerImage": "ubuntu24"
+  },
+  "target": {
+    "goos": "per-application",
+    "goarch": "wasm"
+  },
+  "configs": [
+    "Go",
+    "TinyGo",
+    "LLGoNoLTO",
+    "LLGoDeadcodeDrop",
+    "LLGoFullLTONoGlobalDCE",
+    "LLGoFullLTOGlobalDCE"
+  ],
+  "configLabels": {
+    "Go": "Go",
+    "TinyGo": "TinyGo",
+    "LLGoNoLTO": "LLGo \u00b7 no LTO",
+    "LLGoDeadcodeDrop": "LLGo \u00b7 deadcode drop",
+    "LLGoFullLTONoGlobalDCE": "LLGo \u00b7 full LTO (GlobalDCE off)",
+    "LLGoFullLTOGlobalDCE": "LLGo \u00b7 full LTO + GlobalDCE"
+  },
+  "comparisons": {
+    "Go": {
+      "LLGoNoLTO": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoDeadcodeDrop": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "ratio": null,
+        "samples": 0
+      }
+    },
+    "TinyGo": {
+      "LLGoNoLTO": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoDeadcodeDrop": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "ratio": null,
+        "samples": 0
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "ratio": null,
+        "samples": 0
+      }
+    }
+  },
+  "comparisonsByTarget": {
+    "js": {
+      "Go": {
+        "LLGoNoLTO": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoDeadcodeDrop": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "ratio": null,
+          "samples": 0
+        }
+      },
+      "TinyGo": {
+        "LLGoNoLTO": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoDeadcodeDrop": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "ratio": null,
+          "samples": 0
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "ratio": null,
+          "samples": 0
+        }
+      }
+    }
+  },
+  "metric": "total-bytes",
+  "protocol": {
+    "Go": [
+      "build",
+      "-trimpath",
+      "-ldflags=-s -w"
+    ],
+    "TinyGo": [
+      "build",
+      "-opt=z",
+      "-no-debug"
+    ],
+    "LLGoNoLTO": [
+      "build",
+      "-a",
+      "-Oz"
+    ],
+    "LLGoDeadcodeDrop": [
+      "build",
+      "-a",
+      "-Oz",
+      "-deadcodedrop"
+    ],
+    "LLGoFullLTONoGlobalDCE": [
+      "build",
+      "-a",
+      "-Oz",
+      "-lto=full",
+      "-globaldce=false"
+    ],
+    "LLGoFullLTOGlobalDCE": [
+      "build",
+      "-a",
+      "-Oz",
+      "-lto=full",
+      "-globaldce=true"
+    ],
+    "LLGoPostLink": [
+      "Emscripten wasm-opt",
+      "Upstream target-specific post-link processing"
+    ],
+    "LLGoPostLinkByTarget": {
+      "wasip1": "LLGo pre-Asyncify optimization, Asyncify and standardized exception translation",
+      "js": "Upstream Emscripten driver; its Binaryen optimization level is not overridden by this benchmark"
+    },
+    "sameGoToolchain": true,
+    "sameGoToolchainPerApplication": true,
+    "modulePolicy": "GOFLAGS=-mod=readonly -p=1, GO111MODULE=on, GOWORK=off; no module rewrites",
+    "sourcePolicy": "Download pinned upstream commits and build original entries with unchanged modules",
+    "environment": {
+      "Go": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "TinyGo": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoNoLTO": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoDeadcodeDrop": {
+        "CCFLAGS": "",
+        "LDFLAGS": "",
+        "CFLAGS": ""
+      },
+      "LLGoFullLTONoGlobalDCE": {
+        "CCFLAGS": "-flto=full",
+        "LDFLAGS": "-Wl,--lto-O2",
+        "CFLAGS": ""
+      },
+      "LLGoFullLTOGlobalDCE": {
+        "CCFLAGS": "-flto=full -fvirtual-function-elimination -fwhole-program-vtables",
+        "LDFLAGS": "-Wl,--lto-O2",
+        "CFLAGS": ""
+      }
+    },
+    "resources": {
+      "parallelBuilds": 1,
+      "GOMAXPROCS": "2",
+      "BINARYEN_CORES": "2",
+      "GOFLAGS": "-mod=readonly -p=1",
+      "buildTimeoutSeconds": 1200.0
+    },
+    "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
+    "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives"
+  },
+  "toolVersions": {
+    "Go": "go version go1.26.2 linux/amd64",
+    "TinyGo": "tinygo version 0.41.1 linux/amd64 (using go version go1.26.2 and LLVM version 20.1.1)",
+    "LLGo": "llgo v1.0.5-0.20260927120810-5c80bcfc11e1 linux/amd64",
+    "Clang": "Ubuntu clang version 22.1.8 (++20260714014902+ca7933e47d3a-1~exp1~20260714135019.80)",
+    "Wasm linker": "Ubuntu LLD 22.1.8",
+    "TinyGo wasm-opt": "wasm-opt version 132 (version_132)",
+    "LLGo wasm-opt": "wasm-opt version 125 (version_125-6-gf03355bd6)"
+  },
+  "benchmarks": [
+    {
+      "id": "tsgo",
+      "command": "tsgo",
+      "source": "tsc/cmd/tsc",
+      "provenance": "microsoft/TypeScript",
+      "kind": "TypeScript compiler",
+      "description": "TypeScript compiler",
+      "tinygo": "optional",
+      "target": {
+        "goos": "js",
+        "goarch": "wasm"
+      },
+      "repository": "https://github.com/microsoft/TypeScript.git",
+      "revision": "c975de5011fb7dfb32a491cf3fcf02d4f811f50e",
+      "goVersion": "1.27.0",
+      "values": {
+        "Go": 50367588,
+        "TinyGo": null,
+        "LLGoNoLTO": null,
+        "LLGoDeadcodeDrop": null,
+        "LLGoFullLTONoGlobalDCE": null,
+        "LLGoFullLTOGlobalDCE": null
+      },
+      "builds": {
+        "Go": {
+          "status": "success",
+          "log": "logs/tsgo.Go.log"
+        },
+        "TinyGo": {
+          "status": "failed",
+          "log": "logs/tsgo.TinyGo.log"
+        },
+        "LLGoNoLTO": {
+          "status": "failed",
+          "log": "logs/tsgo.LLGoNoLTO.log"
+        },
+        "LLGoDeadcodeDrop": {
+          "status": "failed",
+          "log": "logs/tsgo.LLGoDeadcodeDrop.log"
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "status": "failed",
+          "log": "logs/tsgo.LLGoFullLTONoGlobalDCE.log"
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "status": "failed",
+          "log": "logs/tsgo.LLGoFullLTOGlobalDCE.log"
+        }
+      }
+    }
+  ],
+  "native": {
+    "summary": "summary.md",
+    "tsv": "sizes.tsv",
+    "binaryDir": "raw"
+  }
+}
