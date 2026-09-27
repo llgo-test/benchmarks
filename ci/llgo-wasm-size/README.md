@@ -143,3 +143,10 @@ only that suite's rows for the LLGo revision, preserving the other suite's
 results regardless of completion order. A lost tsgo runner cannot prevent the
 standard suite from publishing. No size or failure is fabricated when a runner
 is lost before it produces a report.
+
+The tsgo suite uses `GOMAXPROCS=1` and `BINARYEN_CORES=1`; standard builds
+retain 2. During tsgo builds, a 15-second sampler streams available RAM, swap,
+OOM counters, cgroup memory usage/limits, and the ten largest process RSS
+values to the job log and `memory.log` in the artifact. Samples are diagnostic,
+not exact peak measurements; concurrency changes do not bound individual
+optimizer memory use. Compiler flags and the build timeout are unchanged.
