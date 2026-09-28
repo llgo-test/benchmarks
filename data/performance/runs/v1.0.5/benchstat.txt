@@ -1,0 +1,520 @@
+Compared 68/68 benchmarks with 5 repetitions per toolchain.
+
+shortname: benhoyt_goawk-BuiltinGsubAmpersand
+                     │     Go      │                 LLGo                  │              LLGoFullLTO              │
+                     │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+BuiltinGsubAmpersand   13.21µ ± 1%   43.48µ ± 1% ¹  +229.23% (p=0.008 n=5)   33.12µ ± 1% ¹  +150.85% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: benhoyt_goawk-NativeFunc
+           │     Go      │                  LLGo                  │              LLGoFullLTO               │
+           │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+NativeFunc   7.467µ ± 2%   31.433µ ± 1% ¹  +320.96% (p=0.008 n=5)   24.117µ ± 1% ¹  +222.98% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: benhoyt_goawk-RecursiveFunc
+              │     Go      │                 LLGo                  │              LLGoFullLTO              │
+              │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+RecursiveFunc   12.06µ ± 1%   34.62µ ± 1% ¹  +187.19% (p=0.008 n=5)   27.06µ ± 1% ¹  +124.44% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: benhoyt_goawk-SimpleBuiltins
+               │     Go      │                  LLGo                  │              LLGoFullLTO               │
+               │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+SimpleBuiltins   576.4n ± 1%   2020.0n ± 1% ¹  +250.45% (p=0.008 n=5)   1551.0n ± 0% ¹  +169.08% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: bloom_bits-BitSetExtractDeposit%2Fsize%3D64%2Ffn%3DDepositTo
+                     │     Go      │                 LLGo                 │             LLGoFullLTO             │
+                     │   sec/op    │    sec/op      vs base               │    sec/op      vs base              │
+BitSetExtractDeposit   21.81n ± 0%   38.94n ± 1% ¹  +78.54% (p=0.008 n=5)   20.25n ± 0% ¹  -7.15% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                     │     Go     │              LLGo               │           LLGoFullLTO           │
+                     │    B/op    │     B/op      vs base           │     B/op      vs base           │
+BitSetExtractDeposit   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+                     │     Go     │              LLGo               │           LLGoFullLTO           │
+                     │ allocs/op  │  allocs/op    vs base           │  allocs/op    vs base           │
+BitSetExtractDeposit   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+shortname: capnproto2-Growth_MultiSegment
+                    │     Go      │                 LLGo                  │             LLGoFullLTO              │
+                    │   sec/op    │    sec/op      vs base                │    sec/op      vs base               │
+Growth_MultiSegment   12.56m ± 0%   26.65m ± 1% ¹  +112.22% (p=0.008 n=5)   19.10m ± 1% ¹  +52.09% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                    │      Go      │                  LLGo                  │              LLGoFullLTO               │
+                    │     B/op     │      B/op       vs base                │      B/op       vs base                │
+Growth_MultiSegment   1.572Mi ± 0%   7.929Mi ± 0% ¹  +404.28% (p=0.008 n=5)   7.925Mi ± 0% ¹  +404.08% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                    │     Go     │                LLGo                 │             LLGoFullLTO             │
+                    │ allocs/op  │  allocs/op   vs base                │  allocs/op   vs base                │
+Growth_MultiSegment   21.00 ± 0%   0.00 ± 0% ¹  -100.00% (p=0.008 n=5)   0.00 ± 0% ¹  -100.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                    │      Go      │                 LLGo                  │              LLGoFullLTO              │
+                    │     B/s      │      B/s        vs base               │      B/s        vs base               │
+Growth_MultiSegment   79.63Mi ± 0%   37.53Mi ± 1% ¹  -52.87% (p=0.008 n=5)   52.36Mi ± 1% ¹  -34.25% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: capnproto2-Unmarshal_Reuse
+                │     Go      │                 LLGo                 │             LLGoFullLTO              │
+                │   sec/op    │    sec/op      vs base               │    sec/op      vs base               │
+Unmarshal_Reuse   456.6n ± 0%   771.2n ± 0% ¹  +68.90% (p=0.008 n=5)   512.6n ± 1% ¹  +12.26% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                │    Go    │             LLGo              │          LLGoFullLTO          │
+                │   B/op   │     B/op      vs base         │     B/op      vs base         │
+Unmarshal_Reuse   0.0 ± 0%   272.0 ± 0% ¹  ? (p=0.008 n=5)   272.0 ± 0% ¹  ? (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                │     Go     │              LLGo               │           LLGoFullLTO           │
+                │ allocs/op  │  allocs/op    vs base           │  allocs/op    vs base           │
+Unmarshal_Reuse   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+shortname: commonmark_markdown-RenderSpecNoHTML
+                 │     Go      │                  LLGo                  │              LLGoFullLTO              │
+                 │   sec/op    │     sec/op      vs base                │    sec/op      vs base                │
+RenderSpecNoHTML   4.407m ± 0%   11.943m ± 1% ¹  +170.98% (p=0.008 n=5)   8.990m ± 1% ¹  +103.97% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: dustin_broadcast-ParallelBrodcast
+                 │     Go      │                   LLGo                   │               LLGoFullLTO                │
+                 │   sec/op    │     sec/op       vs base                 │     sec/op       vs base                 │
+ParallelBrodcast   542.3n ± 8%   28736.0n ± 1% ¹  +5198.91% (p=0.008 n=5)   28773.0n ± 5% ¹  +5205.73% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: dustin_humanize-BigCommas
+          │      Go      │                  LLGo                  │              LLGoFullLTO               │
+          │    sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+BigCommas   378.9n ± 13%   2121.0n ± 1% ¹  +459.78% (p=0.008 n=5)   1742.0n ± 1% ¹  +359.75% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: dustin_humanize-Commaf
+       │     Go      │                  LLGo                  │              LLGoFullLTO              │
+       │   sec/op    │     sec/op      vs base                │    sec/op      vs base                │
+Commaf   249.0n ± 7%   1175.0n ± 2% ¹  +371.89% (p=0.008 n=5)   841.1n ± 1% ¹  +237.79% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: dustin_humanize-ParseBytes
+           │     Go      │                  LLGo                  │              LLGoFullLTO               │
+           │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+ParseBytes   88.11n ± 1%   341.90n ± 0% ¹  +288.04% (p=0.008 n=5)   273.40n ± 1% ¹  +210.29% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: dustin_humanize-ParseSI
+        │     Go      │                  LLGo                  │              LLGoFullLTO               │
+        │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+ParseSI   392.0n ± 0%   1670.0n ± 1% ¹  +326.02% (p=0.008 n=5)   1258.0n ± 4% ¹  +220.92% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: ericlagergren_decimal-Mandelbrot_decimal_GDA_9
+                         │     Go     │                LLGo                 │             LLGoFullLTO             │
+                         │   sec/op   │    sec/op     vs base               │    sec/op     vs base               │
+Mandelbrot_decimal_GDA_9   3.391 ± 2%   5.870 ± 0% ¹  +73.09% (p=0.008 n=5)   5.637 ± 0% ¹  +66.21% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: ericlagergren_decimal-Pi%2Ffoo%3Dapmckinlay%2Fprec%3D19
+   │     Go      │                 LLGo                  │              LLGoFullLTO              │
+   │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+Pi   2.017µ ± 2%   8.208µ ± 1% ¹  +306.94% (p=0.008 n=5)   6.325µ ± 1% ¹  +213.58% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: ericlagergren_decimal-Pi%2Ffoo%3Dcockroachdb%2Fapd%2Fprec%3D100
+   │     Go      │                  LLGo                  │             LLGoFullLTO              │
+   │   sec/op    │     sec/op      vs base                │    sec/op     vs base                │
+Pi   4.762m ± 1%   35.267m ± 0% ¹  +640.67% (p=0.008 n=5)   28.620m ± 0%  +501.06% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: ericlagergren_decimal-Pi%2Ffoo%3Dgo-inf%2Fprec%3D100
+   │     Go      │                  LLGo                  │              LLGoFullLTO               │
+   │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+Pi   91.05µ ± 1%   309.04µ ± 0% ¹  +239.42% (p=0.008 n=5)   241.89µ ± 1% ¹  +165.66% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_community-NewDirectedLayers%2FgraphSize%3D10%2CnumGraphs%3D1
+                  │      Go      │                 LLGo                 │             LLGoFullLTO             │
+                  │    sec/op    │    sec/op      vs base               │    sec/op      vs base              │
+NewDirectedLayers   1.215µ ± 13%   1.428µ ± 1% ¹  +17.53% (p=0.008 n=5)   1.199µ ± 1% ¹  -1.32% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_community-NewDirectedLayers%2FgraphSize%3D1000%2CnumGraphs%3D1
+                  │     Go      │                LLGo                 │             LLGoFullLTO             │
+                  │   sec/op    │    sec/op      vs base              │    sec/op      vs base              │
+NewDirectedLayers   141.5µ ± 1%   150.2µ ± 8% ¹  +6.15% (p=0.008 n=5)   131.8µ ± 1% ¹  -6.90% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_community-NewUndirectedLayers%2FgraphSize%3D1000%2CnumGraphs%3D10
+                    │     Go      │                 LLGo                 │             LLGoFullLTO             │
+                    │   sec/op    │    sec/op      vs base               │    sec/op      vs base              │
+NewUndirectedLayers   1.742m ± 2%   2.012m ± 1% ¹  +15.51% (p=0.008 n=5)   1.810m ± 0% ¹  +3.93% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_lapack_native-Dgeev%2FCirculant5
+      │     Go      │                  LLGo                  │              LLGoFullLTO               │
+      │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+Dgeev   9.063µ ± 8%   55.389µ ± 1% ¹  +511.16% (p=0.008 n=5)   45.614µ ± 1% ¹  +403.30% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-AddScaledVec10Inc1
+                   │     Go      │                  LLGo                   │              LLGoFullLTO               │
+                   │   sec/op    │     sec/op      vs base                 │     sec/op      vs base                │
+AddScaledVec10Inc1   200.6n ± 2%   2334.0n ± 4% ¹  +1063.51% (p=0.008 n=5)   2038.0n ± 8% ¹  +915.95% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-CholeskyFactorize%2Fn%3D10
+                  │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                  │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+CholeskyFactorize   3.209µ ± 0%   26.385µ ± 0% ¹  +722.22% (p=0.008 n=5)   21.783µ ± 1% ¹  +578.81% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-CholeskyInverseTo%2Fn%3D100
+                  │     Go      │                 LLGo                  │             LLGoFullLTO              │
+                  │   sec/op    │    sec/op      vs base                │    sec/op      vs base               │
+CholeskyInverseTo   279.8µ ± 1%   587.1µ ± 0% ¹  +109.86% (p=0.008 n=5)   313.2µ ± 0% ¹  +11.96% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-MarshalToVecDense10
+                    │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                    │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+MarshalToVecDense10   457.9n ± 0%   2146.0n ± 0% ¹  +368.66% (p=0.008 n=5)   1554.0n ± 3% ¹  +239.38% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-Pool100by100Uncleared
+                      │     Go      │                 LLGo                  │             LLGoFullLTO              │
+                      │   sec/op    │    sec/op      vs base                │    sec/op      vs base               │
+Pool100by100Uncleared   17.14n ± 0%   54.44n ± 8% ¹  +217.62% (p=0.008 n=5)   30.12n ± 1% ¹  +75.73% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-TriMulDiag%2FBenchmarkTriMulDiag100
+           │     Go      │                  LLGo                  │              LLGoFullLTO               │
+           │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+TriMulDiag   43.61µ ± 0%   124.00µ ± 0% ¹  +184.32% (p=0.008 n=5)   111.93µ ± 1% ¹  +156.65% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_mat-UnmarshalVecDense10
+                    │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                    │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+UnmarshalVecDense10   259.4n ± 2%   1570.0n ± 0% ¹  +505.24% (p=0.008 n=5)   1143.0n ± 1% ¹  +340.63% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_topo-SortStabilizedPath_100000
+                          │     Go      │                 LLGo                 │             LLGoFullLTO              │
+                          │   sec/op    │    sec/op      vs base               │    sec/op      vs base               │
+SortStabilizedPath_100000   148.8m ± 6%   285.9m ± 4% ¹  +92.17% (p=0.008 n=5)   258.3m ± 3% ¹  +73.64% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gonum_traverse-WalkAllDepthFirstGnp_100_half
+                              │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                              │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+WalkAllDepthFirstGnp_100_half   438.2µ ± 1%   1227.4µ ± 3% ¹  +180.07% (p=0.008 n=5)   1041.6µ ± 1% ¹  +137.68% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_encoding-TextDecode
+           │     Go      │                  LLGo                  │              LLGoFullLTO               │
+           │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+TextDecode   37.35m ± 1%   147.67m ± 3% ¹  +295.38% (p=0.008 n=5)   119.24m ± 5% ¹  +219.26% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_json-Bool
+     │     Go      │                  LLGo                  │              LLGoFullLTO               │
+     │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+Bool   56.95n ± 1%   347.40n ± 1% ¹  +510.01% (p=0.008 n=5)   304.50n ± 1% ¹  +434.68% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_json-Int
+    │     Go      │                 LLGo                  │              LLGoFullLTO              │
+    │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+Int   216.4n ± 1%   842.2n ± 1% ¹  +289.19% (p=0.008 n=5)   679.4n ± 1% ¹  +213.96% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_proto-Decode%2Fbasic_scalar_types_%28%2Atest.TestAllTypes%29
+       │     Go      │                  LLGo                  │              LLGoFullLTO               │
+       │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+Decode   1.360µ ± 3%   13.141µ ± 4% ¹  +866.25% (p=0.008 n=5)   10.204µ ± 2% ¹  +650.29% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_proto-Decode%2Fjust_at_recursion_limit_%28%2Atest3.TestAllTypes%29
+       │     Go      │                  LLGo                  │              LLGoFullLTO               │
+       │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+Decode   1.316µ ± 3%   14.204µ ± 3% ¹  +979.33% (p=0.008 n=5)   11.252µ ± 3% ¹  +755.02% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: gproto_proto-EqualWithDeeplyNestedEqual
+                           │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                           │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+EqualWithDeeplyNestedEqual   51.57µ ± 2%   354.95µ ± 2% ¹  +588.25% (p=0.008 n=5)   303.90µ ± 3% ¹  +489.25% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                           │     Go     │              LLGo               │           LLGoFullLTO           │
+                           │    B/op    │      B/op       vs base         │      B/op       vs base         │
+EqualWithDeeplyNestedEqual   0.0Ki ± 0%   271.5Ki ± 0% ¹  ? (p=0.008 n=5)   271.5Ki ± 0% ¹  ? (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                           │     Go     │              LLGo               │           LLGoFullLTO           │
+                           │ allocs/op  │  allocs/op    vs base           │  allocs/op    vs base           │
+EqualWithDeeplyNestedEqual   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+shortname: gproto_reflect-Value%2FInterface
+      │     Go      │                 LLGo                 │             LLGoFullLTO              │
+      │   sec/op    │    sec/op      vs base               │    sec/op      vs base               │
+Value   28.66n ± 3%   24.48n ± 1% ¹  -14.58% (p=0.008 n=5)   22.70n ± 3% ¹  -20.80% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+      │     Go     │                 LLGo                 │             LLGoFullLTO              │
+      │    B/op    │     B/op      vs base                │     B/op      vs base                │
+Value   15.00 ± 0%   32.00 ± 0% ¹  +113.33% (p=0.008 n=5)   32.00 ± 0% ¹  +113.33% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+      │     Go     │              LLGo               │           LLGoFullLTO           │
+      │ allocs/op  │  allocs/op    vs base           │  allocs/op    vs base           │
+Value   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+shortname: k8s_cache-EachListItemWithAlloc%2FPodList
+                      │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                      │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+EachListItemWithAlloc   62.67µ ± 3%   148.99µ ± 2% ¹  +137.75% (p=0.008 n=5)   147.27µ ± 4% ¹  +135.01% (p=0.008 n=5)
+¹ benchmarks vary in cpu, goleak
+
+shortname: k8s_workqueue-DelayingQueue_AddAfter
+                       │      Go      │                 LLGo                  │              LLGoFullLTO               │
+                       │    sec/op    │    sec/op      vs base                │     sec/op      vs base                │
+DelayingQueue_AddAfter   3.150µ ± 11%   7.626µ ± 9% ¹  +142.10% (p=0.008 n=5)   8.237µ ± 15% ¹  +161.49% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: kanzi-ANS0
+     │     Go      │                 LLGo                  │             LLGoFullLTO              │
+     │   sec/op    │    sec/op      vs base                │    sec/op      vs base               │
+ANS0   1.945m ± 1%   4.002m ± 1% ¹  +105.74% (p=0.008 n=5)   3.755m ± 2% ¹  +93.03% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: kanzi-BWTSmallBlock
+              │     Go      │                 LLGo                 │             LLGoFullLTO             │
+              │   sec/op    │    sec/op      vs base               │    sec/op      vs base              │
+BWTSmallBlock   34.34m ± 1%   44.18m ± 2% ¹  +28.67% (p=0.008 n=5)   36.00m ± 0% ¹  +4.86% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: kanzi-CM
+   │     Go      │                LLGo                │             LLGoFullLTO             │
+   │   sec/op    │   sec/op     vs base               │    sec/op      vs base              │
+CM   40.05m ± 0%   48.58m ± 1%  +21.30% (p=0.008 n=5)   42.93m ± 0% ¹  +7.18% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: kanzi-Huffman
+        │     Go      │                 LLGo                  │              LLGoFullLTO              │
+        │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+Huffman   1.609m ± 1%   4.136m ± 0% ¹  +156.99% (p=0.008 n=5)   3.921m ± 1% ¹  +143.64% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: nelsam_gxui_interval-General
+        │     Go      │                  LLGo                  │              LLGoFullLTO               │
+        │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+General   271.3n ± 2%   1168.0n ± 4% ¹  +330.52% (p=0.008 n=5)   1075.0n ± 4% ¹  +296.24% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: rcrowley_metrics-Histogram
+          │     Go      │                  LLGo                  │              LLGoFullLTO              │
+          │   sec/op    │     sec/op      vs base                │    sec/op      vs base                │
+Histogram   18.72n ± 3%   111.60n ± 0% ¹  +496.15% (p=0.008 n=5)   95.61n ± 2% ¹  +410.74% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: rcrowley_metrics-Timer
+      │     Go      │                 LLGo                  │              LLGoFullLTO              │
+      │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+Timer   233.7n ± 0%   694.3n ± 1% ¹  +197.09% (p=0.008 n=5)   632.6n ± 1% ¹  +170.69% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: semver-CheckVersionRange
+                  │     Go      │                 LLGo                  │             LLGoFullLTO              │
+                  │   sec/op    │    sec/op      vs base                │    sec/op      vs base               │
+CheckVersionRange   45.65n ± 0%   99.85n ± 3% ¹  +118.73% (p=0.008 n=5)   91.02n ± 2% ¹  +99.39% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                  │    Go     │             LLGo              │          LLGoFullLTO          │
+                  │   B/op    │     B/op      vs base         │     B/op      vs base         │
+CheckVersionRange   0.00 ± 0%   64.00 ± 0% ¹  ? (p=0.008 n=5)   64.00 ± 0% ¹  ? (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                  │     Go     │              LLGo               │           LLGoFullLTO           │
+                  │ allocs/op  │  allocs/op    vs base           │  allocs/op    vs base           │
+CheckVersionRange   0.000 ± 0%   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²   0.000 ± 0% ¹  ~ (p=1.000 n=5) ²
+¹ benchmarks vary in cpu
+² all samples are equal
+
+shortname: semver-CoerceNewVersionSimple
+                       │     Go      │                 LLGo                  │              LLGoFullLTO              │
+                       │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+CoerceNewVersionSimple   145.0n ± 2%   530.3n ± 1% ¹  +265.72% (p=0.008 n=5)   442.7n ± 2% ¹  +205.31% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                       │     Go     │                 LLGo                 │             LLGoFullLTO              │
+                       │    B/op    │     B/op      vs base                │     B/op      vs base                │
+CoerceNewVersionSimple   128.0 ± 0%   432.0 ± 0% ¹  +237.50% (p=0.008 n=5)   432.0 ± 0% ¹  +237.50% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                       │     Go     │                 LLGo                 │             LLGoFullLTO              │
+                       │ allocs/op  │  allocs/op    vs base                │  allocs/op    vs base                │
+CoerceNewVersionSimple   2.000 ± 0%   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: semver-ValidateVersionRangeFail
+                         │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                         │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+ValidateVersionRangeFail   611.3n ± 2%   2636.0n ± 3% ¹  +331.21% (p=0.008 n=5)   2355.0n ± 2% ¹  +285.24% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                         │     Go     │                  LLGo                  │              LLGoFullLTO               │
+                         │    B/op    │     B/op       vs base                 │     B/op       vs base                 │
+ValidateVersionRangeFail   189.0 ± 0%   3744.0 ± 0% ¹  +1880.95% (p=0.008 n=5)   3744.0 ± 0% ¹  +1880.95% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                         │     Go     │                 LLGo                 │             LLGoFullLTO              │
+                         │ allocs/op  │  allocs/op    vs base                │  allocs/op    vs base                │
+ValidateVersionRangeFail   7.000 ± 0%   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: shopify_sarama-ZstdMemoryConsumption%2Fno_drain
+                      │     Go      │                  LLGo                   │              LLGoFullLTO               │
+                      │   sec/op    │     sec/op      vs base                 │     sec/op      vs base                │
+ZstdMemoryConsumption   430.8µ ± 2%   5448.2µ ± 1% ¹  +1164.71% (p=0.008 n=5)   2241.6µ ± 1% ¹  +420.36% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                      │      Go      │                   LLGo                   │               LLGoFullLTO               │
+                      │     B/op     │      B/op        vs base                 │      B/op        vs base                │
+ZstdMemoryConsumption   18.73Ki ± 1%   232.68Ki ± 1% ¹  +1142.52% (p=0.008 n=5)   119.55Ki ± 1% ¹  +538.39% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                      │     Go     │                 LLGo                 │             LLGoFullLTO              │
+                      │ allocs/op  │  allocs/op    vs base                │  allocs/op    vs base                │
+ZstdMemoryConsumption   4.000 ± 0%   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: shopify_sarama-_getMetricNameForTopic
+                       │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                       │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+_getMetricNameForTopic   91.43n ± 1%   276.60n ± 3% ¹  +202.53% (p=0.008 n=5)   221.70n ± 1% ¹  +142.48% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                       │     Go     │                 LLGo                  │              LLGoFullLTO              │
+                       │    B/op    │     B/op       vs base                │     B/op       vs base                │
+_getMetricNameForTopic   16.00 ± 0%   128.00 ± 0% ¹  +700.00% (p=0.008 n=5)   128.00 ± 0% ¹  +700.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+                       │     Go     │                 LLGo                 │             LLGoFullLTO              │
+                       │ allocs/op  │  allocs/op    vs base                │  allocs/op    vs base                │
+_getMetricNameForTopic   1.000 ± 0%   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)   0.000 ± 0% ¹  -100.00% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: thriftrw_gen-RoundTrip%2FContainersOfContainers%2FDecode
+          │     Go      │                  LLGo                  │              LLGoFullLTO               │
+          │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+RoundTrip   44.82µ ± 1%   216.94µ ± 0% ¹  +384.02% (p=0.008 n=5)   163.30µ ± 1% ¹  +264.35% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: thriftrw_gen-RoundTrip%2FContainersOfContainers%2FEncode
+          │      Go      │                  LLGo                  │              LLGoFullLTO              │
+          │    sec/op    │     sec/op      vs base                │    sec/op      vs base                │
+RoundTrip   18.47µ ± 15%   117.69µ ± 1% ¹  +537.16% (p=0.008 n=5)   89.54µ ± 1% ¹  +384.75% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: thriftrw_gen-RoundTrip%2FPrimitiveOptionalStruct%2FStreaming_Decode
+          │     Go      │                  LLGo                  │              LLGoFullLTO               │
+          │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+RoundTrip   837.2n ± 1%   6585.0n ± 1% ¹  +686.55% (p=0.008 n=5)   5491.0n ± 3% ¹  +555.88% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: uber_zap-JSONLogMarshalerFunc
+                     │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                     │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+JSONLogMarshalerFunc   428.8n ± 2%   1594.0n ± 2% ¹  +271.74% (p=0.008 n=5)   1350.0n ± 6% ¹  +214.83% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: uuid-New
+    │     Go      │                  LLGo                  │              LLGoFullLTO               │
+    │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+New   92.12n ± 1%   939.40n ± 0% ¹  +919.76% (p=0.008 n=5)   810.50n ± 1% ¹  +779.83% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: uuid-UUID_MarshalJSON
+                 │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                 │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+UUID_MarshalJSON   285.5n ± 1%   1692.0n ± 1% ¹  +492.64% (p=0.008 n=5)   1360.0n ± 0% ¹  +376.36% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: uuid-UUID_UnmarshalJSON
+                   │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                   │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+UUID_UnmarshalJSON   781.1n ± 2%   3510.0n ± 0% ¹  +349.37% (p=0.008 n=5)   2616.0n ± 5% ¹  +234.91% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_augmentedtree-AddItems
+         │     Go      │                 LLGo                 │             LLGoFullLTO              │
+         │   sec/op    │    sec/op      vs base               │    sec/op      vs base               │
+AddItems   189.9µ ± 1%   276.8µ ± 1% ¹  +45.79% (p=0.008 n=5)   212.2µ ± 1% ¹  +11.77% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_avl-ImmutableInsert
+                │     Go      │                 LLGo                 │             LLGoFullLTO              │
+                │   sec/op    │    sec/op      vs base               │    sec/op      vs base               │
+ImmutableInsert   2.129µ ± 2%   1.408µ ± 5% ¹  -33.87% (p=0.008 n=5)   1.267µ ± 4% ¹  -40.49% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_bitarray-CompressedIntersects
+                     │     Go      │                  LLGo                  │              LLGoFullLTO               │
+                     │   sec/op    │     sec/op      vs base                │     sec/op      vs base                │
+CompressedIntersects   51.27n ± 1%   403.70n ± 0% ¹  +687.40% (p=0.008 n=5)   377.60n ± 2% ¹  +636.49% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_hilbert-BulkUpdatePoints
+                 │     Go      │                  LLGo                  │              LLGoFullLTO              │
+                 │   sec/op    │     sec/op      vs base                │    sec/op      vs base                │
+BulkUpdatePoints   278.3µ ± 1%   1069.2µ ± 1% ¹  +284.14% (p=0.008 n=5)   938.4µ ± 1% ¹  +237.14% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_queue-PriorityQueue
+              │     Go      │                  LLGo                   │               LLGoFullLTO               │
+              │   sec/op    │     sec/op       vs base                │     sec/op       vs base                │
+PriorityQueue   652.2n ± 2%   1905.0n ± 24% ¹  +192.09% (p=0.008 n=5)   1747.0n ± 29% ¹  +167.86% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_rangetree-Apply
+      │     Go      │                  LLGo                   │              LLGoFullLTO               │
+      │   sec/op    │     sec/op      vs base                 │     sec/op      vs base                │
+Apply   14.09µ ± 4%   176.64µ ± 2% ¹  +1153.41% (p=0.008 n=5)   149.69µ ± 1% ¹  +962.18% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_rangetree-ImmutableInsertSecondDimension
+                               │     Go      │                 LLGo                 │             LLGoFullLTO             │
+                               │   sec/op    │    sec/op      vs base               │    sec/op      vs base              │
+ImmutableInsertSecondDimension   35.41m ± 3%   40.05m ± 4% ¹  +13.10% (p=0.008 n=5)   34.11m ± 3% ¹  -3.69% (p=0.032 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_set-Clear
+      │     Go      │                 LLGo                 │          LLGoFullLTO           │
+      │   sec/op    │    sec/op      vs base               │    sec/op      vs base         │
+Clear   46.05n ± 1%   50.91n ± 1% ¹  +10.55% (p=0.008 n=5)   45.87n ± 1% ¹  ~ (p=0.952 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_set-Exists
+       │     Go      │                 LLGo                  │              LLGoFullLTO              │
+       │   sec/op    │    sec/op      vs base                │    sec/op      vs base                │
+Exists   18.10n ± 0%   63.81n ± 1% ¹  +252.54% (p=0.008 n=5)   49.10n ± 1% ¹  +171.27% (p=0.008 n=5)
+¹ benchmarks vary in cpu
+
+shortname: workiva_triey-Iterator
+         │     Go      │                LLGo                 │             LLGoFullLTO              │
+         │   sec/op    │    sec/op      vs base              │    sec/op      vs base               │
+Iterator   2.444µ ± 1%   2.595µ ± 0% ¹  +6.18% (p=0.008 n=5)   2.170µ ± 0% ¹  -11.21% (p=0.008 n=5)
+¹ benchmarks vary in cpu
