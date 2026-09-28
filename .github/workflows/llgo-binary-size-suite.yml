@@ -201,7 +201,7 @@ jobs:
           WASM_SUITE: ${{ inputs.suite }}
           GOMAXPROCS: ${{ inputs.suite == 'tsgo' && '1' || '2' }}
           BINARYEN_CORES: ${{ inputs.suite == 'tsgo' && '1' || '2' }}
-          LLGO_BUILD_TIMEOUT_SECONDS: "1200"
+          LLGO_BUILD_TIMEOUT_SECONDS: ${{ inputs.suite == 'tsgo' && '3600' || '1200' }}
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |

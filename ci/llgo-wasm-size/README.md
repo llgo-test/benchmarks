@@ -149,4 +149,7 @@ retain 2. During tsgo builds, a 15-second sampler streams available RAM, swap,
 OOM counters, cgroup memory usage/limits, and the ten largest process RSS
 values to the job log and `memory.log` in the artifact. Samples are diagnostic,
 not exact peak measurements; concurrency changes do not bound individual
-optimizer memory use. Compiler flags and the build timeout are unchanged.
+optimizer memory use. Compiler flags are unchanged. Each tsgo configuration
+has a 3600-second build timeout to test whether the previous 1200-second
+timeouts were caused by slower single-threaded builds; standard WASM and
+native builds retain their 1200-second limits.
