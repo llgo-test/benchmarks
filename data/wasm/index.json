@@ -1,7 +1,36 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-30T04:43:00.376754Z",
+  "generatedAt": "2026-09-30T06:26:13.546563Z",
   "runs": [
+    {
+      "schemaVersion": 2,
+      "configs": [
+        "Go",
+        "TinyGo",
+        "LLGoNoLTO",
+        "LLGoDeadcodeDrop",
+        "LLGoFullLTONoGlobalDCE",
+        "LLGoFullLTOGlobalDCE"
+      ],
+      "key": "653957f840b529fc3e18a214b003b64faa7080d0",
+      "id": "36668929616",
+      "attempt": 1,
+      "number": 510,
+      "createdAt": "2026-09-30T05:22:15.534261Z",
+      "sourceCommit": "e171d27293e42e141639830202eb37264e95aab7",
+      "ref": "main",
+      "llgoRepository": "xgo-dev/llgo",
+      "llgoCommit": "653957f840b529fc3e18a214b003b64faa7080d0",
+      "llgoMainIndex": 1725,
+      "llgoCommittedAt": "2026-09-30T12:27:01+08:00",
+      "llgoBuildGoVersion": "1.27.0",
+      "goVersion": "1.26.2",
+      "llvmVersion": "22",
+      "tinygoVersion": "0.41.1",
+      "binaryenVersion": "132",
+      "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/36668929616",
+      "path": "wasm/runs/653957f840b529fc3e18a214b003b64faa7080d0/results.json"
+    },
     {
       "schemaVersion": 2,
       "configs": [
