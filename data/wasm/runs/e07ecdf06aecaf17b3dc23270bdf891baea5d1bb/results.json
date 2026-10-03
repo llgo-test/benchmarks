@@ -3,12 +3,12 @@
   "schemaVersion": 2,
   "format": "wasm-file-size",
   "run": {
-    "id": "37090652610",
+    "id": "37093920136",
     "attempt": 1,
-    "number": 523,
-    "createdAt": "2026-10-03T03:38:19.973813Z",
+    "number": 524,
+    "createdAt": "2026-10-03T04:38:36.868254Z",
     "repository": "llgo-test/benchmarks",
-    "sourceCommit": "0c7763e1fb93e1b5d4cb90c76a6c24f2b068ade5",
+    "sourceCommit": "1ad96b0a637204993bf4a7aff0d07f5650a6baa3",
     "ref": "main",
     "llgoRepository": "xgo-dev/llgo",
     "llgoCommit": "e07ecdf06aecaf17b3dc23270bdf891baea5d1bb",
@@ -19,8 +19,8 @@
     "llvmVersion": "22",
     "tinygoVersion": "0.41.1",
     "binaryenVersion": "132",
-    "event": "repository_dispatch",
-    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/37090652610",
+    "event": "push",
+    "workflowUrl": "https://github.com/llgo-test/benchmarks/actions/runs/37093920136",
     "runnerOS": "Linux",
     "runnerArch": "X64",
     "runnerImage": "ubuntu24"
@@ -84,44 +84,6 @@
     }
   },
   "comparisonsByTarget": {
-    "wasip1": {
-      "Go": {
-        "LLGoNoLTO": {
-          "ratio": 0.8081748305026475,
-          "samples": 11
-        },
-        "LLGoDeadcodeDrop": {
-          "ratio": 0.5204368422098664,
-          "samples": 11
-        },
-        "LLGoFullLTONoGlobalDCE": {
-          "ratio": 0.6249944856666645,
-          "samples": 11
-        },
-        "LLGoFullLTOGlobalDCE": {
-          "ratio": 0.44414980873048293,
-          "samples": 11
-        }
-      },
-      "TinyGo": {
-        "LLGoNoLTO": {
-          "ratio": 13.275792737550944,
-          "samples": 10
-        },
-        "LLGoDeadcodeDrop": {
-          "ratio": 8.283843384234322,
-          "samples": 10
-        },
-        "LLGoFullLTONoGlobalDCE": {
-          "ratio": 10.365543843749087,
-          "samples": 10
-        },
-        "LLGoFullLTOGlobalDCE": {
-          "ratio": 7.207756603821427,
-          "samples": 10
-        }
-      }
-    },
     "js": {
       "Go": {
         "LLGoNoLTO": {
@@ -156,6 +118,44 @@
         },
         "LLGoFullLTOGlobalDCE": {
           "ratio": 7.327971536518361,
+          "samples": 10
+        }
+      }
+    },
+    "wasip1": {
+      "Go": {
+        "LLGoNoLTO": {
+          "ratio": 0.8081748305026475,
+          "samples": 11
+        },
+        "LLGoDeadcodeDrop": {
+          "ratio": 0.5204368422098664,
+          "samples": 11
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "ratio": 0.6249944856666645,
+          "samples": 11
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "ratio": 0.44414980873048293,
+          "samples": 11
+        }
+      },
+      "TinyGo": {
+        "LLGoNoLTO": {
+          "ratio": 13.275792737550944,
+          "samples": 10
+        },
+        "LLGoDeadcodeDrop": {
+          "ratio": 8.283843384234322,
+          "samples": 10
+        },
+        "LLGoFullLTONoGlobalDCE": {
+          "ratio": 10.365543843749087,
+          "samples": 10
+        },
+        "LLGoFullLTOGlobalDCE": {
+          "ratio": 7.207756603821427,
           "samples": 10
         }
       }
