@@ -199,9 +199,9 @@ jobs:
         continue-on-error: true
         env:
           WASM_SUITE: ${{ inputs.suite }}
-          GOMAXPROCS: "2"
-          BINARYEN_CORES: "2"
-          LLGO_BUILD_TIMEOUT_SECONDS: "1200"
+          GOMAXPROCS: ${{ inputs.suite == 'tsgo' && '1' || '2' }}
+          BINARYEN_CORES: ${{ inputs.suite == 'tsgo' && '1' || '2' }}
+          LLGO_BUILD_TIMEOUT_SECONDS: ${{ inputs.suite == 'tsgo' && '3600' || '1200' }}
           LLGO_BIN: ${{ github.workspace }}/.ci/llgo/llgo
           LLGO_ROOT: ${{ github.workspace }}/.ci/llgo
         run: |
@@ -214,6 +214,44 @@ jobs:
           export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
           export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
+          # Stream samples as well as saving them: runner loss can prevent artifact upload.
+          if [[ "$WASM_SUITE" == tsgo ]]; then
+            mkdir -p .ci/wasm-run
+            python3 -u - .ci/wasm-run/memory.log <<'PYMONITOR' &
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import subprocess
+          import sys
+          import time
+
+          cgroup = Path("/sys/fs/cgroup")
+          for line in Path("/proc/self/cgroup").read_text().splitlines():
+              if line.startswith("0::"):
+                  candidate = cgroup / line[3:].lstrip("/")
+                  if candidate.is_dir():
+                      cgroup = candidate
+          with open(sys.argv[1], "w", buffering=1) as log:
+              while True:
+                  lines = ["[tsgo-memory] " + datetime.now(timezone.utc).isoformat(),
+                           "meminfo values and process RSS are KiB; cgroup memory values are bytes"]
+                  for filename, prefixes in (("/proc/meminfo", ("MemTotal:", "MemAvailable:", "SwapTotal:", "SwapFree:")),
+                                             ("/proc/vmstat", ("oom_kill ",))):
+                      lines.extend(line for line in Path(filename).read_text().splitlines() if line.startswith(prefixes))
+                  for name in ("memory.current", "memory.peak", "memory.max", "memory.swap.current", "memory.events"):
+                      path = cgroup / name
+                      if path.is_file():
+                          lines.append(str(path) + ": " + path.read_text().strip().replace("\n", "; "))
+                  processes = subprocess.run(["ps", "-eo", "pid,ppid,rss,nlwp,args", "--sort=-rss"],
+                                             capture_output=True, text=True, timeout=5)
+                  lines.extend(processes.stdout.splitlines()[:11])
+                  sample = "\n".join(lines) + "\n"
+                  print(sample, end="", flush=True)
+                  log.write(sample)
+                  time.sleep(15)
+          PYMONITOR
+            monitor_pid=$!
+            trap 'kill "$monitor_pid" 2>/dev/null || true; wait "$monitor_pid" 2>/dev/null || true' EXIT
+          fi
           status=0
           ci/llgo-wasm-size/run.sh .ci/wasm-run || status=$?
           if [[ -f .ci/wasm-run/summary.md ]]; then

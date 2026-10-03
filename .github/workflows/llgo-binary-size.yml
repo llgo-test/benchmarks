@@ -165,6 +165,7 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --quiet "$BASE_SHA" "$PR_SHA" -- \
+              .github/workflows/llgo-binary-size-suite.yml \
               ci/llgo-size/llgo-version.env \
               ci/llgo-size/bin/go \
               cmd/bent \
