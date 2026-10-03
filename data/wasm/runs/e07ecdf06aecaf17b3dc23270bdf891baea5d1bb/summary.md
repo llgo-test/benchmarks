@@ -21,8 +21,6 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | llimport | TinyGo | optional | failed | [logs/llimport.TinyGo.log](logs/llimport.TinyGo.log) |
 | llimport-js | TinyGo | optional | failed | [logs/llimport-js.TinyGo.log](logs/llimport-js.TinyGo.log) |
 | tsgo | TinyGo | optional | failed | [logs/tsgo.TinyGo.log](logs/tsgo.TinyGo.log) |
-| tsgo | LLGoFullLTONoGlobalDCE | required | timeout | [logs/tsgo.LLGoFullLTONoGlobalDCE.log](logs/tsgo.LLGoFullLTONoGlobalDCE.log) |
-| tsgo | LLGoFullLTOGlobalDCE | required | timeout | [logs/tsgo.LLGoFullLTOGlobalDCE.log](logs/tsgo.LLGoFullLTOGlobalDCE.log) |
 
 | Application | Target | Go toolchain | Source repository | Commit | Entry |
 | --- | --- | --- | --- | --- | --- |
@@ -56,8 +54,8 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | --- | ---: | ---: |
 | LLGo · no LTO | 1.125x | 12 |
 | LLGo · deadcode drop | 0.715x | 12 |
-| LLGo · full LTO (GlobalDCE off) | 0.960x | 11 |
-| LLGo · full LTO + GlobalDCE | 0.608x | 11 |
+| LLGo · full LTO (GlobalDCE off) | 1.015x | 12 |
+| LLGo · full LTO + GlobalDCE | 0.667x | 12 |
 
 | Application | Go bytes | LLGo mode | LLGo bytes | vs. Go |
 | --- | ---: | --- | ---: | ---: |
@@ -103,8 +101,8 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `sha-wasi` | 2811136 | LLGo · full LTO + GlobalDCE | 2044910 | -27.3% |
 | `tsgo` | 50367588 | LLGo · no LTO | 96072004 | +90.7% |
 | `tsgo` | 50367588 | LLGo · deadcode drop | 94938211 | +88.5% |
-| `tsgo` | 50367588 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `tsgo` | 50367588 | LLGo · full LTO + GlobalDCE | — | — |
+| `tsgo` | 50367588 | LLGo · full LTO (GlobalDCE off) | 93885367 | +86.4% |
+| `tsgo` | 50367588 | LLGo · full LTO + GlobalDCE | 93532943 | +85.7% |
 | `word-count` | 2300998 | LLGo · no LTO | 2212645 | -3.8% |
 | `word-count` | 2300998 | LLGo · deadcode drop | 1288978 | -44.0% |
 | `word-count` | 2300998 | LLGo · full LTO (GlobalDCE off) | 1954724 | -15.0% |
@@ -163,8 +161,8 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `sha-wasi` | 351971 | LLGo · full LTO + GlobalDCE | 2044910 | +481.0% |
 | `tsgo` | — | LLGo · no LTO | 96072004 | — |
 | `tsgo` | — | LLGo · deadcode drop | 94938211 | — |
-| `tsgo` | — | LLGo · full LTO (GlobalDCE off) | — | — |
-| `tsgo` | — | LLGo · full LTO + GlobalDCE | — | — |
+| `tsgo` | — | LLGo · full LTO (GlobalDCE off) | 93885367 | — |
+| `tsgo` | — | LLGo · full LTO + GlobalDCE | 93532943 | — |
 | `word-count` | 164053 | LLGo · no LTO | 2212645 | +1248.7% |
 | `word-count` | 164053 | LLGo · deadcode drop | 1288978 | +685.7% |
 | `word-count` | 164053 | LLGo · full LTO (GlobalDCE off) | 1954724 | +1091.5% |

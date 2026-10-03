@@ -1,12 +1,12 @@
 {
-  "suite": "standard",
+  "suite": "tsgo",
   "schemaVersion": 2,
   "format": "wasm-file-size",
   "run": {
     "id": "37093920136",
     "attempt": 1,
     "number": 524,
-    "createdAt": "2026-10-03T04:38:36.868254Z",
+    "createdAt": "2026-10-03T06:31:17.222986Z",
     "repository": "llgo-test/benchmarks",
     "sourceCommit": "1ad96b0a637204993bf4a7aff0d07f5650a6baa3",
     "ref": "main",
@@ -56,12 +56,12 @@
         "samples": 23
       },
       "LLGoFullLTONoGlobalDCE": {
-        "ratio": 0.7746832625014026,
-        "samples": 22
+        "ratio": 0.8048286272122335,
+        "samples": 23
       },
       "LLGoFullLTOGlobalDCE": {
-        "ratio": 0.5196852278490057,
-        "samples": 22
+        "ratio": 0.5492714520166858,
+        "samples": 23
       }
     },
     "TinyGo": {
@@ -95,12 +95,12 @@
           "samples": 12
         },
         "LLGoFullLTONoGlobalDCE": {
-          "ratio": 0.9602231235043145,
-          "samples": 11
+          "ratio": 1.01479513462906,
+          "samples": 12
         },
         "LLGoFullLTOGlobalDCE": {
-          "ratio": 0.60806676201533,
-          "samples": 11
+          "ratio": 0.6673542744734634,
+          "samples": 12
         }
       },
       "TinyGo": {
@@ -244,10 +244,10 @@
     },
     "resources": {
       "parallelBuilds": 1,
-      "GOMAXPROCS": "2",
-      "BINARYEN_CORES": "2",
+      "GOMAXPROCS": "1",
+      "BINARYEN_CORES": "1",
       "GOFLAGS": "-mod=readonly -p=1",
-      "buildTimeoutSeconds": 1200.0
+      "buildTimeoutSeconds": 3600.0
     },
     "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
     "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives"
@@ -1282,8 +1282,8 @@
         "TinyGo": null,
         "LLGoNoLTO": 96072004,
         "LLGoDeadcodeDrop": 94938211,
-        "LLGoFullLTONoGlobalDCE": null,
-        "LLGoFullLTOGlobalDCE": null
+        "LLGoFullLTONoGlobalDCE": 93885367,
+        "LLGoFullLTOGlobalDCE": 93532943
       },
       "builds": {
         "Go": {
@@ -1303,11 +1303,11 @@
           "log": "logs/tsgo.LLGoDeadcodeDrop.log"
         },
         "LLGoFullLTONoGlobalDCE": {
-          "status": "timeout",
+          "status": "success",
           "log": "logs/tsgo.LLGoFullLTONoGlobalDCE.log"
         },
         "LLGoFullLTOGlobalDCE": {
-          "status": "timeout",
+          "status": "success",
           "log": "logs/tsgo.LLGoFullLTOGlobalDCE.log"
         }
       }
