@@ -44,11 +44,9 @@ const dom = {
   status: document.querySelector("#status"),
   sizeGrid: document.querySelector("#size-grid"),
   strippedGrid: document.querySelector("#stripped-grid"),
-  legacyGrid: document.querySelector("#legacy-grid"),
   timeGrid: document.querySelector("#time-grid"),
   sizeWrap: document.querySelector("#size-wrap"),
   strippedWrap: document.querySelector("#stripped-wrap"),
-  legacyWrap: document.querySelector("#legacy-wrap"),
   timeWrap: document.querySelector("#time-wrap"),
   filter: document.querySelector("#commit-filter"),
   pageSize: document.querySelector("#page-size"),
@@ -268,16 +266,19 @@ function latestRun() {
 function measureValue(benchmark, config, measure) {
   if (!benchmark) return NaN;
   const timing = benchmark.buildTimes && benchmark.buildTimes[config];
-  if (measure === "legacySize" && benchmark.sizes) return NaN;
-  const value = measure === "withDwarf" || measure === "withoutDwarf"
+  // Historical runs stored only the original ELF size. Keep those in the
+  // with-DWARF series, but never replace a missing measurement in a paired run.
+  const value = measure === "withDwarf" && !benchmark.sizes
+    ? benchmark.values && benchmark.values[config]
+    : measure === "withDwarf" || measure === "withoutDwarf"
     ? benchmark.sizes && benchmark.sizes[measure] && benchmark.sizes[measure][config]
-    : measure === "size" || measure === "legacySize" ? benchmark.values && benchmark.values[config]
+    : measure === "size" ? benchmark.values && benchmark.values[config]
     : timing && (measure === "wall" ? timing.wallNs : timing.cpuNs);
   return value == null ? NaN : Number(value);
 }
 
 function isSizeMeasure(measure) {
-  return ["size", "legacySize", "withDwarf", "withoutDwarf"].includes(measure);
+  return ["size", "withDwarf", "withoutDwarf"].includes(measure);
 }
 
 function formatMeasure(value, measure) {
@@ -367,13 +368,11 @@ function cellHtml(benchmark, config, measure, runKey, baselineBenchmark) {
     if (Number.isFinite(cpu)) secondary = '<span class="secondary-value">CPU ' + formatDuration(cpu) + "</span>";
   }
   let context = "";
-  if (measure !== "legacySize") {
-    const goValue = measureValue(benchmark, "Go", measure);
-    if (config === "Go") context = '<span class="comparison-context flat">Go reference</span>';
-    else {
-      const vsGo = percentDelta(value, goValue);
-      if (Number.isFinite(vsGo)) context = '<span class="comparison-context ' + deltaClass(vsGo) + '">' + formatPercent(vsGo) + " vs Go</span>";
-    }
+  const goValue = measureValue(benchmark, "Go", measure);
+  if (config === "Go") context = '<span class="comparison-context flat">Go reference</span>';
+  else {
+    const vsGo = percentDelta(value, goValue);
+    if (Number.isFinite(vsGo)) context = '<span class="comparison-context ' + deltaClass(vsGo) + '">' + formatPercent(vsGo) + " vs Go</span>";
   }
   let comparison = "";
   if (state.selectedKeys.length === 2 && runKey === state.selectedKeys[1]) {
@@ -470,7 +469,7 @@ async function renderEnvironment() {
   dom.envToolchain.textContent = goVersionLabel(run.goVersion || meta.goVersion) + " · LLVM " + (run.llvmVersion || meta.llvmVersion || "—");
   dom.envLlgo.textContent = commitLabel(meta) + " · " + (run.ref || meta.ref || "main");
   const runNumber = run.number || meta.number || meta.key;
-  dom.envProtocol.textContent = (document.sizeProtocol ? "One build · two sizes" : "Legacy · DWARF unchecked") + " · run #" + runNumber;
+  dom.envProtocol.textContent = (document.sizeProtocol ? "One build · two sizes" : "Historical · original size") + " · run #" + runNumber;
 }
 
 async function renderTables() {
@@ -480,7 +479,6 @@ async function renderTables() {
   const baselineDocument = state.selectedKeys.length === 2 ? await loadRun(findMeta(state.selectedKeys[0])) : null;
   renderMatrix(dom.sizeGrid, runs, documents, baselineDocument, "withDwarf");
   renderMatrix(dom.strippedGrid, runs, documents, baselineDocument, "withoutDwarf");
-  renderMatrix(dom.legacyGrid, runs, documents, baselineDocument, "legacySize");
   renderMatrix(dom.timeGrid, runs, documents, baselineDocument, "wall");
 }
 
@@ -608,7 +606,7 @@ function attachEvents() {
     clearSelection();
     await refreshAll();
   });
-  [dom.sizeGrid, dom.strippedGrid, dom.legacyGrid, dom.timeGrid].forEach(function (table) {
+  [dom.sizeGrid, dom.strippedGrid, dom.timeGrid].forEach(function (table) {
     table.addEventListener("click", function (event) {
       const button = event.target.closest("button.commit-select[data-run-key]");
       if (button) selectCommit(button.dataset.runKey);
@@ -640,7 +638,7 @@ function attachEvents() {
     renderTrend();
   });
   let syncing = false;
-  const wraps = [dom.sizeWrap, dom.strippedWrap, dom.legacyWrap, dom.timeWrap];
+  const wraps = [dom.sizeWrap, dom.strippedWrap, dom.timeWrap];
   function syncScroll(source) {
     source.addEventListener("scroll", function () {
       if (syncing) return;

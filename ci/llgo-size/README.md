@@ -150,7 +150,8 @@ Both variants have downloadable TSV files. Build times measure the single
 compilation, excluding the subsequent strip and size measurements.
 
 The Linux dashboard shows separate tables, Go-relative comparisons, A/B deltas,
-and trends for the two variants. Historical runs without verified pairs stay
-in the expandable historical table; they are never substituted into either
-new series. Missing DWARF, strip failures, or missing measurements fail the
+and trends for the two variants. Historical runs without paired measurements use their original
+`values` in the with-DWARF table, comparisons, and trends. Their without-DWARF
+values remain missing. Paired runs always use their explicit measurements;
+a missing value is never replaced by the original total. Missing DWARF, strip failures, or missing measurements fail the
 report while still preserving partial results for publication.

@@ -21,7 +21,7 @@
       <div>
         <p class="eyebrow">LLGo compiler benchmarks</p>
         <h1>Linux binary size &amp; build-time history</h1>
-        <p class="lede">Each Go and LLGo mode is built once with DWARF. Compare the original ELF and a copy with debug information removed; ordinary symbols are preserved. Linked commit labels open the pull request that landed each revision.</p>
+        <p class="lede">Each Go and LLGo mode is built once with DWARF. Compare the original ELF and a copy with debug information removed; ordinary symbols are preserved. Historical original sizes are included in the with-DWARF table. Linked commit labels open the pull request that landed each revision.</p>
       </div>
       <p id="status" class="status" role="status">Loading results…</p>
     </header>
@@ -73,14 +73,6 @@
         <table id="stripped-grid" class="comparison-table" aria-live="polite"></table>
       </div>
     </section>
-
-    <details class="card legacy-sizes">
-      <summary>Historical binary sizes · DWARF status unchecked</summary>
-      <p>Earlier runs measured the original ELF only. These values are retained here and excluded from the verified DWARF comparisons above. Missing paired measurements are shown as —.</p>
-      <div id="legacy-wrap" class="matrix-wrap" aria-label="Historical binary sizes">
-        <table id="legacy-grid" class="comparison-table" aria-live="polite"></table>
-      </div>
-    </details>
 
     <section class="card" aria-labelledby="time-heading">
       <div class="card-heading">

@@ -21,35 +21,37 @@ function page() {
   return { context, elements, run: code => vm.runInContext(code, context) };
 }
 
-test('verified size series never use old totals or missing values', () => {
+test('historical totals join with-DWARF while missing paired measurements stay missing', () => {
   const p = page();
   p.run('old = {values: {Go: 900, LLGoNoLTO: 800}}');
-  for (const metric of ['withDwarf', 'withoutDwarf']) {
-    assert.ok(Number.isNaN(p.run(`measureValue(old, 'Go', '${metric}')`)));
-    assert.equal(p.run(`rankFor(old, 'Go', '${metric}')`), null);
-  }
-  assert.equal(p.run("measureValue(old, 'Go', 'legacySize')"), 900);
+  assert.equal(p.run("measureValue(old, 'Go', 'withDwarf')"), 900);
+  assert.equal(p.run("rankFor(old, 'LLGoNoLTO', 'withDwarf').rank"), 1);
+  assert.ok(Number.isNaN(p.run("measureValue(old, 'Go', 'withoutDwarf')")));
+  assert.equal(p.run("rankFor(old, 'Go', 'withoutDwarf')"), null);
+  p.run('old.sizes = null'); // compact historical trend records
+  assert.equal(p.run("measureValue(old, 'Go', 'withDwarf')"), 900);
   p.run('paired = {values:{Go:900}, sizes:{withDwarf:{Go:900,LLGoNoLTO:1800},withoutDwarf:{Go:400,LLGoNoLTO:200}}}');
-  assert.ok(Number.isNaN(p.run("measureValue(paired, 'Go', 'legacySize')")));
   assert.match(p.run("cellHtml(paired, 'LLGoNoLTO', 'withDwarf', 'a')"), /\+100\.0% vs Go/);
   assert.match(p.run("cellHtml(paired, 'LLGoNoLTO', 'withoutDwarf', 'a')"), /-50\.0% vs Go/);
   assert.equal(p.run("rankFor(paired, 'LLGoNoLTO', 'withoutDwarf').rank"), 1);
-  p.run('paired.sizes.withoutDwarf.Go = null');
+  p.run('paired.sizes.withoutDwarf.Go = null; paired.sizes.withDwarf.Go = null');
+  assert.ok(Number.isNaN(p.run("measureValue(paired, 'Go', 'withDwarf')")));
   assert.doesNotMatch(p.run("cellHtml(paired, 'LLGoNoLTO', 'withoutDwarf', 'a')"), /vs Go/);
   assert.match(p.run("cellHtml(paired, 'Go', 'withoutDwarf', 'a')"), /missing/);
 });
 
-test('A/B deltas stay within the same variant and exclude historical gaps', () => {
+test('A/B comparisons include historical original sizes only in with-DWARF', () => {
   const p = page();
   p.run(`state.benchmarkNames = ['Hello']; state.selectedKeys = ['a', 'b'];
     a = {name:'Hello',values:{Go:999},sizes:{withDwarf:{Go:100},withoutDwarf:{Go:50}}};
     b = {name:'Hello',values:{Go:999},sizes:{withDwarf:{Go:200},withoutDwarf:{Go:40}}};`);
   assert.match(p.run("cellHtml(b, 'Go', 'withDwarf', 'b', a)"), /Δ A \+100\.0%/);
   assert.match(p.run("cellHtml(b, 'Go', 'withoutDwarf', 'b', a)"), /Δ A -20\.0%/);
-  assert.equal(p.run("comparisonPairs({benchmarks:[{name:'Hello',values:{Go:999}}]}, {benchmarks:[b]}, 'withDwarf').length"), 0);
+  assert.equal(p.run("comparisonPairs({benchmarks:[{name:'Hello',values:{Go:999}}]}, {benchmarks:[b]}, 'withDwarf').length"), 1);
+  assert.equal(p.run("comparisonPairs({benchmarks:[{name:'Hello',values:{Go:999}}]}, {benchmarks:[b]}, 'withoutDwarf').length"), 0);
 });
 
-test('paired trend charts break across legacy runs', () => {
+test('with-DWARF trends include history while without-DWARF keeps historical gaps', () => {
   const p = page();
   p.run(`state.activeConfigs = new Set(['Go']);
     metas = [{key:'a'},{key:'old'},{key:'b'}];
@@ -58,8 +60,8 @@ test('paired trend charts break across legacy runs', () => {
       {benchmarks:[{name:'Hello',sizes:{withDwarf:{Go:200},withoutDwarf:{Go:40}}}]}];`);
   for (const metric of ['withDwarf', 'withoutDwarf']) {
     const chart = p.run(`chartBand(documents, metas, 'Hello', '${metric}', 'Size')`);
-    assert.equal((chart.match(/class="history-point"/g) || []).length, 2);
-    assert.equal((chart.match(/ M /g) || []).length, 2);
+    assert.equal((chart.match(/class="history-point"/g) || []).length, metric === 'withDwarf' ? 3 : 2);
+    assert.equal((chart.match(/ M /g) || []).length, metric === 'withDwarf' ? 1 : 2);
     assert.match(chart, /bytes/);
     assert.doesNotMatch(chart, /NaN|Infinity|wall time/);
   }
