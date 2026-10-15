@@ -43,8 +43,12 @@ const seriesColors = ["#2457d6", "#7c3aed", "#4d7c0f", "#d97706", "#0f766e", "#c
 const dom = {
   status: document.querySelector("#status"),
   sizeGrid: document.querySelector("#size-grid"),
+  strippedGrid: document.querySelector("#stripped-grid"),
+  legacyGrid: document.querySelector("#legacy-grid"),
   timeGrid: document.querySelector("#time-grid"),
   sizeWrap: document.querySelector("#size-wrap"),
+  strippedWrap: document.querySelector("#stripped-wrap"),
+  legacyWrap: document.querySelector("#legacy-wrap"),
   timeWrap: document.querySelector("#time-wrap"),
   filter: document.querySelector("#commit-filter"),
   pageSize: document.querySelector("#page-size"),
@@ -56,6 +60,7 @@ const dom = {
   compareA: document.querySelector("#compare-a"),
   compareB: document.querySelector("#compare-b"),
   compareSize: document.querySelector("#compare-size"),
+  compareStripped: document.querySelector("#compare-stripped"),
   compareTime: document.querySelector("#compare-time"),
   clearComparison: document.querySelector("#clear-comparison"),
   historyRange: document.querySelector("#history-range"),
@@ -263,13 +268,20 @@ function latestRun() {
 function measureValue(benchmark, config, measure) {
   if (!benchmark) return NaN;
   const timing = benchmark.buildTimes && benchmark.buildTimes[config];
-  const value = measure === "size" ? benchmark.values && benchmark.values[config]
+  if (measure === "legacySize" && benchmark.sizes) return NaN;
+  const value = measure === "withDwarf" || measure === "withoutDwarf"
+    ? benchmark.sizes && benchmark.sizes[measure] && benchmark.sizes[measure][config]
+    : measure === "size" || measure === "legacySize" ? benchmark.values && benchmark.values[config]
     : timing && (measure === "wall" ? timing.wallNs : timing.cpuNs);
   return value == null ? NaN : Number(value);
 }
 
+function isSizeMeasure(measure) {
+  return ["size", "legacySize", "withDwarf", "withoutDwarf"].includes(measure);
+}
+
 function formatMeasure(value, measure) {
-  return measure === "size" ? formatBytes(value) : formatDuration(value);
+  return isSizeMeasure(measure) ? formatBytes(value) : formatDuration(value);
 }
 
 function filteredRuns() {
@@ -355,7 +367,7 @@ function cellHtml(benchmark, config, measure, runKey, baselineBenchmark) {
     if (Number.isFinite(cpu)) secondary = '<span class="secondary-value">CPU ' + formatDuration(cpu) + "</span>";
   }
   let context = "";
-  if (state.selectedKeys.length === 2 && selectedClass) {
+  if (measure !== "legacySize") {
     const goValue = measureValue(benchmark, "Go", measure);
     if (config === "Go") context = '<span class="comparison-context flat">Go reference</span>';
     else {
@@ -424,10 +436,13 @@ async function renderComparisonSummary() {
   const documents = await Promise.all([loadRun(aMeta), loadRun(bMeta)]);
   dom.compareA.textContent = "A " + commitLabel(aMeta);
   dom.compareB.textContent = "B " + commitLabel(bMeta);
-  const sizeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "size"));
+  const sizeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "withDwarf"));
   const timeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "wall"));
   dom.compareSize.textContent = formatPercent(sizeDelta);
   dom.compareSize.className = deltaClass(sizeDelta);
+  const strippedDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "withoutDwarf"));
+  dom.compareStripped.textContent = formatPercent(strippedDelta);
+  dom.compareStripped.className = deltaClass(strippedDelta);
   dom.compareTime.textContent = formatPercent(timeDelta);
   dom.compareTime.className = deltaClass(timeDelta);
 }
@@ -455,7 +470,7 @@ async function renderEnvironment() {
   dom.envToolchain.textContent = goVersionLabel(run.goVersion || meta.goVersion) + " · LLVM " + (run.llvmVersion || meta.llvmVersion || "—");
   dom.envLlgo.textContent = commitLabel(meta) + " · " + (run.ref || meta.ref || "main");
   const runNumber = run.number || meta.number || meta.key;
-  dom.envProtocol.textContent = "Bent · run #" + runNumber;
+  dom.envProtocol.textContent = (document.sizeProtocol ? "One build · two sizes" : "Legacy · DWARF unchecked") + " · run #" + runNumber;
 }
 
 async function renderTables() {
@@ -463,7 +478,9 @@ async function renderTables() {
   const runs = currentPageRuns();
   const documents = await Promise.all(runs.map(loadRun));
   const baselineDocument = state.selectedKeys.length === 2 ? await loadRun(findMeta(state.selectedKeys[0])) : null;
-  renderMatrix(dom.sizeGrid, runs, documents, baselineDocument, "size");
+  renderMatrix(dom.sizeGrid, runs, documents, baselineDocument, "withDwarf");
+  renderMatrix(dom.strippedGrid, runs, documents, baselineDocument, "withoutDwarf");
+  renderMatrix(dom.legacyGrid, runs, documents, baselineDocument, "legacySize");
   renderMatrix(dom.timeGrid, runs, documents, baselineDocument, "wall");
 }
 
@@ -532,7 +549,7 @@ function chartBand(documents, metas, benchmarkName, measure, title) {
       parts.push(commitLinkHtml(metas[index], point, "history-point-link", commitLinkTitle(metas[index]) + ": " + commitLabel(metas[index])));
     });
   });
-  return '<div class="chart-band"><div class="chart-title"><span>' + escapeHtml(title) + '</span><span>' + escapeHtml(measure === "size" ? "bytes" : "wall time") + '</span></div><svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="' + escapeHtml(title + " trend") + '">' + parts.join("") + "</svg></div>";
+  return '<div class="chart-band"><div class="chart-title"><span>' + escapeHtml(title) + '</span><span>' + escapeHtml(isSizeMeasure(measure) ? "bytes" : "wall time") + '</span></div><svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="' + escapeHtml(title + " trend") + '">' + parts.join("") + "</svg></div>";
 }
 
 async function renderTrend() {
@@ -545,7 +562,7 @@ async function renderTrend() {
   const legend = configs.filter(function (config) { return state.activeConfigs.has(config); }).map(function (config) {
     return '<span class="history-legend-item"><i style="--series:' + seriesColors[configs.indexOf(config)] + '"></i>' + escapeHtml(configLabels[config]) + "</span>";
   }).join("");
-  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, "size", "Binary size") + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
+  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, "withDwarf", "Binary size · with DWARF") + chartBand(documents, metas, benchmarkName, "withoutDwarf", "Binary size · without DWARF") + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
 }
 
 function renderConfigFilter() {
@@ -591,7 +608,7 @@ function attachEvents() {
     clearSelection();
     await refreshAll();
   });
-  [dom.sizeGrid, dom.timeGrid].forEach(function (table) {
+  [dom.sizeGrid, dom.strippedGrid, dom.legacyGrid, dom.timeGrid].forEach(function (table) {
     table.addEventListener("click", function (event) {
       const button = event.target.closest("button.commit-select[data-run-key]");
       if (button) selectCommit(button.dataset.runKey);
@@ -623,16 +640,16 @@ function attachEvents() {
     renderTrend();
   });
   let syncing = false;
-  function syncScroll(source, target) {
+  const wraps = [dom.sizeWrap, dom.strippedWrap, dom.legacyWrap, dom.timeWrap];
+  function syncScroll(source) {
     source.addEventListener("scroll", function () {
       if (syncing) return;
       syncing = true;
-      target.scrollLeft = source.scrollLeft;
+      wraps.forEach(function (target) { if (target !== source) target.scrollLeft = source.scrollLeft; });
       requestAnimationFrame(function () { syncing = false; });
     });
   }
-  syncScroll(dom.sizeWrap, dom.timeWrap);
-  syncScroll(dom.timeWrap, dom.sizeWrap);
+  wraps.forEach(syncScroll);
 }
 
 async function main() {

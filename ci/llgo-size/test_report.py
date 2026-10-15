@@ -34,6 +34,23 @@ class NativeReportTest(unittest.TestCase):
         self.assertIn("needs.binary-size.outputs.published == 'true'", deploy)
         self.assertNotIn("needs.binary-size.result == 'success'", deploy)
 
+    def test_unpaired_legacy_values_are_not_promoted_to_verified_sizes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "bench").mkdir()
+            for config in CONFIGS:
+                (root / "bench" / f"test.{config}.benchsize").write_text("".join(
+                    f"Benchmark{case} 1 123 total-bytes\n" for case in CASES))
+            result = subprocess.run(["bash", str(HERE / "report.sh"), str(root)], capture_output=True)
+            self.assertEqual(result.returncode, 1)
+            data = json.loads((root / "results/results.json").read_text())
+            self.assertEqual(data["schemaVersion"], 2)
+            self.assertEqual(data["sizeProtocol"]["buildsPerConfiguration"], 1)
+            for row in data["benchmarks"]:
+                self.assertEqual(row["values"]["Go"], 123)
+                self.assertIsNone(row["sizes"]["withDwarf"]["Go"])
+                self.assertIsNone(row["sizes"]["withoutDwarf"]["Go"])
+
     def test_partial_results_preserve_all_cases_and_other_compilers(self):
         for missing in (set(), {("Toml", "LLGoDeadcodeDrop")},
                         {(case, "Go") for case in CASES},
@@ -44,7 +61,7 @@ class NativeReportTest(unittest.TestCase):
                 bench.mkdir()
                 for config in CONFIGS:
                     (bench / f"test.{config}.benchsize").write_text("".join(
-                        f"Benchmark{case} 1 123 total-bytes\n" for case in CASES if (case, config) not in missing))
+                        f"Benchmark{case} 1 123 total-bytes\nBenchmark{case} 1 123 with-dwarf-bytes\nBenchmark{case} 1 100 without-dwarf-bytes\n" for case in CASES if (case, config) not in missing))
                 (root / "build.log").write_text("compiler failure evidence\n")
                 result = subprocess.run(["bash", str(HERE / "report.sh"), str(root)],
                                         capture_output=True, text=True)
@@ -53,6 +70,8 @@ class NativeReportTest(unittest.TestCase):
                 self.assertEqual(set(rows), set(CASES))
                 for case in CASES:
                     for config in CONFIGS:
+                        self.assertEqual(rows[case]["sizes"]["withDwarf"][config], None if (case, config) in missing else 123)
+                        self.assertEqual(rows[case]["sizes"]["withoutDwarf"][config], None if (case, config) in missing else 100)
                         self.assertEqual(rows[case]["values"][config], None if (case, config) in missing else 123)
                         self.assertEqual(rows[case]["builds"][config]["status"], "missing" if (case, config) in missing else "success")
                 self.assertEqual((root / "results/build.log").read_text(), "compiler failure evidence\n")

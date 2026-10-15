@@ -251,7 +251,7 @@ jobs:
           python3 -m unittest discover -s ci/llgo-wasm-size -p 'test_*.py' -v
           python3 -m unittest discover -s ci/llgo-size -p 'test_*.py' -v
           go test ./cmd/bent
-          node --test ci/llgo-wasm-size/test_wasm_site.cjs
+          node --test ci/llgo-wasm-size/test_wasm_site.cjs ci/llgo-size/test_site.cjs
           shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh
           (cd ci/llgo-wasm-size/apps && GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...)
           export GO_VERSION

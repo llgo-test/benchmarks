@@ -162,6 +162,7 @@ var scripts embed.FS
 var configs embed.FS
 
 var copyExes = []string{
+	"benchsize-dwarf.py",
 	"foo", "memprofile", "cpuprofile", "testjson", "tmpclr", "benchtime", "benchsize", "benchdwarf", "cronjob.sh", "cmpjob.sh", "cmpcl.sh", "cmpcl-phase.sh", "tweet-results",
 }
 

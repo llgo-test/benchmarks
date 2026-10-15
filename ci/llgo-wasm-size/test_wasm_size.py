@@ -411,7 +411,7 @@ class ArchiveCompatibilityTest(unittest.TestCase):
                 native_doc = {"run": {"id": "partial-run"}, "benchmarks": [
                     {"name": "Toml", "values": {"Go": None, "LLGoNoLTO": 123}}]}
                 (native / "results.json").write_text(json.dumps(native_doc))
-                for name in ("summary.md", "total-bytes.tsv", "timing-summary.md", "build-times.tsv", "download-timings.log", "build.log"):
+                for name in ("summary.md", "total-bytes.tsv", "with-dwarf-bytes.tsv", "without-dwarf-bytes.tsv", "timing-summary.md", "build-times.tsv", "download-timings.log", "build.log"):
                     (native / name).write_text("partial result\n")
                 (native / "raw").mkdir()
                 (native / "raw/current.benchsize").write_text("BenchmarkToml 1 123 total-bytes\n")
@@ -439,10 +439,15 @@ class ArchiveCompatibilityTest(unittest.TestCase):
                 if mode != "wasm":
                     archived = pages / "data/runs/partial-run"
                     self.assertIsNone(json.loads((archived / "results.json").read_text())["benchmarks"][0]["values"]["Go"])
+                    for variant in ("with-dwarf", "without-dwarf"):
+                        self.assertEqual((archived / f"{variant}-bytes.tsv").read_text(), "partial result\n")
+                        (native / f"{variant}-bytes.tsv").unlink()
                     (native / "raw/current.benchsize").unlink()
                     repeated = subprocess.run(command, capture_output=True, text=True)
                     self.assertEqual(repeated.returncode, 0, repeated.stderr)
                     self.assertFalse((archived / "raw/current.benchsize").exists())
+                    for variant in ("with-dwarf", "without-dwarf"):
+                        self.assertFalse((archived / f"{variant}-bytes.tsv").exists())
                 self.assertTrue((pages / "index.html").exists())
 
     def test_mixed_schema_history_preserves_old_bytes_and_nullable_results(self):

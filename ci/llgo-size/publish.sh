@@ -97,6 +97,12 @@ PY
   cp "$result_json" "$run_dir/results.json"
   cp "$results_dir/summary.md" "$run_dir/summary.md"
   cp "$results_dir/total-bytes.tsv" "$run_dir/total-bytes.tsv"
+  for variant in with-dwarf without-dwarf; do
+    rm -f "$run_dir/$variant-bytes.tsv"
+    if [[ -f "$results_dir/$variant-bytes.tsv" ]]; then
+      cp "$results_dir/$variant-bytes.tsv" "$run_dir/"
+    fi
+  done
   cp "$results_dir/timing-summary.md" "$run_dir/timing-summary.md"
   cp "$results_dir/build-times.tsv" "$run_dir/build-times.tsv"
   cp "$results_dir/download-timings.log" "$run_dir/download-timings.log"
