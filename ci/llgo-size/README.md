@@ -132,3 +132,26 @@ workflows to write repository contents. In `xgo-dev/llgo`, configure
 `BENCHMARKS_DISPATCH_TOKEN` with permission to dispatch to
 `llgo-test/benchmarks`; this token is required only by the small sender workflow
 that runs after `main` advances.
+
+### Linux DWARF size pairs
+
+Each configuration builds once with `-ldflags='-s=false -w=false'`. Bent's
+`benchsize` checks the ELF for a nonempty `.debug_info` (or `.zdebug_info`),
+then runs `llvm-strip --strip-debug` on a temporary copy and verifies that
+no `.debug_*` or `.zdebug_*` sections remain. It leaves the original binary
+and ordinary symbol tables intact. This measures DWARF removal, not a fully
+stripped `-s -w` build. Compiler defaults for DWARF compression are unchanged.
+LLVM's `llvm-readelf` and `llvm-strip`, and Python 3, must be on PATH.
+
+The raw Bent output includes `with-dwarf-bytes` and `without-dwarf-bytes`;
+`total-bytes` remains the original file size. Schema v2 adds per-benchmark
+`sizes.withDwarf` and `sizes.withoutDwarf` maps and a `sizeProtocol` descriptor.
+Both variants have downloadable TSV files. Build times measure the single
+compilation, excluding the subsequent strip and size measurements.
+
+The Linux dashboard shows separate tables, Go-relative comparisons, A/B deltas,
+and trends for the two variants. Historical runs without paired measurements use their original
+`values` in the with-DWARF table, comparisons, and trends. Their without-DWARF
+values remain missing. Paired runs always use their explicit measurements;
+a missing value is never replaced by the original total. Missing DWARF, strip failures, or missing measurements fail the
+report while still preserving partial results for publication.

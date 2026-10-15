@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# The Linux dashboard measures a verified pair from one compiler invocation.
+if [[ "${BENT_SIZE_DWARF_PAIRS:-}" == 1 ]]; then
+    exec python3 "$(dirname -- "$0")/benchsize-dwarf.py" "$@"
+fi
+
 tmp=tmp-bench-size-$$
 
 if [ `uname` = "Darwin" ] ; then

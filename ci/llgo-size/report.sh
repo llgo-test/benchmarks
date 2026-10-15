@@ -209,9 +209,12 @@ with open(output, "w", encoding="utf-8") as f:
     f.write("\n")
 PY
 
+paired_status=0
+python3 "$script_dir/report-dwarf.py" "$result_dir" || paired_status=$?
+
 cat "$summary"
 printf "\n"
 cat "$timing_summary"
-if ((missing > 0)); then
+if ((missing > 0 || paired_status > 0)); then
   exit 1
 fi

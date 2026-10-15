@@ -129,6 +129,7 @@ class IndexEnrichmentTest(unittest.TestCase):
                     {
                         "name": name,
                         "values": {"Go": len(name)},
+                        "sizes": {"withDwarf": {"Go": 42}, "withoutDwarf": {"Go": 21}} if key == "a" else None,
                         "buildTimes": {"Go": {"wallNs": len(name) * 10}} if key == "a" else {},
                     }
                     for name in names
@@ -150,6 +151,8 @@ class IndexEnrichmentTest(unittest.TestCase):
 
             trends = MODULE.build_trends(index, data_dir)
 
+            self.assertEqual(trends["runs"][0]["benchmarks"][0]["sizes"]["withoutDwarf"]["Go"], 21)
+            self.assertIsNone(trends["runs"][1]["benchmarks"][0]["sizes"])
             self.assertEqual(index["benchmarkNames"], ["alpha", "Historical", "Zeta"])
             self.assertEqual(trends["runs"][0]["benchmarks"][0]["values"]["Go"], 4)
             self.assertEqual(trends["runs"][0]["benchmarks"][0]["buildTimes"]["Go"]["wallNs"], 40)

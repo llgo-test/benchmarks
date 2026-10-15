@@ -192,6 +192,7 @@ def build_trends(index, data_dir):
             benchmarks.append({
                 "name": name,
                 "values": values,
+                "sizes": benchmark.get("sizes"),
                 "buildTimes": build_times,
             })
         runs.append({"key": run.get("key", ""), "benchmarks": benchmarks})
