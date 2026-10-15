@@ -24,26 +24,26 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | Application | Target | Go toolchain | Source repository | Commit | Entry |
 | --- | --- | --- | --- | --- | --- |
 | base64 | wasip1/wasm | 1.26.2 | - | - | base64 |
-| checksum | wasip1/wasm | 1.26.2 | - | - | checksum |
-| convolution | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
-| fibonacci | wasip1/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
-| grep | wasip1/wasm | 1.26.2 | - | - | grep |
-| glob | wasip1/wasm | 1.26.2 | - | - | glob |
-| json-roundtrip | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
-| llimport | wasip1/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
-| path-report | wasip1/wasm | 1.26.2 | - | - | path-report |
-| sha256 | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
-| word-count | wasip1/wasm | 1.26.2 | - | - | word-count |
 | base64-js | js/wasm | 1.26.2 | - | - | base64 |
+| checksum | wasip1/wasm | 1.26.2 | - | - | checksum |
 | checksum-js | js/wasm | 1.26.2 | - | - | checksum |
+| convolution | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
 | convolution-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
+| fibonacci | wasip1/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
 | fibonacci-js | js/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
-| grep-js | js/wasm | 1.26.2 | - | - | grep |
+| glob | wasip1/wasm | 1.26.2 | - | - | glob |
 | glob-js | js/wasm | 1.26.2 | - | - | glob |
+| grep | wasip1/wasm | 1.26.2 | - | - | grep |
+| grep-js | js/wasm | 1.26.2 | - | - | grep |
+| json-roundtrip | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
 | json-roundtrip-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
+| llimport | wasip1/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
 | llimport-js | js/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
+| path-report | wasip1/wasm | 1.26.2 | - | - | path-report |
 | path-report-js | js/wasm | 1.26.2 | - | - | path-report |
+| sha256 | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
 | sha256-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
+| word-count | wasip1/wasm | 1.26.2 | - | - | word-count |
 | word-count-js | js/wasm | 1.26.2 | - | - | word-count |
 
 ## js/wasm binary size (vs. Go)
@@ -73,14 +73,14 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `fibonacci` | 2274375 | LLGo · deadcode drop | 1050017 | -53.8% |
 | `fibonacci` | 2274375 | LLGo · full LTO (GlobalDCE off) | 1495614 | -34.2% |
 | `fibonacci` | 2274375 | LLGo · full LTO + GlobalDCE | 962197 | -57.7% |
-| `grep` | 2871426 | LLGo · no LTO | 2643618 | -7.9% |
-| `grep` | 2871426 | LLGo · deadcode drop | 1690818 | -41.1% |
-| `grep` | 2871426 | LLGo · full LTO (GlobalDCE off) | 2326810 | -19.0% |
-| `grep` | 2871426 | LLGo · full LTO + GlobalDCE | 1562166 | -45.6% |
 | `glob` | 2305059 | LLGo · no LTO | 2096463 | -9.0% |
 | `glob` | 2305059 | LLGo · deadcode drop | 1254604 | -45.6% |
 | `glob` | 2305059 | LLGo · full LTO (GlobalDCE off) | 1848404 | -19.8% |
 | `glob` | 2305059 | LLGo · full LTO + GlobalDCE | 1147640 | -50.2% |
+| `grep` | 2871426 | LLGo · no LTO | 2643618 | -7.9% |
+| `grep` | 2871426 | LLGo · deadcode drop | 1690818 | -41.1% |
+| `grep` | 2871426 | LLGo · full LTO (GlobalDCE off) | 2326810 | -19.0% |
+| `grep` | 2871426 | LLGo · full LTO + GlobalDCE | 1562166 | -45.6% |
 | `json-wasi` | 3338360 | LLGo · no LTO | 4264748 | +27.7% |
 | `json-wasi` | 3338360 | LLGo · deadcode drop | 2542517 | -23.8% |
 | `json-wasi` | 3338360 | LLGo · full LTO (GlobalDCE off) | 3890235 | +16.5% |
@@ -129,14 +129,14 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `fibonacci` | 141855 | LLGo · deadcode drop | 1050017 | +640.2% |
 | `fibonacci` | 141855 | LLGo · full LTO (GlobalDCE off) | 1495614 | +954.3% |
 | `fibonacci` | 141855 | LLGo · full LTO + GlobalDCE | 962197 | +578.3% |
-| `grep` | 155984 | LLGo · no LTO | 2643618 | +1594.8% |
-| `grep` | 155984 | LLGo · deadcode drop | 1690818 | +984.0% |
-| `grep` | 155984 | LLGo · full LTO (GlobalDCE off) | 2326810 | +1391.7% |
-| `grep` | 155984 | LLGo · full LTO + GlobalDCE | 1562166 | +901.5% |
 | `glob` | 136553 | LLGo · no LTO | 2096463 | +1435.3% |
 | `glob` | 136553 | LLGo · deadcode drop | 1254604 | +818.8% |
 | `glob` | 136553 | LLGo · full LTO (GlobalDCE off) | 1848404 | +1253.6% |
 | `glob` | 136553 | LLGo · full LTO + GlobalDCE | 1147640 | +740.4% |
+| `grep` | 155984 | LLGo · no LTO | 2643618 | +1594.8% |
+| `grep` | 155984 | LLGo · deadcode drop | 1690818 | +984.0% |
+| `grep` | 155984 | LLGo · full LTO (GlobalDCE off) | 2326810 | +1391.7% |
+| `grep` | 155984 | LLGo · full LTO + GlobalDCE | 1562166 | +901.5% |
 | `json-wasi` | 525666 | LLGo · no LTO | 4264748 | +711.3% |
 | `json-wasi` | 525666 | LLGo · deadcode drop | 2542517 | +383.7% |
 | `json-wasi` | 525666 | LLGo · full LTO (GlobalDCE off) | 3890235 | +640.1% |
@@ -185,14 +185,14 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `fibonacci` | 2230899 | LLGo · deadcode drop | 852706 | -61.8% |
 | `fibonacci` | 2230899 | LLGo · full LTO (GlobalDCE off) | 1140503 | -48.9% |
 | `fibonacci` | 2230899 | LLGo · full LTO + GlobalDCE | 743660 | -66.7% |
-| `grep` | 2848917 | LLGo · no LTO | 2066462 | -27.5% |
-| `grep` | 2848917 | LLGo · deadcode drop | 1367774 | -52.0% |
-| `grep` | 2848917 | LLGo · full LTO (GlobalDCE off) | 1807039 | -36.6% |
-| `grep` | 2848917 | LLGo · full LTO + GlobalDCE | 1248705 | -56.2% |
 | `glob` | 2257634 | LLGo · no LTO | 1677372 | -25.7% |
 | `glob` | 2257634 | LLGo · deadcode drop | 1043656 | -53.8% |
 | `glob` | 2257634 | LLGo · full LTO (GlobalDCE off) | 1438004 | -36.3% |
 | `glob` | 2257634 | LLGo · full LTO + GlobalDCE | 919812 | -59.3% |
+| `grep` | 2848917 | LLGo · no LTO | 2066462 | -27.5% |
+| `grep` | 2848917 | LLGo · deadcode drop | 1367774 | -52.0% |
+| `grep` | 2848917 | LLGo · full LTO (GlobalDCE off) | 1807039 | -36.6% |
+| `grep` | 2848917 | LLGo · full LTO + GlobalDCE | 1248705 | -56.2% |
 | `json-wasi` | 3314587 | LLGo · no LTO | 3448503 | +4.0% |
 | `json-wasi` | 3314587 | LLGo · deadcode drop | 2101692 | -36.6% |
 | `json-wasi` | 3314587 | LLGo · full LTO (GlobalDCE off) | 3069242 | -7.4% |
@@ -241,14 +241,14 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 | `fibonacci` | 62386 | LLGo · deadcode drop | 852706 | +1266.8% |
 | `fibonacci` | 62386 | LLGo · full LTO (GlobalDCE off) | 1140503 | +1728.1% |
 | `fibonacci` | 62386 | LLGo · full LTO + GlobalDCE | 743660 | +1092.0% |
-| `grep` | 303772 | LLGo · no LTO | 2066462 | +580.3% |
-| `grep` | 303772 | LLGo · deadcode drop | 1367774 | +350.3% |
-| `grep` | 303772 | LLGo · full LTO (GlobalDCE off) | 1807039 | +494.9% |
-| `grep` | 303772 | LLGo · full LTO + GlobalDCE | 1248705 | +311.1% |
 | `glob` | 93153 | LLGo · no LTO | 1677372 | +1700.7% |
 | `glob` | 93153 | LLGo · deadcode drop | 1043656 | +1020.4% |
 | `glob` | 93153 | LLGo · full LTO (GlobalDCE off) | 1438004 | +1443.7% |
 | `glob` | 93153 | LLGo · full LTO + GlobalDCE | 919812 | +887.4% |
+| `grep` | 303772 | LLGo · no LTO | 2066462 | +580.3% |
+| `grep` | 303772 | LLGo · deadcode drop | 1367774 | +350.3% |
+| `grep` | 303772 | LLGo · full LTO (GlobalDCE off) | 1807039 | +494.9% |
+| `grep` | 303772 | LLGo · full LTO + GlobalDCE | 1248705 | +311.1% |
 | `json-wasi` | 493590 | LLGo · no LTO | 3448503 | +598.7% |
 | `json-wasi` | 493590 | LLGo · deadcode drop | 2101692 | +325.8% |
 | `json-wasi` | 493590 | LLGo · full LTO (GlobalDCE off) | 3069242 | +521.8% |
