@@ -80,8 +80,11 @@ the WASI binary-size comparison against Go; `wasm-tinygo.html` compares against
 TinyGo. `js-wasm.html` and `js-wasm-tinygo.html` provide the corresponding
 JS/WASM comparisons for the same applications plus tsgo. All four views show
 four LLGo modes and filter the shared results by target. Linux ELF
-size and build-time history lives at `linux.html`, where readers can compare
-any two runs by benchmark and configuration. Pull requests that change the
+size history is split into `linux.html` (without DWARF) and
+`linux-dwarf.html` (with DWARF, including historical original sizes). Each page
+shows its own size table, A/B size summary, and size trend, alongside the same
+original build times. Readers can compare any two runs by benchmark and
+configuration. Pull requests that change the
 LLGo pin or benchmark cases run the full matrix without publishing; other
 changes use the lightweight Go-only validation job described below.
 Existing published runs load their retained `build-times.tsv` directly, while

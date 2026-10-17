@@ -100,12 +100,14 @@ for (const baseline of ['Go', 'TinyGo']) {
 }
 
 test('all pages have four WASM links and correct active navigation', () => {
-  for (const file of ['index.html','wasm-tinygo.html','js-wasm.html','js-wasm-tinygo.html','linux.html','performance.html','compatibility.html']) {
+  for (const file of ['index.html','wasm-tinygo.html','js-wasm.html','js-wasm-tinygo.html','linux.html','linux-dwarf.html','performance.html','compatibility.html']) {
     const html = fs.readFileSync(path.join(site, file), 'utf8');
     assert.match(html, /href="index.html"[^>]*>WASI binary size \(vs\. Go\)/);
     assert.match(html, /href="wasm-tinygo.html"[^>]*>WASI binary size \(vs\. TinyGo\)/);
     assert.match(html, /href="js-wasm.html"/);
     assert.match(html, /href="js-wasm-tinygo.html"/);
+    assert.match(html, /href="linux.html"/);
+    assert.match(html, /href="linux-dwarf.html"/);
     assert.equal((html.match(/aria-current="page"/g) || []).length, 1);
   }
 });

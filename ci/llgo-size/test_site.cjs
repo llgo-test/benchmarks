@@ -5,10 +5,10 @@ const vm = require('node:vm');
 const { test } = require('node:test');
 const source = fs.readFileSync(path.join(__dirname, 'site/app.js'), 'utf8');
 
-function page() {
+function page(measure = "withoutDwarf") {
   const elements = new Map();
   const context = vm.createContext({
-    document: { querySelector(selector) {
+    document: { body: { dataset: { linuxMeasure: measure } }, querySelector(selector) {
       if (!elements.has(selector)) elements.set(selector, {
         addEventListener() {}, classList: { add() {}, toggle() {} }, style: {},
         value: '0', innerHTML: '', textContent: '',
@@ -66,3 +66,27 @@ test('with-DWARF trends include history while without-DWARF keeps historical gap
     assert.doesNotMatch(chart, /NaN|Infinity|wall time/);
   }
 });
+
+for (const measure of ['withoutDwarf', 'withDwarf']) {
+  test(`${measure}: table, A/B summary and trend use only the page's size measure`, async () => {
+    const p = page(measure);
+    p.run(`state.index = {runs:[{key:'a'},{key:'b'}]};
+      state.benchmarkNames = ['Hello']; state.activeBenchmark = 'Hello';
+      state.activeConfigs = new Set(['Go']);
+      state.comparisonMode = true; state.selectedKeys = ['a','b'];
+      state.runs.set('a', Promise.resolve({benchmarks:[{name:'Hello',sizes:{withDwarf:{Go:100},withoutDwarf:{Go:50}}}]}));
+      state.runs.set('b', Promise.resolve({benchmarks:[{name:'Hello',sizes:{withDwarf:{Go:200},withoutDwarf:{Go:40}}}]}));
+      loadTrends = async () => null;`);
+    await p.run('renderTables()');
+    const table = p.elements.get('#size-grid').innerHTML;
+    assert.match(table, measure === 'withDwarf' ? /200 B/ : /40 B/);
+    assert.doesNotMatch(table, measure === 'withDwarf' ? /40 B/ : /200 B/);
+    await p.run('renderComparisonSummary()');
+    assert.equal(p.elements.get('#compare-size').textContent, measure === 'withDwarf' ? '+100.0%' : '-20.0%');
+    await p.run('renderTrend()');
+    const trend = p.elements.get('#trend-chart').innerHTML;
+    assert.match(trend, measure === 'withDwarf' ? /Binary size · with DWARF/ : /Binary size · without DWARF/);
+    assert.doesNotMatch(trend, measure === 'withDwarf' ? /Binary size · without DWARF/ : /Binary size · with DWARF/);
+    assert.equal((trend.match(/class="chart-band"/g) || []).length, 2);
+  });
+}

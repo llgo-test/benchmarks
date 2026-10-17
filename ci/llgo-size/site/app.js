@@ -1,3 +1,6 @@
+const sizeMeasure = document.body.dataset.linuxMeasure === "withDwarf" ? "withDwarf" : "withoutDwarf";
+const sizeTitle = "Binary size · " + (sizeMeasure === "withDwarf" ? "with DWARF" : "without DWARF");
+
 const state = {
   index: null,
   runs: new Map(),
@@ -43,10 +46,8 @@ const seriesColors = ["#2457d6", "#7c3aed", "#4d7c0f", "#d97706", "#0f766e", "#c
 const dom = {
   status: document.querySelector("#status"),
   sizeGrid: document.querySelector("#size-grid"),
-  strippedGrid: document.querySelector("#stripped-grid"),
   timeGrid: document.querySelector("#time-grid"),
   sizeWrap: document.querySelector("#size-wrap"),
-  strippedWrap: document.querySelector("#stripped-wrap"),
   timeWrap: document.querySelector("#time-wrap"),
   filter: document.querySelector("#commit-filter"),
   pageSize: document.querySelector("#page-size"),
@@ -58,7 +59,6 @@ const dom = {
   compareA: document.querySelector("#compare-a"),
   compareB: document.querySelector("#compare-b"),
   compareSize: document.querySelector("#compare-size"),
-  compareStripped: document.querySelector("#compare-stripped"),
   compareTime: document.querySelector("#compare-time"),
   clearComparison: document.querySelector("#clear-comparison"),
   historyRange: document.querySelector("#history-range"),
@@ -435,13 +435,10 @@ async function renderComparisonSummary() {
   const documents = await Promise.all([loadRun(aMeta), loadRun(bMeta)]);
   dom.compareA.textContent = "A " + commitLabel(aMeta);
   dom.compareB.textContent = "B " + commitLabel(bMeta);
-  const sizeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "withDwarf"));
+  const sizeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], sizeMeasure));
   const timeDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "wall"));
   dom.compareSize.textContent = formatPercent(sizeDelta);
   dom.compareSize.className = deltaClass(sizeDelta);
-  const strippedDelta = geometricMeanDelta(comparisonPairs(documents[0], documents[1], "withoutDwarf"));
-  dom.compareStripped.textContent = formatPercent(strippedDelta);
-  dom.compareStripped.className = deltaClass(strippedDelta);
   dom.compareTime.textContent = formatPercent(timeDelta);
   dom.compareTime.className = deltaClass(timeDelta);
 }
@@ -477,8 +474,7 @@ async function renderTables() {
   const runs = currentPageRuns();
   const documents = await Promise.all(runs.map(loadRun));
   const baselineDocument = state.selectedKeys.length === 2 ? await loadRun(findMeta(state.selectedKeys[0])) : null;
-  renderMatrix(dom.sizeGrid, runs, documents, baselineDocument, "withDwarf");
-  renderMatrix(dom.strippedGrid, runs, documents, baselineDocument, "withoutDwarf");
+  renderMatrix(dom.sizeGrid, runs, documents, baselineDocument, sizeMeasure);
   renderMatrix(dom.timeGrid, runs, documents, baselineDocument, "wall");
 }
 
@@ -560,7 +556,7 @@ async function renderTrend() {
   const legend = configs.filter(function (config) { return state.activeConfigs.has(config); }).map(function (config) {
     return '<span class="history-legend-item"><i style="--series:' + seriesColors[configs.indexOf(config)] + '"></i>' + escapeHtml(configLabels[config]) + "</span>";
   }).join("");
-  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, "withDwarf", "Binary size · with DWARF") + chartBand(documents, metas, benchmarkName, "withoutDwarf", "Binary size · without DWARF") + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
+  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, sizeMeasure, sizeTitle) + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
 }
 
 function renderConfigFilter() {
@@ -606,7 +602,7 @@ function attachEvents() {
     clearSelection();
     await refreshAll();
   });
-  [dom.sizeGrid, dom.strippedGrid, dom.timeGrid].forEach(function (table) {
+  [dom.sizeGrid, dom.timeGrid].forEach(function (table) {
     table.addEventListener("click", function (event) {
       const button = event.target.closest("button.commit-select[data-run-key]");
       if (button) selectCommit(button.dataset.runKey);
@@ -638,7 +634,7 @@ function attachEvents() {
     renderTrend();
   });
   let syncing = false;
-  const wraps = [dom.sizeWrap, dom.strippedWrap, dom.timeWrap];
+  const wraps = [dom.sizeWrap, dom.timeWrap];
   function syncScroll(source) {
     source.addEventListener("scroll", function () {
       if (syncing) return;
