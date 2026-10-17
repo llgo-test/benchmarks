@@ -3,25 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLGo Linux binary size and build-time history</title>
+  <title>Linux binary size (without DWARF)</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-linux-measure="withoutDwarf">
   <main class="shell">
     <nav class="site-nav" aria-label="Benchmark views">
       <a href="index.html">WASI binary size (vs. Go)</a>
       <a href="wasm-tinygo.html">WASI binary size (vs. TinyGo)</a>
       <a href="js-wasm.html">JS/WASM binary size (vs. Go)</a>
       <a href="js-wasm-tinygo.html">JS/WASM binary size (vs. TinyGo)</a>
-      <a class="active" href="linux.html" aria-current="page">Linux size &amp; build time</a>
+      <a class="active" href="linux.html" aria-current="page">Linux size (without DWARF)</a>
+      <a href="linux-dwarf.html">Linux size (with DWARF)</a>
       <a href="performance.html">Runtime performance</a>
       <a href="compatibility.html">Open-source compatibility</a>
     </nav>
     <header class="hero">
       <div>
         <p class="eyebrow">LLGo compiler benchmarks</p>
-        <h1>Linux binary size &amp; build-time history</h1>
-        <p class="lede">Each Go and LLGo mode is built once with DWARF. Compare the original ELF and a copy with debug information removed; ordinary symbols are preserved. Historical original sizes are included in the with-DWARF table. Linked commit labels open the pull request that landed each revision.</p>
+        <h1>Linux binary size · without DWARF</h1>
+        <p class="lede">Sizes after removing DWARF debug information; ordinary symbols are preserved. Each mode is built once, and build times refer to that original build. Historical runs without stripped measurements show —. Linked commit labels open the pull request that landed each revision.</p>
       </div>
       <p id="status" class="status" role="status">Loading results…</p>
     </header>
@@ -45,28 +46,17 @@
       <strong>Comparison mode</strong>
       <span>Select A/B with the date buttons; linked SHAs open their merged pull requests.</span>
     </section>
-    <section id="comparison-strip" class="comparison-strip dwarf-comparison-strip" aria-live="polite" hidden>
+    <section id="comparison-strip" class="comparison-strip" aria-live="polite" hidden>
       <div class="compare-pair"><code id="compare-a">A</code><span>→</span><code id="compare-b">B</code></div>
-      <div><span class="label">Without DWARF · geomean</span><strong id="compare-stripped">—</strong></div>
-      <div><span class="label">With DWARF · geomean</span><strong id="compare-size">—</strong></div>
+      <div><span class="label">Without DWARF · geomean</span><strong id="compare-size">—</strong></div>
       <div><span class="label">Wall time · geomean</span><strong id="compare-time">—</strong></div>
       <span class="comparison-note">B versus A; per-cell deltas appear only in column B.</span>
       <button id="clear-comparison" type="button">Clear</button>
     </section>
 
-    <section class="card" aria-labelledby="stripped-heading">
-      <div class="card-heading">
-        <div><p class="eyebrow">Table 1</p><h2 id="stripped-heading">Binary size · without DWARF</h2></div>
-        <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
-      </div>
-      <div id="stripped-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
-        <table id="stripped-grid" class="comparison-table" aria-live="polite"></table>
-      </div>
-    </section>
-
     <section class="card" aria-labelledby="size-heading">
       <div class="card-heading">
-        <div><p class="eyebrow">Table 2</p><h2 id="size-heading">Binary size · with DWARF</h2></div>
+        <div><p class="eyebrow">Table 1</p><h2 id="size-heading">Binary size · without DWARF</h2></div>
         <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
       </div>
       <div id="size-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
@@ -76,7 +66,7 @@
 
     <section class="card" aria-labelledby="time-heading">
       <div class="card-heading">
-        <div><p class="eyebrow">Table 3</p><h2 id="time-heading">Build time</h2></div>
+        <div><p class="eyebrow">Table 2</p><h2 id="time-heading">Build time</h2></div>
         <div class="rank-legend" aria-label="Build-mode rank colors: shorter is better"><span>all rows · shorter</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>longer</span></div>
       </div>
       <div id="time-wrap" class="matrix-wrap" aria-label="Horizontally scrollable build-time matrix">

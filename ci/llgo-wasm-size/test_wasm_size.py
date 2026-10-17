@@ -119,6 +119,7 @@ class WasmSizeTest(unittest.TestCase):
             "js-wasm.html",
             "js-wasm-tinygo.html",
             "linux.html",
+            "linux-dwarf.html",
             "app.js",
             "wasm.js",
             "performance.html",
