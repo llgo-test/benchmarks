@@ -199,7 +199,12 @@ function wasmRank(benchmark, compiler) {
   const unique = Array.from(new Set(values)).sort(function (a, b) { return a - b; });
   const rank = unique.indexOf(value) + 1;
   const ties = values.filter(function (candidate) { return candidate === value; }).length;
-  const tone = rank === 1 ? "rank-best" : rank === unique.length ? "rank-worst" : "rank-mid";
+  const position = unique.length <= 1 ? 0 : (rank - 1) / (unique.length - 1);
+  let tone = "rank-mid";
+  if (rank === 1) tone = "rank-best";
+  else if (rank === unique.length) tone = "rank-worst";
+  else if (position <= .34) tone = "rank-good";
+  else if (position >= .67) tone = "rank-slow";
   return { rank: rank, ties: ties, tone: tone };
 }
 
