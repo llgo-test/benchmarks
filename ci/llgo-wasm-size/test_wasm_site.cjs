@@ -43,6 +43,23 @@ test('native null measurements are gaps, including a missing Go baseline', () =>
 });
 
 for (const baseline of ['Go', 'TinyGo']) {
+  test(`${baseline}: five distinct rank colors, ties and incomplete results`, () => {
+    const p = page(baseline);
+    p.run(`row = {values:{${baseline}:50,LLGoNoLTO:40,LLGoDeadcodeDrop:20,LLGoFullLTONoGlobalDCE:30,LLGoFullLTOGlobalDCE:10}}`);
+    const ordered = ['LLGoFullLTOGlobalDCE', 'LLGoDeadcodeDrop', 'LLGoFullLTONoGlobalDCE', 'LLGoNoLTO', baseline];
+    const tones = ['rank-best', 'rank-good', 'rank-mid', 'rank-slow', 'rank-worst'];
+    ordered.forEach((compiler, index) => {
+      assert.equal(p.run(`wasmRank(row, '${compiler}').tone`), tones[index]);
+      assert.match(p.run(`wasmCellHtml(row, '${compiler}')`), new RegExp(`matrix-cell ${tones[index]}`));
+    });
+    p.run('row.values.LLGoDeadcodeDrop = 10');
+    assert.equal(p.run('wasmRank(row, "LLGoDeadcodeDrop").tone'), 'rank-best');
+    assert.match(p.run('wasmCellHtml(row, "LLGoDeadcodeDrop")'), /#1=/);
+    p.run('row.values.LLGoDeadcodeDrop = null; row.values.LLGoNoLTO = null');
+    assert.equal(p.run('wasmRank(row, "LLGoFullLTONoGlobalDCE").tone'), 'rank-mid');
+    assert.equal(p.run('wasmRank(row, "LLGoNoLTO")'), null);
+  });
+
   test(`${baseline}: independent baseline, legacy values, nulls and ranks`, () => {
     const p = page(baseline);
     assert.equal(p.run('wasmCompilers.length'), 5);
