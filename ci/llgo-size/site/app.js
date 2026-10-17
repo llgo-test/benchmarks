@@ -560,7 +560,7 @@ async function renderTrend() {
   const legend = configs.filter(function (config) { return state.activeConfigs.has(config); }).map(function (config) {
     return '<span class="history-legend-item"><i style="--series:' + seriesColors[configs.indexOf(config)] + '"></i>' + escapeHtml(configLabels[config]) + "</span>";
   }).join("");
-  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, "withDwarf", "Binary size · with DWARF") + chartBand(documents, metas, benchmarkName, "withoutDwarf", "Binary size · without DWARF") + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
+  dom.trendChart.innerHTML = chartBand(documents, metas, benchmarkName, "withoutDwarf", "Binary size · without DWARF") + chartBand(documents, metas, benchmarkName, "withDwarf", "Binary size · with DWARF") + chartBand(documents, metas, benchmarkName, "wall", "Build wall time") + '<div class="history-legend">' + legend + "</div>";
 }
 
 function renderConfigFilter() {

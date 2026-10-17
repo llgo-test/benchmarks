@@ -47,30 +47,30 @@
     </section>
     <section id="comparison-strip" class="comparison-strip dwarf-comparison-strip" aria-live="polite" hidden>
       <div class="compare-pair"><code id="compare-a">A</code><span>→</span><code id="compare-b">B</code></div>
-      <div><span class="label">With DWARF · geomean</span><strong id="compare-size">—</strong></div>
       <div><span class="label">Without DWARF · geomean</span><strong id="compare-stripped">—</strong></div>
+      <div><span class="label">With DWARF · geomean</span><strong id="compare-size">—</strong></div>
       <div><span class="label">Wall time · geomean</span><strong id="compare-time">—</strong></div>
       <span class="comparison-note">B versus A; per-cell deltas appear only in column B.</span>
       <button id="clear-comparison" type="button">Clear</button>
     </section>
 
-    <section class="card" aria-labelledby="size-heading">
-      <div class="card-heading">
-        <div><p class="eyebrow">Table 1</p><h2 id="size-heading">Binary size · with DWARF</h2></div>
-        <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
-      </div>
-      <div id="size-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
-        <table id="size-grid" class="comparison-table" aria-live="polite"></table>
-      </div>
-    </section>
-
     <section class="card" aria-labelledby="stripped-heading">
       <div class="card-heading">
-        <div><p class="eyebrow">Table 2</p><h2 id="stripped-heading">Binary size · without DWARF</h2></div>
+        <div><p class="eyebrow">Table 1</p><h2 id="stripped-heading">Binary size · without DWARF</h2></div>
         <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
       </div>
       <div id="stripped-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
         <table id="stripped-grid" class="comparison-table" aria-live="polite"></table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="size-heading">
+      <div class="card-heading">
+        <div><p class="eyebrow">Table 2</p><h2 id="size-heading">Binary size · with DWARF</h2></div>
+        <div class="rank-legend" aria-label="Build-mode rank colors: smaller is better"><span>all rows · smaller</span><i class="rank-best"></i><i class="rank-good"></i><i class="rank-mid"></i><i class="rank-slow"></i><i class="rank-worst"></i><span>larger</span></div>
+      </div>
+      <div id="size-wrap" class="matrix-wrap" aria-label="Horizontally scrollable binary-size matrix">
+        <table id="size-grid" class="comparison-table" aria-live="polite"></table>
       </div>
     </section>
 
