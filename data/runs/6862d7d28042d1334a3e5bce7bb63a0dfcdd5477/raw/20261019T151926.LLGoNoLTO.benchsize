@@ -1,0 +1,180 @@
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkGorm_schema 1 9531216 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkGorm_schema 1 9531216 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkGorm_schema 1 6811328 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkGorm_schema 1 2541783 text-bytes
+Unit data-bytes assume=exact
+BenchmarkGorm_schema 1 233912 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkGorm_schema 1 1053920 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkGorm_schema 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkGorm_schema 1 2681223 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkUber_zap 1 15537584 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkUber_zap 1 15537584 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkUber_zap 1 11316368 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkUber_zap 1 4355910 text-bytes
+Unit data-bytes assume=exact
+BenchmarkUber_zap 1 351160 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkUber_zap 1 1810320 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkUber_zap 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkUber_zap 1 4162458 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkK8s_workqueue 1 15160760 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkK8s_workqueue 1 15160760 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkK8s_workqueue 1 11098112 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkK8s_workqueue 1 4204902 text-bytes
+Unit data-bytes assume=exact
+BenchmarkK8s_workqueue 1 346456 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkK8s_workqueue 1 1749888 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkK8s_workqueue 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkK8s_workqueue 1 4004673 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkIXGo 1 45040504 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkIXGo 1 45040504 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkIXGo 1 31096848 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkIXGo 1 11367616 text-bytes
+Unit data-bytes assume=exact
+BenchmarkIXGo 1 1217160 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkIXGo 1 5559536 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkIXGo 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkIXGo 1 13784581 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkXGo 1 23447456 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkXGo 1 23447456 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkXGo 1 17114168 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkXGo 1 6172344 text-bytes
+Unit data-bytes assume=exact
+BenchmarkXGo 1 365792 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkXGo 1 2842368 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkXGo 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkXGo 1 6231747 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkAws_restjson 1 17261728 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkAws_restjson 1 17261728 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkAws_restjson 1 12586680 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkAws_restjson 1 5126285 text-bytes
+Unit data-bytes assume=exact
+BenchmarkAws_restjson 1 351776 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkAws_restjson 1 1959120 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkAws_restjson 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkAws_restjson 1 4591941 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkEtcdctl 1 28914280 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkEtcdctl 1 28914280 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkEtcdctl 1 21355112 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkEtcdctl 1 7501244 text-bytes
+Unit data-bytes assume=exact
+BenchmarkEtcdctl 1 860480 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkEtcdctl 1 3594944 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkEtcdctl 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkEtcdctl 1 7393356 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkDustin_humanize 1 6557280 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkDustin_humanize 1 6557280 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkDustin_humanize 1 4540568 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkDustin_humanize 1 1808262 text-bytes
+Unit data-bytes assume=exact
+BenchmarkDustin_humanize 1 139424 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkDustin_humanize 1 707968 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkDustin_humanize 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkDustin_humanize 1 1993751 debug-bytes
+toolchain: LLGoNoLTO
+goos: linux
+goarch: amd64
+pkg:
+Unit total-bytes assume=exact
+BenchmarkToml 1 8382272 total-bytes
+Unit with-dwarf-bytes assume=exact
+BenchmarkToml 1 8382272 with-dwarf-bytes
+Unit without-dwarf-bytes assume=exact
+BenchmarkToml 1 5969432 without-dwarf-bytes
+Unit text-bytes assume=exact
+BenchmarkToml 1 2352654 text-bytes
+Unit data-bytes assume=exact
+BenchmarkToml 1 136192 data-bytes
+Unit rodata-bytes assume=exact
+BenchmarkToml 1 1064688 rodata-bytes
+Unit pclntab-bytes assume=exact
+BenchmarkToml 1 0 pclntab-bytes
+Unit debug-bytes assume=exact
+BenchmarkToml 1 2377298 debug-bytes
