@@ -1,2 +1,5 @@
-github.com/universonic/go-rust-wasm-bench/go/cmd/conv-wasi: final Wasm pipeline requires Binaryen 132 (LLGo llgo-v132.3), found "wasm-opt version 125 (version_125-6-gf03355bd6)"
-Compiler exit status: 1
+emcc: warning: unexpected binaryen version: 132 (expected 125) [-Wversion-check]
+warning: JS library symbol '$allocateUTF8' is deprecated. Please open a bug if you have a continuing need for this symbol [-Wdeprecated]
+emcc: warning: warnings in JS library compilation [-Wjs-compiler]
+warning: Asyncify removelist contained a non-matching pattern: '*RecordCallerLocationWasm*'
+Compiler exit status: 0

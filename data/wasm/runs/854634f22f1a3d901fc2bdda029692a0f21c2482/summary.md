@@ -18,342 +18,254 @@ Failed builds are shown as — and excluded from comparisons; logs are included 
 
 | Application | Configuration | Policy | Status | Log |
 | --- | --- | --- | --- | --- |
-| base64 | LLGoNoLTO | required | failed | [logs/base64.LLGoNoLTO.log](logs/base64.LLGoNoLTO.log) |
-| base64 | LLGoDeadcodeDrop | required | failed | [logs/base64.LLGoDeadcodeDrop.log](logs/base64.LLGoDeadcodeDrop.log) |
-| base64 | LLGoFullLTONoGlobalDCE | required | failed | [logs/base64.LLGoFullLTONoGlobalDCE.log](logs/base64.LLGoFullLTONoGlobalDCE.log) |
-| base64 | LLGoFullLTOGlobalDCE | required | failed | [logs/base64.LLGoFullLTOGlobalDCE.log](logs/base64.LLGoFullLTOGlobalDCE.log) |
-| checksum | LLGoNoLTO | required | failed | [logs/checksum.LLGoNoLTO.log](logs/checksum.LLGoNoLTO.log) |
-| checksum | LLGoDeadcodeDrop | required | failed | [logs/checksum.LLGoDeadcodeDrop.log](logs/checksum.LLGoDeadcodeDrop.log) |
-| checksum | LLGoFullLTONoGlobalDCE | required | failed | [logs/checksum.LLGoFullLTONoGlobalDCE.log](logs/checksum.LLGoFullLTONoGlobalDCE.log) |
-| checksum | LLGoFullLTOGlobalDCE | required | failed | [logs/checksum.LLGoFullLTOGlobalDCE.log](logs/checksum.LLGoFullLTOGlobalDCE.log) |
-| convolution | LLGoNoLTO | required | failed | [logs/convolution.LLGoNoLTO.log](logs/convolution.LLGoNoLTO.log) |
-| convolution | LLGoDeadcodeDrop | required | failed | [logs/convolution.LLGoDeadcodeDrop.log](logs/convolution.LLGoDeadcodeDrop.log) |
-| convolution | LLGoFullLTONoGlobalDCE | required | failed | [logs/convolution.LLGoFullLTONoGlobalDCE.log](logs/convolution.LLGoFullLTONoGlobalDCE.log) |
-| convolution | LLGoFullLTOGlobalDCE | required | failed | [logs/convolution.LLGoFullLTOGlobalDCE.log](logs/convolution.LLGoFullLTOGlobalDCE.log) |
-| fibonacci | LLGoNoLTO | required | failed | [logs/fibonacci.LLGoNoLTO.log](logs/fibonacci.LLGoNoLTO.log) |
-| fibonacci | LLGoDeadcodeDrop | required | failed | [logs/fibonacci.LLGoDeadcodeDrop.log](logs/fibonacci.LLGoDeadcodeDrop.log) |
-| fibonacci | LLGoFullLTONoGlobalDCE | required | failed | [logs/fibonacci.LLGoFullLTONoGlobalDCE.log](logs/fibonacci.LLGoFullLTONoGlobalDCE.log) |
-| fibonacci | LLGoFullLTOGlobalDCE | required | failed | [logs/fibonacci.LLGoFullLTOGlobalDCE.log](logs/fibonacci.LLGoFullLTOGlobalDCE.log) |
-| grep | LLGoNoLTO | required | failed | [logs/grep.LLGoNoLTO.log](logs/grep.LLGoNoLTO.log) |
-| grep | LLGoDeadcodeDrop | required | failed | [logs/grep.LLGoDeadcodeDrop.log](logs/grep.LLGoDeadcodeDrop.log) |
-| grep | LLGoFullLTONoGlobalDCE | required | failed | [logs/grep.LLGoFullLTONoGlobalDCE.log](logs/grep.LLGoFullLTONoGlobalDCE.log) |
-| grep | LLGoFullLTOGlobalDCE | required | failed | [logs/grep.LLGoFullLTOGlobalDCE.log](logs/grep.LLGoFullLTOGlobalDCE.log) |
-| glob | LLGoNoLTO | required | failed | [logs/glob.LLGoNoLTO.log](logs/glob.LLGoNoLTO.log) |
-| glob | LLGoDeadcodeDrop | required | failed | [logs/glob.LLGoDeadcodeDrop.log](logs/glob.LLGoDeadcodeDrop.log) |
-| glob | LLGoFullLTONoGlobalDCE | required | failed | [logs/glob.LLGoFullLTONoGlobalDCE.log](logs/glob.LLGoFullLTONoGlobalDCE.log) |
-| glob | LLGoFullLTOGlobalDCE | required | failed | [logs/glob.LLGoFullLTOGlobalDCE.log](logs/glob.LLGoFullLTOGlobalDCE.log) |
-| json-roundtrip | LLGoNoLTO | required | failed | [logs/json-roundtrip.LLGoNoLTO.log](logs/json-roundtrip.LLGoNoLTO.log) |
-| json-roundtrip | LLGoDeadcodeDrop | required | failed | [logs/json-roundtrip.LLGoDeadcodeDrop.log](logs/json-roundtrip.LLGoDeadcodeDrop.log) |
-| json-roundtrip | LLGoFullLTONoGlobalDCE | required | failed | [logs/json-roundtrip.LLGoFullLTONoGlobalDCE.log](logs/json-roundtrip.LLGoFullLTONoGlobalDCE.log) |
-| json-roundtrip | LLGoFullLTOGlobalDCE | required | failed | [logs/json-roundtrip.LLGoFullLTOGlobalDCE.log](logs/json-roundtrip.LLGoFullLTOGlobalDCE.log) |
 | llimport | TinyGo | optional | failed | [logs/llimport.TinyGo.log](logs/llimport.TinyGo.log) |
-| llimport | LLGoNoLTO | required | failed | [logs/llimport.LLGoNoLTO.log](logs/llimport.LLGoNoLTO.log) |
-| llimport | LLGoDeadcodeDrop | required | failed | [logs/llimport.LLGoDeadcodeDrop.log](logs/llimport.LLGoDeadcodeDrop.log) |
-| llimport | LLGoFullLTONoGlobalDCE | required | failed | [logs/llimport.LLGoFullLTONoGlobalDCE.log](logs/llimport.LLGoFullLTONoGlobalDCE.log) |
-| llimport | LLGoFullLTOGlobalDCE | required | failed | [logs/llimport.LLGoFullLTOGlobalDCE.log](logs/llimport.LLGoFullLTOGlobalDCE.log) |
-| path-report | LLGoNoLTO | required | failed | [logs/path-report.LLGoNoLTO.log](logs/path-report.LLGoNoLTO.log) |
-| path-report | LLGoDeadcodeDrop | required | failed | [logs/path-report.LLGoDeadcodeDrop.log](logs/path-report.LLGoDeadcodeDrop.log) |
-| path-report | LLGoFullLTONoGlobalDCE | required | failed | [logs/path-report.LLGoFullLTONoGlobalDCE.log](logs/path-report.LLGoFullLTONoGlobalDCE.log) |
-| path-report | LLGoFullLTOGlobalDCE | required | failed | [logs/path-report.LLGoFullLTOGlobalDCE.log](logs/path-report.LLGoFullLTOGlobalDCE.log) |
-| sha256 | LLGoNoLTO | required | failed | [logs/sha256.LLGoNoLTO.log](logs/sha256.LLGoNoLTO.log) |
-| sha256 | LLGoDeadcodeDrop | required | failed | [logs/sha256.LLGoDeadcodeDrop.log](logs/sha256.LLGoDeadcodeDrop.log) |
-| sha256 | LLGoFullLTONoGlobalDCE | required | failed | [logs/sha256.LLGoFullLTONoGlobalDCE.log](logs/sha256.LLGoFullLTONoGlobalDCE.log) |
-| sha256 | LLGoFullLTOGlobalDCE | required | failed | [logs/sha256.LLGoFullLTOGlobalDCE.log](logs/sha256.LLGoFullLTOGlobalDCE.log) |
-| word-count | LLGoNoLTO | required | failed | [logs/word-count.LLGoNoLTO.log](logs/word-count.LLGoNoLTO.log) |
-| word-count | LLGoDeadcodeDrop | required | failed | [logs/word-count.LLGoDeadcodeDrop.log](logs/word-count.LLGoDeadcodeDrop.log) |
-| word-count | LLGoFullLTONoGlobalDCE | required | failed | [logs/word-count.LLGoFullLTONoGlobalDCE.log](logs/word-count.LLGoFullLTONoGlobalDCE.log) |
-| word-count | LLGoFullLTOGlobalDCE | required | failed | [logs/word-count.LLGoFullLTOGlobalDCE.log](logs/word-count.LLGoFullLTOGlobalDCE.log) |
-| base64-js | LLGoNoLTO | required | failed | [logs/base64-js.LLGoNoLTO.log](logs/base64-js.LLGoNoLTO.log) |
-| base64-js | LLGoDeadcodeDrop | required | failed | [logs/base64-js.LLGoDeadcodeDrop.log](logs/base64-js.LLGoDeadcodeDrop.log) |
-| base64-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/base64-js.LLGoFullLTONoGlobalDCE.log](logs/base64-js.LLGoFullLTONoGlobalDCE.log) |
-| base64-js | LLGoFullLTOGlobalDCE | required | failed | [logs/base64-js.LLGoFullLTOGlobalDCE.log](logs/base64-js.LLGoFullLTOGlobalDCE.log) |
-| checksum-js | LLGoNoLTO | required | failed | [logs/checksum-js.LLGoNoLTO.log](logs/checksum-js.LLGoNoLTO.log) |
-| checksum-js | LLGoDeadcodeDrop | required | failed | [logs/checksum-js.LLGoDeadcodeDrop.log](logs/checksum-js.LLGoDeadcodeDrop.log) |
-| checksum-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/checksum-js.LLGoFullLTONoGlobalDCE.log](logs/checksum-js.LLGoFullLTONoGlobalDCE.log) |
-| checksum-js | LLGoFullLTOGlobalDCE | required | failed | [logs/checksum-js.LLGoFullLTOGlobalDCE.log](logs/checksum-js.LLGoFullLTOGlobalDCE.log) |
-| convolution-js | LLGoNoLTO | required | failed | [logs/convolution-js.LLGoNoLTO.log](logs/convolution-js.LLGoNoLTO.log) |
-| convolution-js | LLGoDeadcodeDrop | required | failed | [logs/convolution-js.LLGoDeadcodeDrop.log](logs/convolution-js.LLGoDeadcodeDrop.log) |
-| convolution-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/convolution-js.LLGoFullLTONoGlobalDCE.log](logs/convolution-js.LLGoFullLTONoGlobalDCE.log) |
-| convolution-js | LLGoFullLTOGlobalDCE | required | failed | [logs/convolution-js.LLGoFullLTOGlobalDCE.log](logs/convolution-js.LLGoFullLTOGlobalDCE.log) |
-| fibonacci-js | LLGoNoLTO | required | failed | [logs/fibonacci-js.LLGoNoLTO.log](logs/fibonacci-js.LLGoNoLTO.log) |
-| fibonacci-js | LLGoDeadcodeDrop | required | failed | [logs/fibonacci-js.LLGoDeadcodeDrop.log](logs/fibonacci-js.LLGoDeadcodeDrop.log) |
-| fibonacci-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/fibonacci-js.LLGoFullLTONoGlobalDCE.log](logs/fibonacci-js.LLGoFullLTONoGlobalDCE.log) |
-| fibonacci-js | LLGoFullLTOGlobalDCE | required | failed | [logs/fibonacci-js.LLGoFullLTOGlobalDCE.log](logs/fibonacci-js.LLGoFullLTOGlobalDCE.log) |
-| grep-js | LLGoNoLTO | required | failed | [logs/grep-js.LLGoNoLTO.log](logs/grep-js.LLGoNoLTO.log) |
-| grep-js | LLGoDeadcodeDrop | required | failed | [logs/grep-js.LLGoDeadcodeDrop.log](logs/grep-js.LLGoDeadcodeDrop.log) |
-| grep-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/grep-js.LLGoFullLTONoGlobalDCE.log](logs/grep-js.LLGoFullLTONoGlobalDCE.log) |
-| grep-js | LLGoFullLTOGlobalDCE | required | failed | [logs/grep-js.LLGoFullLTOGlobalDCE.log](logs/grep-js.LLGoFullLTOGlobalDCE.log) |
-| glob-js | LLGoNoLTO | required | failed | [logs/glob-js.LLGoNoLTO.log](logs/glob-js.LLGoNoLTO.log) |
-| glob-js | LLGoDeadcodeDrop | required | failed | [logs/glob-js.LLGoDeadcodeDrop.log](logs/glob-js.LLGoDeadcodeDrop.log) |
-| glob-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/glob-js.LLGoFullLTONoGlobalDCE.log](logs/glob-js.LLGoFullLTONoGlobalDCE.log) |
-| glob-js | LLGoFullLTOGlobalDCE | required | failed | [logs/glob-js.LLGoFullLTOGlobalDCE.log](logs/glob-js.LLGoFullLTOGlobalDCE.log) |
-| json-roundtrip-js | LLGoNoLTO | required | failed | [logs/json-roundtrip-js.LLGoNoLTO.log](logs/json-roundtrip-js.LLGoNoLTO.log) |
-| json-roundtrip-js | LLGoDeadcodeDrop | required | failed | [logs/json-roundtrip-js.LLGoDeadcodeDrop.log](logs/json-roundtrip-js.LLGoDeadcodeDrop.log) |
-| json-roundtrip-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/json-roundtrip-js.LLGoFullLTONoGlobalDCE.log](logs/json-roundtrip-js.LLGoFullLTONoGlobalDCE.log) |
-| json-roundtrip-js | LLGoFullLTOGlobalDCE | required | failed | [logs/json-roundtrip-js.LLGoFullLTOGlobalDCE.log](logs/json-roundtrip-js.LLGoFullLTOGlobalDCE.log) |
 | llimport-js | TinyGo | optional | failed | [logs/llimport-js.TinyGo.log](logs/llimport-js.TinyGo.log) |
-| llimport-js | LLGoNoLTO | required | failed | [logs/llimport-js.LLGoNoLTO.log](logs/llimport-js.LLGoNoLTO.log) |
-| llimport-js | LLGoDeadcodeDrop | required | failed | [logs/llimport-js.LLGoDeadcodeDrop.log](logs/llimport-js.LLGoDeadcodeDrop.log) |
-| llimport-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/llimport-js.LLGoFullLTONoGlobalDCE.log](logs/llimport-js.LLGoFullLTONoGlobalDCE.log) |
-| llimport-js | LLGoFullLTOGlobalDCE | required | failed | [logs/llimport-js.LLGoFullLTOGlobalDCE.log](logs/llimport-js.LLGoFullLTOGlobalDCE.log) |
-| path-report-js | LLGoNoLTO | required | failed | [logs/path-report-js.LLGoNoLTO.log](logs/path-report-js.LLGoNoLTO.log) |
-| path-report-js | LLGoDeadcodeDrop | required | failed | [logs/path-report-js.LLGoDeadcodeDrop.log](logs/path-report-js.LLGoDeadcodeDrop.log) |
-| path-report-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/path-report-js.LLGoFullLTONoGlobalDCE.log](logs/path-report-js.LLGoFullLTONoGlobalDCE.log) |
-| path-report-js | LLGoFullLTOGlobalDCE | required | failed | [logs/path-report-js.LLGoFullLTOGlobalDCE.log](logs/path-report-js.LLGoFullLTOGlobalDCE.log) |
-| sha256-js | LLGoNoLTO | required | failed | [logs/sha256-js.LLGoNoLTO.log](logs/sha256-js.LLGoNoLTO.log) |
-| sha256-js | LLGoDeadcodeDrop | required | failed | [logs/sha256-js.LLGoDeadcodeDrop.log](logs/sha256-js.LLGoDeadcodeDrop.log) |
-| sha256-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/sha256-js.LLGoFullLTONoGlobalDCE.log](logs/sha256-js.LLGoFullLTONoGlobalDCE.log) |
-| sha256-js | LLGoFullLTOGlobalDCE | required | failed | [logs/sha256-js.LLGoFullLTOGlobalDCE.log](logs/sha256-js.LLGoFullLTOGlobalDCE.log) |
-| word-count-js | LLGoNoLTO | required | failed | [logs/word-count-js.LLGoNoLTO.log](logs/word-count-js.LLGoNoLTO.log) |
-| word-count-js | LLGoDeadcodeDrop | required | failed | [logs/word-count-js.LLGoDeadcodeDrop.log](logs/word-count-js.LLGoDeadcodeDrop.log) |
-| word-count-js | LLGoFullLTONoGlobalDCE | required | failed | [logs/word-count-js.LLGoFullLTONoGlobalDCE.log](logs/word-count-js.LLGoFullLTONoGlobalDCE.log) |
-| word-count-js | LLGoFullLTOGlobalDCE | required | failed | [logs/word-count-js.LLGoFullLTOGlobalDCE.log](logs/word-count-js.LLGoFullLTOGlobalDCE.log) |
 
 | Application | Target | Go toolchain | Source repository | Commit | Entry |
 | --- | --- | --- | --- | --- | --- |
 | base64 | wasip1/wasm | 1.26.2 | - | - | base64 |
-| checksum | wasip1/wasm | 1.26.2 | - | - | checksum |
-| convolution | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
-| fibonacci | wasip1/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
-| grep | wasip1/wasm | 1.26.2 | - | - | grep |
-| glob | wasip1/wasm | 1.26.2 | - | - | glob |
-| json-roundtrip | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
-| llimport | wasip1/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
-| path-report | wasip1/wasm | 1.26.2 | - | - | path-report |
-| sha256 | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
-| word-count | wasip1/wasm | 1.26.2 | - | - | word-count |
 | base64-js | js/wasm | 1.26.2 | - | - | base64 |
+| checksum | wasip1/wasm | 1.26.2 | - | - | checksum |
 | checksum-js | js/wasm | 1.26.2 | - | - | checksum |
+| convolution | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
 | convolution-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/conv-wasi |
+| fibonacci | wasip1/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
 | fibonacci-js | js/wasm | 1.26.2 | https://github.com/mattn/wasi-benchmark.git | c7d73b7b1e03b352791f91ed207c6b9c79559453 | main.go |
-| grep-js | js/wasm | 1.26.2 | - | - | grep |
+| glob | wasip1/wasm | 1.26.2 | - | - | glob |
 | glob-js | js/wasm | 1.26.2 | - | - | glob |
+| grep | wasip1/wasm | 1.26.2 | - | - | grep |
+| grep-js | js/wasm | 1.26.2 | - | - | grep |
+| json-roundtrip | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
 | json-roundtrip-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/json-wasi |
+| llimport | wasip1/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
 | llimport-js | js/wasm | 1.27.0 | https://github.com/goplus/llcppg.git | d62a300b00d567ce2737ab085cef18c06d43f7d7 | cmd/llimport |
+| path-report | wasip1/wasm | 1.26.2 | - | - | path-report |
 | path-report-js | js/wasm | 1.26.2 | - | - | path-report |
+| sha256 | wasip1/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
 | sha256-js | js/wasm | 1.26.2 | https://github.com/universonic/go-rust-wasm-bench.git | 6d1b98c971d6206c313a6d1233d9f2687c50febe | go/cmd/sha-wasi |
+| word-count | wasip1/wasm | 1.26.2 | - | - | word-count |
 | word-count-js | js/wasm | 1.26.2 | - | - | word-count |
 
 ## js/wasm binary size (vs. Go)
 
 | LLGo mode | Geometric mean / baseline | Valid samples |
 | --- | ---: | ---: |
-| LLGo · no LTO | — | 0 |
-| LLGo · deadcode drop | — | 0 |
-| LLGo · full LTO (GlobalDCE off) | — | 0 |
-| LLGo · full LTO + GlobalDCE | — | 0 |
+| LLGo · no LTO | 0.964x | 11 |
+| LLGo · deadcode drop | 0.564x | 11 |
+| LLGo · full LTO (GlobalDCE off) | 0.855x | 11 |
+| LLGo · full LTO + GlobalDCE | 0.577x | 11 |
 
 | Application | Go bytes | LLGo mode | LLGo bytes | vs. Go |
 | --- | ---: | --- | ---: | ---: |
-| `base64` | 2322402 | LLGo · no LTO | — | — |
-| `base64` | 2322402 | LLGo · deadcode drop | — | — |
-| `base64` | 2322402 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `base64` | 2322402 | LLGo · full LTO + GlobalDCE | — | — |
-| `checksum` | 2311672 | LLGo · no LTO | — | — |
-| `checksum` | 2311672 | LLGo · deadcode drop | — | — |
-| `checksum` | 2311672 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `checksum` | 2311672 | LLGo · full LTO + GlobalDCE | — | — |
-| `conv-wasi` | 2638493 | LLGo · no LTO | — | — |
-| `conv-wasi` | 2638493 | LLGo · deadcode drop | — | — |
-| `conv-wasi` | 2638493 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `conv-wasi` | 2638493 | LLGo · full LTO + GlobalDCE | — | — |
-| `fibonacci` | 2274375 | LLGo · no LTO | — | — |
-| `fibonacci` | 2274375 | LLGo · deadcode drop | — | — |
-| `fibonacci` | 2274375 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `fibonacci` | 2274375 | LLGo · full LTO + GlobalDCE | — | — |
-| `grep` | 2871426 | LLGo · no LTO | — | — |
-| `grep` | 2871426 | LLGo · deadcode drop | — | — |
-| `grep` | 2871426 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `grep` | 2871426 | LLGo · full LTO + GlobalDCE | — | — |
-| `glob` | 2305059 | LLGo · no LTO | — | — |
-| `glob` | 2305059 | LLGo · deadcode drop | — | — |
-| `glob` | 2305059 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `glob` | 2305059 | LLGo · full LTO + GlobalDCE | — | — |
-| `json-wasi` | 3338360 | LLGo · no LTO | — | — |
-| `json-wasi` | 3338360 | LLGo · deadcode drop | — | — |
-| `json-wasi` | 3338360 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `json-wasi` | 3338360 | LLGo · full LTO + GlobalDCE | — | — |
-| `llimport` | 8440671 | LLGo · no LTO | — | — |
-| `llimport` | 8440671 | LLGo · deadcode drop | — | — |
-| `llimport` | 8440671 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `llimport` | 8440671 | LLGo · full LTO + GlobalDCE | — | — |
-| `path-report` | 2428068 | LLGo · no LTO | — | — |
-| `path-report` | 2428068 | LLGo · deadcode drop | — | — |
-| `path-report` | 2428068 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `path-report` | 2428068 | LLGo · full LTO + GlobalDCE | — | — |
-| `sha-wasi` | 2811136 | LLGo · no LTO | — | — |
-| `sha-wasi` | 2811136 | LLGo · deadcode drop | — | — |
-| `sha-wasi` | 2811136 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `sha-wasi` | 2811136 | LLGo · full LTO + GlobalDCE | — | — |
-| `word-count` | 2300998 | LLGo · no LTO | — | — |
-| `word-count` | 2300998 | LLGo · deadcode drop | — | — |
-| `word-count` | 2300998 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `word-count` | 2300998 | LLGo · full LTO + GlobalDCE | — | — |
+| `base64` | 2322402 | LLGo · no LTO | 1903691 | -18.0% |
+| `base64` | 2322402 | LLGo · deadcode drop | 1031880 | -55.6% |
+| `base64` | 2322402 | LLGo · full LTO (GlobalDCE off) | 1685020 | -27.4% |
+| `base64` | 2322402 | LLGo · full LTO + GlobalDCE | 1073687 | -53.8% |
+| `checksum` | 2311672 | LLGo · no LTO | 1883144 | -18.5% |
+| `checksum` | 2311672 | LLGo · deadcode drop | 1017625 | -56.0% |
+| `checksum` | 2311672 | LLGo · full LTO (GlobalDCE off) | 1648560 | -28.7% |
+| `checksum` | 2311672 | LLGo · full LTO + GlobalDCE | 1039514 | -55.0% |
+| `conv-wasi` | 2638493 | LLGo · no LTO | 2859241 | +8.4% |
+| `conv-wasi` | 2638493 | LLGo · deadcode drop | 1591891 | -39.7% |
+| `conv-wasi` | 2638493 | LLGo · full LTO (GlobalDCE off) | 2536581 | -3.9% |
+| `conv-wasi` | 2638493 | LLGo · full LTO + GlobalDCE | 1590274 | -39.7% |
+| `fibonacci` | 2274375 | LLGo · no LTO | 1684317 | -25.9% |
+| `fibonacci` | 2274375 | LLGo · deadcode drop | 909224 | -60.0% |
+| `fibonacci` | 2274375 | LLGo · full LTO (GlobalDCE off) | 1473751 | -35.2% |
+| `fibonacci` | 2274375 | LLGo · full LTO + GlobalDCE | 976563 | -57.1% |
+| `glob` | 2305059 | LLGo · no LTO | 2039896 | -11.5% |
+| `glob` | 2305059 | LLGo · deadcode drop | 1143943 | -50.4% |
+| `glob` | 2305059 | LLGo · full LTO (GlobalDCE off) | 1791293 | -22.3% |
+| `glob` | 2305059 | LLGo · full LTO + GlobalDCE | 1159478 | -49.7% |
+| `grep` | 2871426 | LLGo · no LTO | 2577223 | -10.2% |
+| `grep` | 2871426 | LLGo · deadcode drop | 1545656 | -46.2% |
+| `grep` | 2871426 | LLGo · full LTO (GlobalDCE off) | 2259444 | -21.3% |
+| `grep` | 2871426 | LLGo · full LTO + GlobalDCE | 1566507 | -45.4% |
+| `json-wasi` | 3338360 | LLGo · no LTO | 4151299 | +24.4% |
+| `json-wasi` | 3338360 | LLGo · deadcode drop | 2303290 | -31.0% |
+| `json-wasi` | 3338360 | LLGo · full LTO (GlobalDCE off) | 3775177 | +13.1% |
+| `json-wasi` | 3338360 | LLGo · full LTO + GlobalDCE | 2492642 | -25.3% |
+| `llimport` | 8440671 | LLGo · no LTO | 11066326 | +31.1% |
+| `llimport` | 8440671 | LLGo · deadcode drop | 9118626 | +8.0% |
+| `llimport` | 8440671 | LLGo · full LTO (GlobalDCE off) | 10099604 | +19.7% |
+| `llimport` | 8440671 | LLGo · full LTO + GlobalDCE | 8973621 | +6.3% |
+| `path-report` | 2428068 | LLGo · no LTO | 2373350 | -2.3% |
+| `path-report` | 2428068 | LLGo · deadcode drop | 1462257 | -39.8% |
+| `path-report` | 2428068 | LLGo · full LTO (GlobalDCE off) | 2114007 | -12.9% |
+| `path-report` | 2428068 | LLGo · full LTO + GlobalDCE | 1473538 | -39.3% |
+| `sha-wasi` | 2811136 | LLGo · no LTO | 3182596 | +13.2% |
+| `sha-wasi` | 2811136 | LLGo · deadcode drop | 1864903 | -33.7% |
+| `sha-wasi` | 2811136 | LLGo · full LTO (GlobalDCE off) | 2857279 | +1.6% |
+| `sha-wasi` | 2811136 | LLGo · full LTO + GlobalDCE | 1900894 | -32.4% |
+| `word-count` | 2300998 | LLGo · no LTO | 2000196 | -13.1% |
+| `word-count` | 2300998 | LLGo · deadcode drop | 1119510 | -51.3% |
+| `word-count` | 2300998 | LLGo · full LTO (GlobalDCE off) | 1750578 | -23.9% |
+| `word-count` | 2300998 | LLGo · full LTO + GlobalDCE | 1126776 | -51.0% |
 
 ## js/wasm binary size (vs. TinyGo)
 
 | LLGo mode | Geometric mean / baseline | Valid samples |
 | --- | ---: | ---: |
-| LLGo · no LTO | — | 0 |
-| LLGo · deadcode drop | — | 0 |
-| LLGo · full LTO (GlobalDCE off) | — | 0 |
-| LLGo · full LTO + GlobalDCE | — | 0 |
+| LLGo · no LTO | 12.080x | 10 |
+| LLGo · deadcode drop | 6.826x | 10 |
+| LLGo · full LTO (GlobalDCE off) | 10.690x | 10 |
+| LLGo · full LTO + GlobalDCE | 7.013x | 10 |
 
 | Application | TinyGo bytes | LLGo mode | LLGo bytes | vs. TinyGo |
 | --- | ---: | --- | ---: | ---: |
-| `base64` | 172302 | LLGo · no LTO | — | — |
-| `base64` | 172302 | LLGo · deadcode drop | — | — |
-| `base64` | 172302 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `base64` | 172302 | LLGo · full LTO + GlobalDCE | — | — |
-| `checksum` | 169609 | LLGo · no LTO | — | — |
-| `checksum` | 169609 | LLGo · deadcode drop | — | — |
-| `checksum` | 169609 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `checksum` | 169609 | LLGo · full LTO + GlobalDCE | — | — |
-| `conv-wasi` | 165385 | LLGo · no LTO | — | — |
-| `conv-wasi` | 165385 | LLGo · deadcode drop | — | — |
-| `conv-wasi` | 165385 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `conv-wasi` | 165385 | LLGo · full LTO + GlobalDCE | — | — |
-| `fibonacci` | 141855 | LLGo · no LTO | — | — |
-| `fibonacci` | 141855 | LLGo · deadcode drop | — | — |
-| `fibonacci` | 141855 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `fibonacci` | 141855 | LLGo · full LTO + GlobalDCE | — | — |
-| `grep` | 155984 | LLGo · no LTO | — | — |
-| `grep` | 155984 | LLGo · deadcode drop | — | — |
-| `grep` | 155984 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `grep` | 155984 | LLGo · full LTO + GlobalDCE | — | — |
-| `glob` | 136553 | LLGo · no LTO | — | — |
-| `glob` | 136553 | LLGo · deadcode drop | — | — |
-| `glob` | 136553 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `glob` | 136553 | LLGo · full LTO + GlobalDCE | — | — |
-| `json-wasi` | 525666 | LLGo · no LTO | — | — |
-| `json-wasi` | 525666 | LLGo · deadcode drop | — | — |
-| `json-wasi` | 525666 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `json-wasi` | 525666 | LLGo · full LTO + GlobalDCE | — | — |
-| `llimport` | — | LLGo · no LTO | — | — |
-| `llimport` | — | LLGo · deadcode drop | — | — |
-| `llimport` | — | LLGo · full LTO (GlobalDCE off) | — | — |
-| `llimport` | — | LLGo · full LTO + GlobalDCE | — | — |
-| `path-report` | 194133 | LLGo · no LTO | — | — |
-| `path-report` | 194133 | LLGo · deadcode drop | — | — |
-| `path-report` | 194133 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `path-report` | 194133 | LLGo · full LTO + GlobalDCE | — | — |
-| `sha-wasi` | 351971 | LLGo · no LTO | — | — |
-| `sha-wasi` | 351971 | LLGo · deadcode drop | — | — |
-| `sha-wasi` | 351971 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `sha-wasi` | 351971 | LLGo · full LTO + GlobalDCE | — | — |
-| `word-count` | 164053 | LLGo · no LTO | — | — |
-| `word-count` | 164053 | LLGo · deadcode drop | — | — |
-| `word-count` | 164053 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `word-count` | 164053 | LLGo · full LTO + GlobalDCE | — | — |
+| `base64` | 172302 | LLGo · no LTO | 1903691 | +1004.9% |
+| `base64` | 172302 | LLGo · deadcode drop | 1031880 | +498.9% |
+| `base64` | 172302 | LLGo · full LTO (GlobalDCE off) | 1685020 | +877.9% |
+| `base64` | 172302 | LLGo · full LTO + GlobalDCE | 1073687 | +523.1% |
+| `checksum` | 169609 | LLGo · no LTO | 1883144 | +1010.3% |
+| `checksum` | 169609 | LLGo · deadcode drop | 1017625 | +500.0% |
+| `checksum` | 169609 | LLGo · full LTO (GlobalDCE off) | 1648560 | +872.0% |
+| `checksum` | 169609 | LLGo · full LTO + GlobalDCE | 1039514 | +512.9% |
+| `conv-wasi` | 165385 | LLGo · no LTO | 2859241 | +1628.8% |
+| `conv-wasi` | 165385 | LLGo · deadcode drop | 1591891 | +862.5% |
+| `conv-wasi` | 165385 | LLGo · full LTO (GlobalDCE off) | 2536581 | +1433.7% |
+| `conv-wasi` | 165385 | LLGo · full LTO + GlobalDCE | 1590274 | +861.6% |
+| `fibonacci` | 141855 | LLGo · no LTO | 1684317 | +1087.4% |
+| `fibonacci` | 141855 | LLGo · deadcode drop | 909224 | +541.0% |
+| `fibonacci` | 141855 | LLGo · full LTO (GlobalDCE off) | 1473751 | +938.9% |
+| `fibonacci` | 141855 | LLGo · full LTO + GlobalDCE | 976563 | +588.4% |
+| `glob` | 136553 | LLGo · no LTO | 2039896 | +1393.8% |
+| `glob` | 136553 | LLGo · deadcode drop | 1143943 | +737.7% |
+| `glob` | 136553 | LLGo · full LTO (GlobalDCE off) | 1791293 | +1211.8% |
+| `glob` | 136553 | LLGo · full LTO + GlobalDCE | 1159478 | +749.1% |
+| `grep` | 155984 | LLGo · no LTO | 2577223 | +1552.2% |
+| `grep` | 155984 | LLGo · deadcode drop | 1545656 | +890.9% |
+| `grep` | 155984 | LLGo · full LTO (GlobalDCE off) | 2259444 | +1348.5% |
+| `grep` | 155984 | LLGo · full LTO + GlobalDCE | 1566507 | +904.3% |
+| `json-wasi` | 525666 | LLGo · no LTO | 4151299 | +689.7% |
+| `json-wasi` | 525666 | LLGo · deadcode drop | 2303290 | +338.2% |
+| `json-wasi` | 525666 | LLGo · full LTO (GlobalDCE off) | 3775177 | +618.2% |
+| `json-wasi` | 525666 | LLGo · full LTO + GlobalDCE | 2492642 | +374.2% |
+| `llimport` | — | LLGo · no LTO | 11066326 | — |
+| `llimport` | — | LLGo · deadcode drop | 9118626 | — |
+| `llimport` | — | LLGo · full LTO (GlobalDCE off) | 10099604 | — |
+| `llimport` | — | LLGo · full LTO + GlobalDCE | 8973621 | — |
+| `path-report` | 194133 | LLGo · no LTO | 2373350 | +1122.5% |
+| `path-report` | 194133 | LLGo · deadcode drop | 1462257 | +653.2% |
+| `path-report` | 194133 | LLGo · full LTO (GlobalDCE off) | 2114007 | +988.9% |
+| `path-report` | 194133 | LLGo · full LTO + GlobalDCE | 1473538 | +659.0% |
+| `sha-wasi` | 351971 | LLGo · no LTO | 3182596 | +804.2% |
+| `sha-wasi` | 351971 | LLGo · deadcode drop | 1864903 | +429.8% |
+| `sha-wasi` | 351971 | LLGo · full LTO (GlobalDCE off) | 2857279 | +711.8% |
+| `sha-wasi` | 351971 | LLGo · full LTO + GlobalDCE | 1900894 | +440.1% |
+| `word-count` | 164053 | LLGo · no LTO | 2000196 | +1119.2% |
+| `word-count` | 164053 | LLGo · deadcode drop | 1119510 | +582.4% |
+| `word-count` | 164053 | LLGo · full LTO (GlobalDCE off) | 1750578 | +967.1% |
+| `word-count` | 164053 | LLGo · full LTO + GlobalDCE | 1126776 | +586.8% |
 
 ## wasip1/wasm binary size (vs. Go)
 
 | LLGo mode | Geometric mean / baseline | Valid samples |
 | --- | ---: | ---: |
-| LLGo · no LTO | — | 0 |
-| LLGo · deadcode drop | — | 0 |
-| LLGo · full LTO (GlobalDCE off) | — | 0 |
-| LLGo · full LTO + GlobalDCE | — | 0 |
+| LLGo · no LTO | 0.598x | 11 |
+| LLGo · deadcode drop | 0.315x | 11 |
+| LLGo · full LTO (GlobalDCE off) | 0.504x | 11 |
+| LLGo · full LTO + GlobalDCE | 0.350x | 11 |
 
 | Application | Go bytes | LLGo mode | LLGo bytes | vs. Go |
 | --- | ---: | --- | ---: | ---: |
-| `base64` | 2275731 | LLGo · no LTO | — | — |
-| `base64` | 2275731 | LLGo · deadcode drop | — | — |
-| `base64` | 2275731 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `base64` | 2275731 | LLGo · full LTO + GlobalDCE | — | — |
-| `checksum` | 2264417 | LLGo · no LTO | — | — |
-| `checksum` | 2264417 | LLGo · deadcode drop | — | — |
-| `checksum` | 2264417 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `checksum` | 2264417 | LLGo · full LTO + GlobalDCE | — | — |
-| `conv-wasi` | 2608089 | LLGo · no LTO | — | — |
-| `conv-wasi` | 2608089 | LLGo · deadcode drop | — | — |
-| `conv-wasi` | 2608089 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `conv-wasi` | 2608089 | LLGo · full LTO + GlobalDCE | — | — |
-| `fibonacci` | 2230899 | LLGo · no LTO | — | — |
-| `fibonacci` | 2230899 | LLGo · deadcode drop | — | — |
-| `fibonacci` | 2230899 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `fibonacci` | 2230899 | LLGo · full LTO + GlobalDCE | — | — |
-| `grep` | 2848917 | LLGo · no LTO | — | — |
-| `grep` | 2848917 | LLGo · deadcode drop | — | — |
-| `grep` | 2848917 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `grep` | 2848917 | LLGo · full LTO + GlobalDCE | — | — |
-| `glob` | 2257634 | LLGo · no LTO | — | — |
-| `glob` | 2257634 | LLGo · deadcode drop | — | — |
-| `glob` | 2257634 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `glob` | 2257634 | LLGo · full LTO + GlobalDCE | — | — |
-| `json-wasi` | 3314587 | LLGo · no LTO | — | — |
-| `json-wasi` | 3314587 | LLGo · deadcode drop | — | — |
-| `json-wasi` | 3314587 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `json-wasi` | 3314587 | LLGo · full LTO + GlobalDCE | — | — |
-| `llimport` | 8423078 | LLGo · no LTO | — | — |
-| `llimport` | 8423078 | LLGo · deadcode drop | — | — |
-| `llimport` | 8423078 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `llimport` | 8423078 | LLGo · full LTO + GlobalDCE | — | — |
-| `path-report` | 2381190 | LLGo · no LTO | — | — |
-| `path-report` | 2381190 | LLGo · deadcode drop | — | — |
-| `path-report` | 2381190 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `path-report` | 2381190 | LLGo · full LTO + GlobalDCE | — | — |
-| `sha-wasi` | 2780972 | LLGo · no LTO | — | — |
-| `sha-wasi` | 2780972 | LLGo · deadcode drop | — | — |
-| `sha-wasi` | 2780972 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `sha-wasi` | 2780972 | LLGo · full LTO + GlobalDCE | — | — |
-| `word-count` | 2253620 | LLGo · no LTO | — | — |
-| `word-count` | 2253620 | LLGo · deadcode drop | — | — |
-| `word-count` | 2253620 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `word-count` | 2253620 | LLGo · full LTO + GlobalDCE | — | — |
+| `base64` | 2275731 | LLGo · no LTO | 1101642 | -51.6% |
+| `base64` | 2275731 | LLGo · deadcode drop | 506646 | -77.7% |
+| `base64` | 2275731 | LLGo · full LTO (GlobalDCE off) | 873978 | -61.6% |
+| `base64` | 2275731 | LLGo · full LTO + GlobalDCE | 585517 | -74.3% |
+| `checksum` | 2264417 | LLGo · no LTO | 1085306 | -52.1% |
+| `checksum` | 2264417 | LLGo · deadcode drop | 493773 | -78.2% |
+| `checksum` | 2264417 | LLGo · full LTO (GlobalDCE off) | 857890 | -62.1% |
+| `checksum` | 2264417 | LLGo · full LTO + GlobalDCE | 566461 | -75.0% |
+| `conv-wasi` | 2608089 | LLGo · no LTO | 1782439 | -31.7% |
+| `conv-wasi` | 2608089 | LLGo · deadcode drop | 918739 | -64.8% |
+| `conv-wasi` | 2608089 | LLGo · full LTO (GlobalDCE off) | 1565112 | -40.0% |
+| `conv-wasi` | 2608089 | LLGo · full LTO + GlobalDCE | 970037 | -62.8% |
+| `fibonacci` | 2230899 | LLGo · no LTO | 896099 | -59.8% |
+| `fibonacci` | 2230899 | LLGo · deadcode drop | 410551 | -81.6% |
+| `fibonacci` | 2230899 | LLGo · full LTO (GlobalDCE off) | 762684 | -65.8% |
+| `fibonacci` | 2230899 | LLGo · full LTO + GlobalDCE | 519683 | -76.7% |
+| `glob` | 2257634 | LLGo · no LTO | 1221374 | -45.9% |
+| `glob` | 2257634 | LLGo · deadcode drop | 604083 | -73.2% |
+| `glob` | 2257634 | LLGo · full LTO (GlobalDCE off) | 1009385 | -55.3% |
+| `glob` | 2257634 | LLGo · full LTO + GlobalDCE | 672871 | -70.2% |
+| `grep` | 2848917 | LLGo · no LTO | 1547750 | -45.7% |
+| `grep` | 2848917 | LLGo · deadcode drop | 847624 | -70.2% |
+| `grep` | 2848917 | LLGo · full LTO (GlobalDCE off) | 1354779 | -52.4% |
+| `grep` | 2848917 | LLGo · full LTO + GlobalDCE | 957292 | -66.4% |
+| `json-wasi` | 3314587 | LLGo · no LTO | 2797006 | -15.6% |
+| `json-wasi` | 3314587 | LLGo · deadcode drop | 1427620 | -56.9% |
+| `json-wasi` | 3314587 | LLGo · full LTO (GlobalDCE off) | 2480819 | -25.2% |
+| `json-wasi` | 3314587 | LLGo · full LTO + GlobalDCE | 1614653 | -51.3% |
+| `llimport` | 8423078 | LLGo · no LTO | 8060377 | -4.3% |
+| `llimport` | 8423078 | LLGo · deadcode drop | 6566329 | -22.0% |
+| `llimport` | 8423078 | LLGo · full LTO (GlobalDCE off) | 6888448 | -18.2% |
+| `llimport` | 8423078 | LLGo · full LTO + GlobalDCE | 6625910 | -21.3% |
+| `path-report` | 2381190 | LLGo · no LTO | 1454546 | -38.9% |
+| `path-report` | 2381190 | LLGo · deadcode drop | 827334 | -65.3% |
+| `path-report` | 2381190 | LLGo · full LTO (GlobalDCE off) | 1234900 | -48.1% |
+| `path-report` | 2381190 | LLGo · full LTO + GlobalDCE | 892617 | -62.5% |
+| `sha-wasi` | 2780972 | LLGo · no LTO | 1971598 | -29.1% |
+| `sha-wasi` | 2780972 | LLGo · deadcode drop | 1076987 | -61.3% |
+| `sha-wasi` | 2780972 | LLGo · full LTO (GlobalDCE off) | 1737508 | -37.5% |
+| `sha-wasi` | 2780972 | LLGo · full LTO + GlobalDCE | 1140756 | -59.0% |
+| `word-count` | 2253620 | LLGo · no LTO | 1202666 | -46.6% |
+| `word-count` | 2253620 | LLGo · deadcode drop | 596060 | -73.6% |
+| `word-count` | 2253620 | LLGo · full LTO (GlobalDCE off) | 964221 | -57.2% |
+| `word-count` | 2253620 | LLGo · full LTO + GlobalDCE | 657483 | -70.8% |
 
 ## wasip1/wasm binary size (vs. TinyGo)
 
 | LLGo mode | Geometric mean / baseline | Valid samples |
 | --- | ---: | ---: |
-| LLGo · no LTO | — | 0 |
-| LLGo · deadcode drop | — | 0 |
-| LLGo · full LTO (GlobalDCE off) | — | 0 |
-| LLGo · full LTO + GlobalDCE | — | 0 |
+| LLGo · no LTO | 9.728x | 10 |
+| LLGo · deadcode drop | 4.901x | 10 |
+| LLGo · full LTO (GlobalDCE off) | 8.197x | 10 |
+| LLGo · full LTO + GlobalDCE | 5.501x | 10 |
 
 | Application | TinyGo bytes | LLGo mode | LLGo bytes | vs. TinyGo |
 | --- | ---: | --- | ---: | ---: |
-| `base64` | 96760 | LLGo · no LTO | — | — |
-| `base64` | 96760 | LLGo · deadcode drop | — | — |
-| `base64` | 96760 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `base64` | 96760 | LLGo · full LTO + GlobalDCE | — | — |
-| `checksum` | 92685 | LLGo · no LTO | — | — |
-| `checksum` | 92685 | LLGo · deadcode drop | — | — |
-| `checksum` | 92685 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `checksum` | 92685 | LLGo · full LTO + GlobalDCE | — | — |
-| `conv-wasi` | 201149 | LLGo · no LTO | — | — |
-| `conv-wasi` | 201149 | LLGo · deadcode drop | — | — |
-| `conv-wasi` | 201149 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `conv-wasi` | 201149 | LLGo · full LTO + GlobalDCE | — | — |
-| `fibonacci` | 62386 | LLGo · no LTO | — | — |
-| `fibonacci` | 62386 | LLGo · deadcode drop | — | — |
-| `fibonacci` | 62386 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `fibonacci` | 62386 | LLGo · full LTO + GlobalDCE | — | — |
-| `grep` | 303772 | LLGo · no LTO | — | — |
-| `grep` | 303772 | LLGo · deadcode drop | — | — |
-| `grep` | 303772 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `grep` | 303772 | LLGo · full LTO + GlobalDCE | — | — |
-| `glob` | 93153 | LLGo · no LTO | — | — |
-| `glob` | 93153 | LLGo · deadcode drop | — | — |
-| `glob` | 93153 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `glob` | 93153 | LLGo · full LTO + GlobalDCE | — | — |
-| `json-wasi` | 493590 | LLGo · no LTO | — | — |
-| `json-wasi` | 493590 | LLGo · deadcode drop | — | — |
-| `json-wasi` | 493590 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `json-wasi` | 493590 | LLGo · full LTO + GlobalDCE | — | — |
-| `llimport` | — | LLGo · no LTO | — | — |
-| `llimport` | — | LLGo · deadcode drop | — | — |
-| `llimport` | — | LLGo · full LTO (GlobalDCE off) | — | — |
-| `llimport` | — | LLGo · full LTO + GlobalDCE | — | — |
-| `path-report` | 116889 | LLGo · no LTO | — | — |
-| `path-report` | 116889 | LLGo · deadcode drop | — | — |
-| `path-report` | 116889 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `path-report` | 116889 | LLGo · full LTO + GlobalDCE | — | — |
-| `sha-wasi` | 287449 | LLGo · no LTO | — | — |
-| `sha-wasi` | 287449 | LLGo · deadcode drop | — | — |
-| `sha-wasi` | 287449 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `sha-wasi` | 287449 | LLGo · full LTO + GlobalDCE | — | — |
-| `word-count` | 86834 | LLGo · no LTO | — | — |
-| `word-count` | 86834 | LLGo · deadcode drop | — | — |
-| `word-count` | 86834 | LLGo · full LTO (GlobalDCE off) | — | — |
-| `word-count` | 86834 | LLGo · full LTO + GlobalDCE | — | — |
+| `base64` | 96760 | LLGo · no LTO | 1101642 | +1038.5% |
+| `base64` | 96760 | LLGo · deadcode drop | 506646 | +423.6% |
+| `base64` | 96760 | LLGo · full LTO (GlobalDCE off) | 873978 | +803.2% |
+| `base64` | 96760 | LLGo · full LTO + GlobalDCE | 585517 | +505.1% |
+| `checksum` | 92685 | LLGo · no LTO | 1085306 | +1071.0% |
+| `checksum` | 92685 | LLGo · deadcode drop | 493773 | +432.7% |
+| `checksum` | 92685 | LLGo · full LTO (GlobalDCE off) | 857890 | +825.6% |
+| `checksum` | 92685 | LLGo · full LTO + GlobalDCE | 566461 | +511.2% |
+| `conv-wasi` | 201149 | LLGo · no LTO | 1782439 | +786.1% |
+| `conv-wasi` | 201149 | LLGo · deadcode drop | 918739 | +356.7% |
+| `conv-wasi` | 201149 | LLGo · full LTO (GlobalDCE off) | 1565112 | +678.1% |
+| `conv-wasi` | 201149 | LLGo · full LTO + GlobalDCE | 970037 | +382.2% |
+| `fibonacci` | 62386 | LLGo · no LTO | 896099 | +1336.4% |
+| `fibonacci` | 62386 | LLGo · deadcode drop | 410551 | +558.1% |
+| `fibonacci` | 62386 | LLGo · full LTO (GlobalDCE off) | 762684 | +1122.5% |
+| `fibonacci` | 62386 | LLGo · full LTO + GlobalDCE | 519683 | +733.0% |
+| `glob` | 93153 | LLGo · no LTO | 1221374 | +1211.1% |
+| `glob` | 93153 | LLGo · deadcode drop | 604083 | +548.5% |
+| `glob` | 93153 | LLGo · full LTO (GlobalDCE off) | 1009385 | +983.6% |
+| `glob` | 93153 | LLGo · full LTO + GlobalDCE | 672871 | +622.3% |
+| `grep` | 303772 | LLGo · no LTO | 1547750 | +409.5% |
+| `grep` | 303772 | LLGo · deadcode drop | 847624 | +179.0% |
+| `grep` | 303772 | LLGo · full LTO (GlobalDCE off) | 1354779 | +346.0% |
+| `grep` | 303772 | LLGo · full LTO + GlobalDCE | 957292 | +215.1% |
+| `json-wasi` | 493590 | LLGo · no LTO | 2797006 | +466.7% |
+| `json-wasi` | 493590 | LLGo · deadcode drop | 1427620 | +189.2% |
+| `json-wasi` | 493590 | LLGo · full LTO (GlobalDCE off) | 2480819 | +402.6% |
+| `json-wasi` | 493590 | LLGo · full LTO + GlobalDCE | 1614653 | +227.1% |
+| `llimport` | — | LLGo · no LTO | 8060377 | — |
+| `llimport` | — | LLGo · deadcode drop | 6566329 | — |
+| `llimport` | — | LLGo · full LTO (GlobalDCE off) | 6888448 | — |
+| `llimport` | — | LLGo · full LTO + GlobalDCE | 6625910 | — |
+| `path-report` | 116889 | LLGo · no LTO | 1454546 | +1144.4% |
+| `path-report` | 116889 | LLGo · deadcode drop | 827334 | +607.8% |
+| `path-report` | 116889 | LLGo · full LTO (GlobalDCE off) | 1234900 | +956.5% |
+| `path-report` | 116889 | LLGo · full LTO + GlobalDCE | 892617 | +663.6% |
+| `sha-wasi` | 287449 | LLGo · no LTO | 1971598 | +585.9% |
+| `sha-wasi` | 287449 | LLGo · deadcode drop | 1076987 | +274.7% |
+| `sha-wasi` | 287449 | LLGo · full LTO (GlobalDCE off) | 1737508 | +504.5% |
+| `sha-wasi` | 287449 | LLGo · full LTO + GlobalDCE | 1140756 | +296.9% |
+| `word-count` | 86834 | LLGo · no LTO | 1202666 | +1285.0% |
+| `word-count` | 86834 | LLGo · deadcode drop | 596060 | +586.4% |
+| `word-count` | 86834 | LLGo · full LTO (GlobalDCE off) | 964221 | +1010.4% |
+| `word-count` | 86834 | LLGo · full LTO + GlobalDCE | 657483 | +657.2% |
