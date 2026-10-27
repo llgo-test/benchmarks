@@ -46,7 +46,7 @@ class WasmSizeTest(unittest.TestCase):
         self.assertEqual(document["run"]["llgoBuildGoVersion"], "1.27.0")
         self.assertEqual(document["protocol"]["Go"], ["build", "-trimpath", "-ldflags=-s -w"])
         self.assertEqual(document["protocol"]["LLGoNoLTO"], ["build", "-a", "-Oz"])
-        self.assertIn("Emscripten wasm-opt", document["protocol"]["LLGoPostLink"])
+        self.assertIn("LLGo-pinned Binaryen", document["protocol"]["LLGoPostLink"])
         self.assertEqual(document["benchmarks"][1]["source"], "grep")
         self.assertEqual(document["benchmarks"][0]["provenance"], "repository")
         self.assertEqual(document["benchmarks"][1]["values"]["LLGoNoLTO"], 600)
@@ -219,7 +219,7 @@ class NullableResultsTest(unittest.TestCase):
 
 
 class RunnerTest(unittest.TestCase):
-    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False, suite=""):
+    def run_fixture(self, root, policy="required", failure="", invalid=False, binaryen="132", two_apps=False, js=False, timeout=False, suite="", llgo_binaryen="132"):
         script = root / "script"
         script.mkdir()
         for name in ("run.sh", "report.py", "prepare_sources.py"):
@@ -249,7 +249,8 @@ import json, os, sys, time
 from pathlib import Path
 name = Path(sys.argv[0]).name
 if "-o" not in sys.argv:
-    print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
+    if name == "llgo-wasm-opt": print("wasm-opt version " + os.environ["RESOLVED_LLGO_BINARYEN"])
+    else: print("wasm-opt version " + os.environ["RESOLVED_BINARYEN"] if name == "wasm-opt" else name + " fixture 22.1.8")
     raise SystemExit(0)
 config = {"go": "Go", "tinygo": "TinyGo"}.get(name, "LLGoNoLTO")
 if name == "llgo":
@@ -280,7 +281,8 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
                "TIMEOUT_BUILD": "1" if timeout else "0", "WASM_SUITE": suite,
                "LLGO_BUILD_TIMEOUT_SECONDS": "0.3" if timeout else "20",
                "CALLS": str(root / "calls.jsonl"), "FAIL_CONFIG": failure,
-               "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen, "GOWORK": "/unrelated/go.work"}
+               "INVALID_WASM": "1" if invalid else "0", "RESOLVED_BINARYEN": binaryen,
+               "RESOLVED_LLGO_BINARYEN": llgo_binaryen, "GOWORK": "/unrelated/go.work"}
         output = root / "output"
         # Pre-existing success must not mask a failing compiler invocation.
         stale = output / "raw" / "TinyGo" / "base64.wasm"
@@ -291,6 +293,15 @@ output.write_bytes(b"\\0asm" + b"x" * 20)
         completed = subprocess.run(["bash", str(script / "run.sh"), str(output)], env=env,
                                    capture_output=True, text=True)
         return completed, output
+
+    def test_old_llgo_binaryen_is_rejected_before_building(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            completed, output = self.run_fixture(root, llgo_binaryen="125 (version_125)")
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("expected LLGo Binaryen 132", completed.stderr)
+            self.assertFalse((root / "calls.jsonl").exists())
+            self.assertFalse((output / "results.json").exists())
 
     def test_execution_suites_are_disjoint(self):
         for suite, expected in (("standard", "second"), ("tsgo", "tsgo")):

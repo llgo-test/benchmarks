@@ -10,6 +10,11 @@ on:
         required: false
         type: string
         default: ''
+      native:
+        description: Build native results as well as WASM (disable when backfilling only WASM)
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   binary-size:
@@ -89,7 +94,7 @@ jobs:
           python3 -m unittest discover -s ci/llgo-size -p 'test_*.py' -v
           go test ./cmd/bent
           node --test ci/llgo-wasm-size/test_wasm_site.cjs ci/llgo-size/test_site.cjs
-          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh ci/llgo-size/publish-site.sh
+          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh ci/llgo-size/publish-site.sh ci/llgo-size/download-go-modules.sh
 
       - name: Install LLVM and CMake dependencies
         run: |
@@ -147,11 +152,6 @@ jobs:
           export PATH="$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$PATH"
           .ci/tinygo/bin/tinygo version
           wasm-opt --version
-          llgo_wasm_opt="$EMSDK/upstream/bin/wasm-opt"
-          [[ -x "$llgo_wasm_opt" ]]
-          "$llgo_wasm_opt" --version
-          llgo_wasm_opt_help="$("$llgo_wasm_opt" --help)"
-          grep -Fq -- '--translate-to-exnref' <<< "$llgo_wasm_opt_help"
 
       - name: Check out pinned LLGo
         run: |
@@ -173,6 +173,19 @@ jobs:
           llgo_committed_at="$(git -C .ci/llgo show -s --format=%cI "$LLGO_COMMIT")"
           printf 'LLGO_MAIN_INDEX=%s\n' "$llgo_main_index" >> "$GITHUB_ENV"
           printf 'LLGO_COMMITTED_AT=%s\n' "$llgo_committed_at" >> "$GITHUB_ENV"
+
+      # Use the compiler revision's own release tag and archive checksums.
+      # TinyGo retains its independent upstream Binaryen installation.
+      - name: Install LLGo's pinned Binaryen
+        uses: ./.ci/llgo/.github/actions/setup-binaryen
+
+      - name: Select LLGo Binaryen for WASM builds
+        run: |
+          set -euo pipefail
+          [[ -x "$WASMOPT" && -x "$EM_BINARYEN_ROOT/bin/wasm-emscripten-finalize" ]]
+          [[ "$("$WASMOPT" --version)" == 'wasm-opt version 132' ]]
+          printf 'LLGO_WASMOPT=%s\n' "$WASMOPT" >> "$GITHUB_ENV"
+
       - name: Build LLGo and the LTO plugin
         run: |
           set -euo pipefail
@@ -183,7 +196,8 @@ jobs:
           (
             cd "$LLGO_ROOT"
             time_command "Download LLGo Go modules" \
-              env GOTOOLCHAIN="$llgo_build_toolchain" go mod download -x
+              env GOTOOLCHAIN="$llgo_build_toolchain" \
+              bash "$GITHUB_WORKSPACE/ci/llgo-size/download-go-modules.sh"
             time_command "Build LLGo command" \
               env GOTOOLCHAIN="$llgo_build_toolchain" go build -tags=dev -o "$LLGO_ROOT/llgo" ./cmd/llgo
           )
@@ -213,7 +227,6 @@ jobs:
           # Resolve the independently pinned Binaryen before that directory.
           export PATH="$GOROOT/bin:$GITHUB_WORKSPACE/.ci/binaryen-version_${BINARYEN_VERSION}/bin:$GITHUB_WORKSPACE/.ci/tinygo/bin:/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"
           export LLVM_CONFIG="/usr/lib/llvm-${LLVM_VERSION}/bin/llvm-config"
-          export LLGO_WASMOPT="$EMSDK/upstream/bin/wasm-opt"
           # Stream samples as well as saving them: runner loss can prevent artifact upload.
           if [[ "$WASM_SUITE" == tsgo ]]; then
             mkdir -p .ci/wasm-run
@@ -271,7 +284,7 @@ jobs:
 
       - name: Build six binary-size configurations with Bent
         id: bent
-        if: inputs.suite == 'standard'
+        if: inputs.suite == 'standard' && inputs.native
         continue-on-error: true
         env:
           # Bound each LLGo benchmark/configuration independently so one stuck

@@ -74,7 +74,8 @@ export WASM_LD_ACTUAL_VERSION
 # accidentally hide an older wasm-ld elsewhere on PATH.
 python3 - "$CLANG_ACTUAL_VERSION" "$WASM_LD_ACTUAL_VERSION" \
   "${LLVM_VERSION:?LLVM_VERSION must identify the LLVM release}" \
-  "$TINYGO_WASM_OPT_ACTUAL_VERSION" "$BINARYEN_VERSION" "$wasm_opt_bin" <<'PY'
+  "$TINYGO_WASM_OPT_ACTUAL_VERSION" "$BINARYEN_VERSION" "$wasm_opt_bin" \
+  "$LLGO_WASM_OPT_ACTUAL_VERSION" "$llgo_wasm_opt_bin" <<'PY'
 import re
 import sys
 
@@ -86,7 +87,19 @@ for version in sys.argv[1:3]:
 match = re.match(r"^wasm-opt version (\d+)(?:\s|$)", sys.argv[4])
 if not match or match[1] != sys.argv[5]:
     raise SystemExit(f"expected TinyGo Binaryen {sys.argv[5]}, got: {sys.argv[4]} ({sys.argv[6]})")
+# LLGo's patched release has the exact upstream version string. CI verifies
+# its archive checksum using the pinned compiler's setup-binaryen action.
+if sys.argv[7] != "wasm-opt version 132":
+    raise SystemExit(f"expected LLGo Binaryen 132 from LLGo's pinned release, got: {sys.argv[7]} ({sys.argv[8]})")
 PY
+LLGO_WASM_OPT_SHA256="$(python3 - "$llgo_wasm_opt_bin" <<'PY'
+import hashlib
+import sys
+with open(sys.argv[1], "rb") as stream:
+    print(hashlib.file_digest(stream, "sha256").hexdigest())
+PY
+)"
+export LLGO_WASM_OPT_SHA256
 
 verify_wasm() {
   python3 - "$1" <<'PY'
