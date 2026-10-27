@@ -198,7 +198,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
         "metric": "total-bytes",
         "protocol": {
             **PROTOCOL,
-            "LLGoPostLink": ["Emscripten wasm-opt", "Upstream target-specific post-link processing"],
+            "LLGoPostLink": ["LLGo-pinned Binaryen", "Upstream target-specific post-link processing"],
             "LLGoPostLinkByTarget": {
                 "wasip1": "LLGo pre-Asyncify optimization, Asyncify and standardized exception translation",
                 "js": "Upstream Emscripten driver; its Binaryen optimization level is not overridden by this benchmark",
@@ -216,6 +216,7 @@ def build_document(manifest: list[dict[str, str]], sizes: dict[str, dict]) -> di
             "sizeScope": "Final .wasm only; JS host glue is retained in the CI artifact and excluded from size",
             "cachePolicy": "LLGo -a rebuilds all packages so ambient flag changes cannot reuse stale archives",
         },
+        "toolHashes": {"LLGo wasm-opt": os.environ.get("LLGO_WASM_OPT_SHA256", "")},
         "toolVersions": {
             "Go": os.environ.get("GO_ACTUAL_VERSION", ""),
             "TinyGo": os.environ.get("TINYGO_ACTUAL_VERSION", ""),

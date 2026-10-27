@@ -38,14 +38,25 @@ not a claim of complete package-import functionality under WASI.
 The newer toolchain needed to build LLGo itself is pinned separately as
 `LLGO_BUILD_GO_VERSION`. Go uses `-trimpath -ldflags='-s -w'`, TinyGo uses
 `-opt=z -no-debug`, and LLGo uses `-Oz` with the pinned LLVM 22 toolchain.
-TinyGo's Binaryen 132 is pinned independently of LLGo's Emscripten 4.0.21
-`wasm-opt`, which supplies Asyncify and exception translation.
+TinyGo's upstream Binaryen 132 is pinned independently of LLGo's patched
+Binaryen. CI installs LLGo's release using the selected compiler revision's
+`setup-binaryen` action and checksums (currently `llgo-v132.3`), then passes its
+`wasm-opt` through `LLGO_WASMOPT`/`WASMOPT` and its directory through
+`EM_BINARYEN_ROOT`. Emscripten 4.0.21 still supplies the JS driver, but its
+bundled Binaryen 125 must not override LLGo's tools. Version validation happens
+before application builds; reports also record the LLGo wasm-opt SHA-256.
 
 `run.sh` writes `results.json`, `summary.md`, `sizes.tsv`, compiler logs, and the
 six sets of WASM binaries. CI uploads the complete directory as an artifact;
 `archive.py` publishes JSON, Markdown, TSV, and compiler logs to the
 `pages` branch. Published history is keyed by the full LLGo commit, matching the
 Linux binary-size history.
+
+For historical repairs, dispatch `LLGo binary size` with a full `llgo_commit`
+and `suite=standard` to exclude tsgo. Set `wasm_only=true` when native results
+already exist. Publication replaces only the standard WASM rows for that
+commit, retaining tsgo rows and native history. Leave `wasm_only=false` to
+recover a revision missing both native and WASM results.
 
 The site has two views, **WASM binary size (vs. Go)** (`index.html`) and
 **WASM binary size (vs. TinyGo)** (`wasm-tinygo.html`). Both use the same run.

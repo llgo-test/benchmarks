@@ -1,4 +1,5 @@
 name: LLGo binary size
+run-name: LLGo binary size / ${{ inputs.suite || 'all' }} / ${{ inputs.llgo_commit || github.event.client_payload.llgo_commit || github.sha }}
 
 on:
   push:
@@ -47,6 +48,15 @@ on:
         description: Optional full xgo-dev/llgo commit SHA to benchmark
         required: false
         type: string
+      suite:
+        description: Suites to run (standard excludes tsgo)
+        type: choice
+        default: all
+        options: [all, standard, tsgo]
+      wasm_only:
+        description: Preserve existing native results and rebuild only WASM
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -188,6 +198,7 @@ jobs:
   binary-size:
     if: >-
       always() &&
+      inputs.suite != 'tsgo' &&
       (github.event_name != 'pull_request' || needs.pr-scope.outputs.full_matrix == 'true') &&
       !(github.event_name == 'push' && github.actor == 'github-actions[bot]' &&
         startsWith(github.event.head_commit.message, 'ci: pin LLGo '))
@@ -201,11 +212,13 @@ jobs:
     with:
       suite: standard
       llgo_commit: ${{ inputs.llgo_commit || '' }}
+      native: ${{ inputs.wasm_only != true }}
     secrets: inherit
 
   tsgo-size:
     if: >-
       always() &&
+      inputs.suite != 'standard' &&
       (github.event_name != 'pull_request' || needs.pr-scope.outputs.full_matrix == 'true') &&
       !(github.event_name == 'push' && github.actor == 'github-actions[bot]' &&
         startsWith(github.event.head_commit.message, 'ci: pin LLGo '))
@@ -252,7 +265,7 @@ jobs:
           python3 -m unittest discover -s ci/llgo-size -p 'test_*.py' -v
           go test ./cmd/bent
           node --test ci/llgo-wasm-size/test_wasm_site.cjs ci/llgo-size/test_site.cjs
-          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh
+          shellcheck ci/llgo-wasm-size/run.sh ci/llgo-size/report.sh ci/llgo-size/publish.sh ci/llgo-size/download-go-modules.sh
           (cd ci/llgo-wasm-size/apps && GOTOOLCHAIN="go${GO_VERSION#go}" go test ./...)
           export GO_VERSION
           python3 ci/llgo-wasm-size/prepare_sources.py ci/llgo-wasm-size/apps.tsv \
